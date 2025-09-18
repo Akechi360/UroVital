@@ -21,8 +21,7 @@ export default function AppHeader() {
   const { toggleSidebar, isMobile } = useSidebar();
 
   const handleLogout = () => {
-    // In a real app, you'd call a logout action
-    document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    localStorage.removeItem('isAuthenticated');
     router.push('/login');
   };
 

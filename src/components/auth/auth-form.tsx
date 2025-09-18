@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Stethoscope, LogIn } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -50,6 +51,7 @@ const formSchemas = {
 export default function AuthForm({ mode: initialMode }: AuthFormProps) {
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(formSchemas[mode]),
@@ -65,7 +67,8 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
         const result = await login(values as z.infer<typeof loginSchema>);
         if (result.success) {
             toast({ title: "Login successful", description: "Redirecting to dashboard..." });
-            window.location.assign('/dashboard');
+            localStorage.setItem("isAuthenticated", "true");
+            router.push('/dashboard');
         } else {
             toast({ variant: "destructive", title: "Login Failed", description: result.error });
         }
