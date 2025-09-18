@@ -18,10 +18,10 @@ export default function PatientDetailLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { patientId: string };
+  params: Promise<{ patientId: string }>;
 }) {
   const pathname = usePathname();
-  const { patientId } = params;
+  const { patientId } = use(params);
   const [patient, setPatient] = useState<Patient | null>(null);
 
   useEffect(() => {
