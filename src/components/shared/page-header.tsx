@@ -20,7 +20,7 @@ export function PageHeader({ title, backHref, actions }: PageHeaderProps) {
                     </Link>
                 </Button>
             )}
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight font-headline">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
                 {title}
             </h1>
             </div>

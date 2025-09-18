@@ -10,8 +10,9 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import {
-  LayoutDashboard,
+  LayoutGrid,
   Users,
+  Calendar,
   Settings,
   Stethoscope,
   PanelLeft,
@@ -20,13 +21,22 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const menuItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/patients', label: 'Patients', icon: Users },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard', label: 'Panel', icon: LayoutGrid },
+  { href: '/patients', label: 'Pacientes', icon: Users },
+  { href: '/appointments', label: 'Citas', icon: Calendar },
+  { href: '/settings', label: 'Configuración', icon: Settings },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
+
+  // A simple way to check for an exact match or if the path starts with the href
+  const isActive = (href: string) => {
+    if (href === '/dashboard') {
+        return pathname === href;
+    }
+    return pathname.startsWith(href);
+  }
 
   return (
     <>
@@ -34,20 +44,20 @@ export default function Nav() {
         <div className="flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg group-data-[collapsible=icon]:hidden">
             <Stethoscope className="h-7 w-7 text-primary" />
-            <span className="font-headline">UroFlow</span>
+            <span className="font-headline">UroSTAT</span>
           </Link>
           <SidebarTrigger className="group-data-[collapsible=icon]:hidden">
              <PanelLeft />
           </SidebarTrigger>
         </div>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="p-2">
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 asChild
-                isActive={pathname.startsWith(item.href)}
+                isActive={isActive(item.href)}
                 tooltip={{ children: item.label }}
               >
                 <Link href={item.href}>
