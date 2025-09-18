@@ -116,97 +116,79 @@ export function AppointmentsLineChart() {
   );
 }
 
-// --- Lab Results Bar Chart ---
+// --- Lab Results Radial Chart ---
 
-const labResultsBarChartOptions: ApexOptions = {
+const labResultsRadialChartOptions: ApexOptions = {
     chart: {
-        type: 'bar',
-        height: 250,
+        type: 'radialBar',
+        height: 350,
         toolbar: { show: false },
         background: 'transparent',
     },
     plotOptions: {
-        bar: {
-            horizontal: true,
-            borderRadius: 6,
-            barHeight: '50%',
+        radialBar: {
+            hollow: {
+                size: '65%',
+            },
             dataLabels: {
-                position: 'top',
+                name: {
+                    show: false,
+                },
+                value: {
+                    show: false,
+                },
+                total: {
+                    show: true,
+                    label: 'Total',
+                    fontSize: '20px',
+                    fontWeight: 600,
+                    color: '#A0A0A0',
+                    formatter: function (w) {
+                        const total = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
+                        return total.toString();
+                    }
+                }
+            },
+            track: {
+                background: 'hsl(var(--muted))',
+                strokeWidth: '97%',
+                margin: 5, 
             },
         },
     },
     colors: ['#28A745', '#DC3545'],
-    dataLabels: {
-        enabled: true,
-        offsetX: -10,
-        style: {
-            fontSize: '14px',
-            fontWeight: 'bold',
-            colors: ['#fff']
+    labels: ['Completados', 'Pendientes'],
+    legend: {
+        show: true,
+        position: 'bottom',
+        horizontalAlign: 'center',
+        fontSize: '14px',
+        markers: {
+            radius: 12,
         },
-        dropShadow: {
-            enabled: true,
-            top: 1,
-            left: 1,
-            blur: 1,
-            opacity: 0.5
+        itemMargin: {
+            horizontal: 10,
+        },
+        labels: {
+            colors: '#A0A0A0'
         }
     },
     stroke: {
-        show: false,
-    },
-    xaxis: {
-        categories: ['Completados', 'Pendientes'],
-        labels: { show: false },
-        axisBorder: { show: false },
-        axisTicks: { show: false },
-    },
-    yaxis: {
-        labels: {
-            show: true,
-            style: {
-                colors: '#A0A0A0',
-                fontSize: '14px',
-                fontWeight: 500,
-            }
-        },
-    },
-    grid: {
-        show: false,
+      lineCap: "round"
     },
     tooltip: {
+        enabled: true,
         theme: 'dark',
-        shared: true,
-        intersect: false,
         y: {
-            formatter: (val) => val.toString(),
-            title: {
-                formatter: (seriesName) => `${seriesName}:`
+            formatter: function (val, { seriesIndex, w }) {
+                return `${val} - ${w.config.labels[seriesIndex]}`;
             }
         }
     },
-    legend: {
-        show: false,
-    },
-    fill: {
-        type: 'gradient',
-        gradient: {
-            shade: 'dark',
-            type: "horizontal",
-            shadeIntensity: 0.5,
-            gradientToColors: undefined, // let apex decide
-            inverseColors: true,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [0, 50, 100],
-            colorStops: []
-        }
-    }
 };
 
-const labResultsBarChartSeries = [{
-    data: [12, 4]
-}];
+const labResultsRadialChartSeries = [12, 4];
+
 
 export function LabResultsBarChart() {
     return (
@@ -216,9 +198,9 @@ export function LabResultsBarChart() {
             </CardHeader>
             <CardContent>
                 <Chart
-                    options={labResultsBarChartOptions}
-                    series={labResultsBarChartSeries}
-                    type="bar"
+                    options={labResultsRadialChartOptions}
+                    series={labResultsRadialChartSeries}
+                    type="radialBar"
                     height={250}
                     width="100%"
                 />
