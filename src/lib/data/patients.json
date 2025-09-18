@@ -83,5 +83,89 @@
       "phone": "555-0106",
       "email": "ana.perez@example.com"
     }
+  },
+  {
+    "id": "p-007",
+    "name": "Javier Fernández",
+    "age": 48,
+    "gender": "Masculino",
+    "bloodType": "B-",
+    "status": "Activo",
+    "lastVisit": "18/08/2025",
+    "avatarUrl": "https://picsum.photos/seed/7/200/200",
+    "contact": {
+      "phone": "555-0107",
+      "email": "javier.fernandez@example.com"
+    }
+  },
+  {
+    "id": "p-008",
+    "name": "Isabel Gómez",
+    "age": 63,
+    "gender": "Femenino",
+    "bloodType": "O+",
+    "status": "Inactivo",
+    "lastVisit": "22/07/2025",
+    "avatarUrl": "https://picsum.photos/seed/8/200/200",
+    "contact": {
+      "phone": "555-0108",
+      "email": "isabel.gomez@example.com"
+    }
+  },
+  {
+    "id": "p-009",
+    "name": "David López",
+    "age": 29,
+    "gender": "Masculino",
+    "bloodType": "A+",
+    "status": "Activo",
+    "lastVisit": "30/09/2025",
+    "avatarUrl": "https://picsum.photos/seed/9/200/200",
+    "contact": {
+      "phone": "555-0109",
+      "email": "david.lopez@example.com"
+    }
+  },
+  {
+    "id": "p-010",
+    "name": "Elena Díaz",
+    "age": 51,
+    "gender": "Femenino",
+    "bloodType": "AB-",
+    "status": "Activo",
+    "lastVisit": "03/10/2025",
+    "avatarUrl": "https://picsum.photos/seed/10/200/200",
+    "contact": {
+      "phone": "555-0110",
+      "email": "elena.diaz@example.com"
+    }
+  },
+  {
+    "id": "p-011",
+    "name": "Francisco Moreno",
+    "age": 80,
+    "gender": "Masculino",
+    "bloodType": "O-",
+    "status": "Inactivo",
+    "lastVisit": "11/06/2025",
+    "avatarUrl": "https://picsum.photos/seed/11/200/200",
+    "contact": {
+      "phone": "555-0111",
+      "email": "francisco.moreno@example.com"
+    }
+  },
+  {
+    "id": "p-012",
+    "name": "Lucía Jiménez",
+    "age": 35,
+    "gender": "Femenino",
+    "bloodType": "B+",
+    "status": "Activo",
+    "lastVisit": "25/09/2025",
+    "avatarUrl": "https://picsum.photos/seed/12/200/200",
+    "contact": {
+      "phone": "555-0112",
+      "email": "lucia.jimenez@example.com"
+    }
   }
 ]
