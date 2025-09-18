@@ -181,7 +181,10 @@ const labResultsRadialChartOptions: ApexOptions = {
         theme: 'dark',
         y: {
             formatter: function (val, { seriesIndex, w }) {
-                return `${val} - ${w.config.labels[seriesIndex]}`;
+                if (w && w.config && w.config.labels) {
+                    return `${val} - ${w.config.labels[seriesIndex]}`;
+                }
+                return val.toString();
             }
         }
     },
