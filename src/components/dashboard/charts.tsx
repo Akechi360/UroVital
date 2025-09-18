@@ -285,7 +285,7 @@ const psaChartOptions: ApexOptions = {
 };
 
 const psaChartSeries = [{
-    name: 'PSA Level',
+    name: 'Nivel de PSA',
     data: [2.5, 2.8, 3.0, 3.2, 3.5, 4.1]
 }];
 
@@ -294,7 +294,7 @@ export function PsaChart() {
     return (
         <Card className="rounded-2xl shadow-md hover:shadow-lg transition-all bg-card/50">
             <CardHeader>
-                <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">PSA Monitoring</CardTitle>
+                <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">Seguimiento de PSA</CardTitle>
             </CardHeader>
             <CardContent>
                 <Chart

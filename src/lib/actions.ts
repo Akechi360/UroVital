@@ -40,21 +40,21 @@ export async function getPatientMedicalHistoryAsString(patientId: string): Promi
     const consultations = (consultationsData as Consultation[]).filter(c => c.patientId === patientId);
 
     if (consultations.length === 0) {
-        return "No medical history found for this patient.";
+        return "No se encontró historial médico para este paciente.";
     }
 
     const historyString = consultations
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map(c => {
-            let entry = `Date: ${new Date(c.date).toLocaleDateString()}\nType: ${c.type}\nDoctor: ${c.doctor}\nNotes: ${c.notes}`;
+            let entry = `Fecha: ${new Date(c.date).toLocaleDateString()}\nTipo: ${c.type}\nDoctor: ${c.doctor}\nNotas: ${c.notes}`;
             if (c.prescriptions && c.prescriptions.length > 0) {
-                entry += `\nPrescriptions: ${c.prescriptions.map(p => p.medication).join(', ')}`;
+                entry += `\nRecetas: ${c.prescriptions.map(p => p.medication).join(', ')}`;
             }
             if (c.labResults && c.labResults.length > 0) {
-                entry += `\nLab Results: ${c.labResults.map(l => `${l.testName}: ${l.value ? l.value : 'N/A'}`).join(', ')}`;
+                entry += `\nResultados de Laboratorio: ${c.labResults.map(l => `${l.testName}: ${l.value ? l.value : 'N/A'}`).join(', ')}`;
             }
             if(c.reports && c.reports.length > 0) {
-                entry += `\nReports: ${c.reports.map(r => r.title).join(', ')}`;
+                entry += `\nInformes: ${c.reports.map(r => r.title).join(', ')}`;
             }
             return entry;
         })
@@ -79,5 +79,5 @@ export async function login(credentials: { email: string, password?: string }): 
         return { success: true, user: user };
     }
   }
-  return { success: false, error: 'Invalid email or password.' };
+  return { success: false, error: 'Email o contraseña inválidos.' };
 }

@@ -22,18 +22,18 @@ import { useToast } from '@/hooks/use-toast';
 import { login } from '@/lib/actions';
 
 const loginSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address.' }),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+  email: z.string().email({ message: 'Dirección de correo inválida.' }),
+  password: z.string().min(8, { message: 'La contraseña debe tener al menos 8 caracteres.' }),
 });
 
 const registerSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  email: z.string().email({ message: 'Invalid email address.' }),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+  name: z.string().min(2, { message: 'El nombre debe tener al menos 2 caracteres.' }),
+  email: z.string().email({ message: 'Dirección de correo inválida.' }),
+  password: z.string().min(8, { message: 'La contraseña debe tener al menos 8 caracteres.' }),
 });
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address.' }),
+  email: z.string().email({ message: 'Dirección de correo inválida.' }),
 });
 
 type AuthMode = 'login' | 'register' | 'forgot-password';
@@ -66,33 +66,41 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
     if (mode === 'login') {
         const result = await login(values as z.infer<typeof loginSchema>);
         if (result.success) {
-            toast({ title: "Login successful", description: "Redirecting to dashboard..." });
+            toast({ title: "Inicio de sesión exitoso", description: "Redirigiendo al panel..." });
             localStorage.setItem("isAuthenticated", "true");
             router.push('/dashboard');
         } else {
-            toast({ variant: "destructive", title: "Login Failed", description: result.error });
+            toast({ variant: "destructive", title: "Fallo en el inicio de sesión", description: result.error });
         }
     } else {
-      toast({ title: `Mock ${mode} successful!`, description: `Data: ${JSON.stringify(values)}` });
+      toast({ title: `¡Simulación de ${mode} exitosa!`, description: `Datos: ${JSON.stringify(values)}` });
       if (mode === 'register') setMode('login');
     }
   };
 
   const getTitle = () => {
     switch (mode) {
-      case 'login': return 'Welcome Back';
-      case 'register': return 'Create Account';
-      case 'forgot-password': return 'Reset Password';
+      case 'login': return 'Bienvenido de Nuevo';
+      case 'register': return 'Crear Cuenta';
+      case 'forgot-password': return 'Restablecer Contraseña';
     }
   };
 
   const getDescription = () => {
     switch (mode) {
-      case 'login': return 'Sign in to access your dashboard.';
-      case 'register': return 'Join UroFlow today.';
-      case 'forgot-password': return 'Enter your email to receive a reset link.';
+      case 'login': return 'Inicia sesión para acceder a tu panel.';
+      case 'register': return 'Únete a UroFlow hoy.';
+      case 'forgot-password': return 'Ingresa tu correo para recibir un enlace de restablecimiento.';
     }
   };
+
+  const getButtonText = () => {
+    switch (mode) {
+        case 'login': return 'Iniciar Sesión';
+        case 'register': return 'Registrarse';
+        case 'forgot-password': return 'Enviar Enlace';
+      }
+  }
 
   return (
     <div className="w-full max-w-md overflow-hidden rounded-2xl border border-border/20 bg-card/50 shadow-2xl shadow-primary/10 backdrop-blur-lg">
@@ -117,9 +125,9 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Full Name</FormLabel>
+                        <FormLabel>Nombre Completo</FormLabel>
                         <FormControl>
-                          <Input placeholder="Dr. John Doe" {...field} />
+                          <Input placeholder="Dr. Juan Pérez" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -132,7 +140,7 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email Address</FormLabel>
+                        <FormLabel>Dirección de Email</FormLabel>
                         <FormControl>
                           <Input type="email" placeholder="doctor@uroflow.com" {...field} />
                         </FormControl>
@@ -148,10 +156,10 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
                     render={({ field }) => (
                       <FormItem>
                         <div className="flex items-center justify-between">
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel>Contraseña</FormLabel>
                             {mode === 'login' && (
                                 <button type="button" onClick={() => setMode('forgot-password')} className="text-sm font-medium text-primary hover:underline">
-                                    Forgot?
+                                    ¿Olvidaste?
                                 </button>
                             )}
                         </div>
@@ -166,7 +174,7 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
               </div>
 
             <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? 'Processing...' : getTitle()}
+              {form.formState.isSubmitting ? 'Procesando...' : getButtonText()}
               <LogIn className="ml-2 h-4 w-4" />
             </Button>
           </form>
@@ -174,25 +182,25 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
         <div className="mt-6 text-center text-sm">
           {mode === 'login' && (
             <p className="text-muted-foreground">
-              Don&apos;t have an account?{' '}
+              ¿No tienes una cuenta?{' '}
               <button onClick={() => {form.reset(); setMode('register')}} className="font-medium text-primary hover:underline">
-                Register
+                Regístrate
               </button>
             </p>
           )}
           {mode === 'register' && (
             <p className="text-muted-foreground">
-              Already have an account?{' '}
+              ¿Ya tienes una cuenta?{' '}
               <button onClick={() => {form.reset(); setMode('login')}} className="font-medium text-primary hover:underline">
-                Login
+                Inicia Sesión
               </button>
             </p>
           )}
            {mode === 'forgot-password' && (
             <p className="text-muted-foreground">
-              Remember your password?{' '}
+              ¿Recuerdas tu contraseña?{' '}
               <button onClick={() => {form.reset(); setMode('login')}} className="font-medium text-primary hover:underline">
-                Login
+                Inicia Sesión
               </button>
             </p>
           )}

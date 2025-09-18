@@ -18,7 +18,7 @@ export default function ReportGenerationClient({ medicalHistory, patientId }: { 
     const { toast } = useToast();
 
     const handleGenerateReport = () => {
-        if (!medicalHistory || medicalHistory === "No medical history found for this patient.") return;
+        if (!medicalHistory || medicalHistory === "No se encontró historial médico para este paciente.") return;
         setIsGenerating(true);
         setReport('');
         startTransition(async () => {
@@ -26,12 +26,12 @@ export default function ReportGenerationClient({ medicalHistory, patientId }: { 
                 const result = await generateReportFromTimeline({ patientTimeline: medicalHistory });
                 setReport(result.report);
             } catch (error) {
-                console.error("Failed to generate report:", error);
-                setReport("Could not generate report at this time.");
+                console.error("Fallo al generar el informe:", error);
+                setReport("No se pudo generar el informe en este momento.");
                 toast({
                     variant: "destructive",
-                    title: "Report Generation Failed",
-                    description: "An error occurred while generating the report.",
+                    title: "Fallo en la Generación del Informe",
+                    description: "Ocurrió un error mientras se generaba el informe.",
                 });
             } finally {
                 setIsGenerating(false);
@@ -40,32 +40,32 @@ export default function ReportGenerationClient({ medicalHistory, patientId }: { 
     };
 
     const handleSaveReport = () => {
-        // In a real application, this would save the report to the database
-        // and associate it with the patient's medical history.
-        console.log("Saving report for patient:", patientId, report);
+        // En una aplicación real, esto guardaría el informe en la base de datos
+        // y lo asociaría con el historial médico del paciente.
+        console.log("Guardando informe para el paciente:", patientId, report);
         toast({
-            title: "Report Saved (Mock)",
-            description: "The generated report has been added to the patient's history.",
+            title: "Informe Guardado (Simulación)",
+            description: "El informe generado ha sido añadido al historial del paciente.",
         });
     };
     
     const handleExport = () => {
-        // In a real application, this would generate and download a PDF.
+        // En una aplicación real, esto generaría y descargaría un PDF.
         toast({
-            title: "Exporting Report (Mock)",
-            description: "A PDF of the report would be downloaded.",
+            title: "Exportando Informe (Simulación)",
+            description: "Se descargaría un PDF del informe.",
         });
     }
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>AI-Powered Report Generation</CardTitle>
-                <CardDescription>Generate a comprehensive medical report from the patient's timeline.</CardDescription>
+                <CardTitle>Generación de Informes con IA</CardTitle>
+                <CardDescription>Genera un informe médico completo a partir de la cronología del paciente.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                  <div className="space-y-2">
-                    <h3 className="font-semibold text-sm">Patient Timeline Source</h3>
+                    <h3 className="font-semibold text-sm">Fuente de Cronología del Paciente</h3>
                     <Textarea
                         readOnly
                         value={medicalHistory}
@@ -73,9 +73,9 @@ export default function ReportGenerationClient({ medicalHistory, patientId }: { 
                         />
                 </div>
                 <div>
-                    <Button onClick={handleGenerateReport} disabled={isPending || isGenerating || medicalHistory === "No medical history found for this patient."}>
+                    <Button onClick={handleGenerateReport} disabled={isPending || isGenerating || medicalHistory === "No se encontró historial médico para este paciente."}>
                         <Wand2 className="mr-2 h-4 w-4" />
-                        {isPending || isGenerating ? 'Generating Report...' : 'Generate Detailed Report'}
+                        {isPending || isGenerating ? 'Generando Informe...' : 'Generar Informe Detallado'}
                     </Button>
                 </div>
                 
@@ -96,10 +96,10 @@ export default function ReportGenerationClient({ medicalHistory, patientId }: { 
 
                 {report && !isGenerating && (
                     <div className="pt-4">
-                        <h3 className="font-semibold text-lg mb-2">Generated Report</h3>
+                        <h3 className="font-semibold text-lg mb-2">Informe Generado</h3>
                         <div className="prose prose-sm dark:prose-invert max-w-none rounded-md border bg-background p-6 text-card-foreground">
-                            <h4 className="font-bold !text-base mt-0">Medical Report</h4>
-                            <p className="text-xs text-muted-foreground !mt-0 !mb-4">Generated on: {format(new Date(), 'MMMM d, yyyy')}</p>
+                            <h4 className="font-bold !text-base mt-0">Informe Médico</h4>
+                            <p className="text-xs text-muted-foreground !mt-0 !mb-4">Generado el: {format(new Date(), 'd \'de\' MMMM \'de\' yyyy')}</p>
                             {report.split('\n').map((paragraph, i) => (
                                 <p key={i}>{paragraph || '\u00A0'}</p>
                             ))}
@@ -111,9 +111,9 @@ export default function ReportGenerationClient({ medicalHistory, patientId }: { 
                     <div className="text-center text-muted-foreground py-12 border rounded-lg bg-muted/20">
                         <Wand2 className="mx-auto h-12 w-12 text-muted-foreground/50" />
                         <p className="mt-4">
-                            {medicalHistory === "No medical history found for this patient."
-                            ? "No medical history available to generate a report."
-                            : "Click the button above to generate a comprehensive report."}
+                            {medicalHistory === "No se encontró historial médico para este paciente."
+                            ? "No hay historial médico disponible para generar un informe."
+                            : "Haz clic en el botón de arriba para generar un informe completo."}
                         </p>
                     </div>
                  )}
@@ -122,11 +122,11 @@ export default function ReportGenerationClient({ medicalHistory, patientId }: { 
                 <CardFooter className="justify-end gap-2 border-t pt-6">
                     <Button variant="outline" onClick={handleSaveReport}>
                         <Save className="mr-2 h-4 w-4" />
-                        Save to Timeline
+                        Guardar en Cronología
                     </Button>
                     <Button onClick={handleExport}>
                         <FileDown className="mr-2 h-4 w-4" />
-                        Export as PDF
+                        Exportar como PDF
                     </Button>
                 </CardFooter>
             )}

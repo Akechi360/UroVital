@@ -17,17 +17,17 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const formSchema = z.object({
-  date: z.date({ required_error: "A date is required." }),
-  doctor: z.string().min(2, "Doctor name is required."),
-  type: z.string().min(1, "Consultation type is required."),
-  notes: z.string().min(10, "Notes must be at least 10 characters."),
+  date: z.date({ required_error: "Se requiere una fecha." }),
+  doctor: z.string().min(2, "Se requiere el nombre del doctor."),
+  type: z.string().min(1, "Se requiere el tipo de consulta."),
+  notes: z.string().min(10, "Las notas deben tener al menos 10 caracteres."),
   prescriptions: z.array(z.object({
-    medication: z.string().min(1, "Medication is required."),
-    dosage: z.string().min(1, "Dosage is required."),
-    duration: z.string().min(1, "Duration is required."),
+    medication: z.string().min(1, "Se requiere el medicamento."),
+    dosage: z.string().min(1, "Se requiere la dosis."),
+    duration: z.string().min(1, "Se requiere la duración."),
   })).optional(),
   reports: z.array(z.object({
-    title: z.string().min(1, "Report title is required."),
+    title: z.string().min(1, "Se requiere el título del informe."),
   })).optional(),
 })
 
@@ -43,7 +43,7 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
     defaultValues: {
         date: new Date(),
         doctor: "Dr. John Doe",
-        type: "Initial",
+        type: "Inicial",
         notes: "",
         prescriptions: [],
         reports: [],
@@ -63,8 +63,8 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log({ patientId, ...values });
     toast({
-      title: "Consultation Added",
-      description: "The new consultation record has been saved.",
+      title: "Consulta Añadida",
+      description: "El nuevo registro de consulta ha sido guardado.",
     })
     onFormSubmit();
   }
@@ -79,7 +79,7 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Date of Consultation</FormLabel>
+                  <FormLabel>Fecha de la Consulta</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -90,7 +90,7 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
                             !field.value && "text-muted-foreground"
                           )}
                         >
-                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                          {field.value ? format(field.value, "PPP") : <span>Elige una fecha</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -114,18 +114,18 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type</FormLabel>
+                  <FormLabel>Tipo</FormLabel>
                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select consultation type" />
+                        <SelectValue placeholder="Selecciona el tipo de consulta" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Initial">Initial</SelectItem>
-                      <SelectItem value="Follow-up">Follow-up</SelectItem>
-                      <SelectItem value="Pre-operative">Pre-operative</SelectItem>
-                      <SelectItem value="Post-operative">Post-operative</SelectItem>
+                      <SelectItem value="Inicial">Inicial</SelectItem>
+                      <SelectItem value="Seguimiento">Seguimiento</SelectItem>
+                      <SelectItem value="Pre-operatorio">Pre-operatorio</SelectItem>
+                      <SelectItem value="Post-operatorio">Post-operatorio</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -137,9 +137,9 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Notes</FormLabel>
+                  <FormLabel>Notas</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Enter clinical notes..." {...field} rows={5} />
+                    <Textarea placeholder="Introduce notas clínicas..." {...field} rows={5} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -151,7 +151,7 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
                 <AccordionTrigger>
                   <div className="flex items-center gap-2">
                     <Pill className="h-5 w-5 text-primary" />
-                    Prescriptions ({prescriptionFields.length})
+                    Recetas ({prescriptionFields.length})
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -162,21 +162,21 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
                           <Trash2 className="h-4 w-4" />
                         </Button>
                         <FormField control={form.control} name={`prescriptions.${index}.medication`} render={({ field }) => (
-                            <FormItem><FormLabel>Medication</FormLabel><FormControl><Input placeholder="e.g. Tamsulosin" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Medicamento</FormLabel><FormControl><Input placeholder="ej. Tamsulosina" {...field} /></FormControl><FormMessage /></FormItem>
                         )}/>
                         <div className="grid grid-cols-2 gap-4">
                             <FormField control={form.control} name={`prescriptions.${index}.dosage`} render={({ field }) => (
-                                <FormItem><FormLabel>Dosage</FormLabel><FormControl><Input placeholder="e.g. 0.4mg" {...field} /></FormControl><FormMessage /></FormItem>
+                                <FormItem><FormLabel>Dosis</FormLabel><FormControl><Input placeholder="ej. 0.4mg" {...field} /></FormControl><FormMessage /></FormItem>
                             )}/>
                             <FormField control={form.control} name={`prescriptions.${index}.duration`} render={({ field }) => (
-                                <FormItem><FormLabel>Duration</FormLabel><FormControl><Input placeholder="e.g. 90 days" {...field} /></FormControl><FormMessage /></FormItem>
+                                <FormItem><FormLabel>Duración</FormLabel><FormControl><Input placeholder="ej. 90 días" {...field} /></FormControl><FormMessage /></FormItem>
                             )}/>
                         </div>
                       </div>
                     ))}
                     <Button type="button" variant="outline" className="w-full" onClick={() => appendPrescription({ medication: "", dosage: "", duration: "" })}>
                       <PlusCircle className="mr-2 h-4 w-4" />
-                      Add Prescription
+                      Añadir Receta
                     </Button>
                   </div>
                 </AccordionContent>
@@ -185,7 +185,7 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
                 <AccordionTrigger>
                   <div className="flex items-center gap-2">
                     <FileText className="h-5 w-5 text-primary" />
-                    Reports ({reportFields.length})
+                    Informes ({reportFields.length})
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -196,10 +196,10 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
                           <Trash2 className="h-4 w-4" />
                         </Button>
                         <FormField control={form.control} name={`reports.${index}.title`} render={({ field }) => (
-                            <FormItem><FormLabel>Report Title</FormLabel><FormControl><Input placeholder="e.g. Renal Ultrasound Results" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Título del Informe</FormLabel><FormControl><Input placeholder="ej. Resultados Ecografía Renal" {...field} /></FormControl><FormMessage /></FormItem>
                         )}/>
                         <FormItem>
-                            <FormLabel>File</FormLabel>
+                            <FormLabel>Archivo</FormLabel>
                             <FormControl>
                                 <Input type="file" className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"/>
                             </FormControl>
@@ -208,7 +208,7 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
                     ))}
                      <Button type="button" variant="outline" className="w-full" onClick={() => appendReport({ title: "" })}>
                       <PlusCircle className="mr-2 h-4 w-4" />
-                      Add Report
+                      Añadir Informe
                     </Button>
                   </div>
                 </AccordionContent>
@@ -217,7 +217,7 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
           </div>
         </ScrollArea>
         <div className="pt-4 flex justify-end">
-            <Button type="submit">Save Consultation</Button>
+            <Button type="submit">Guardar Consulta</Button>
         </div>
       </form>
     </Form>

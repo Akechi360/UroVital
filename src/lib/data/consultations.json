@@ -4,10 +4,10 @@
     "patientId": "p-001",
     "date": "2024-05-20T10:00:00Z",
     "doctor": "Dr. John Doe",
-    "type": "Initial",
-    "notes": "Patient presents with symptoms of BPH. PSA level is slightly elevated. Recommending further tests and a follow-up in 3 months.",
+    "type": "Inicial",
+    "notes": "Paciente presenta síntomas de HBP. Nivel de PSA ligeramente elevado. Se recomiendan más pruebas y seguimiento en 3 meses.",
     "prescriptions": [
-      { "id": "rx-001", "medication": "Tamsulosin 0.4mg", "dosage": "1 daily", "duration": "90 days" }
+      { "id": "rx-001", "medication": "Tamsulosina 0.4mg", "dosage": "1 diaria", "duration": "90 días" }
     ],
     "labResults": [],
     "reports": []
@@ -17,14 +17,14 @@
     "patientId": "p-001",
     "date": "2024-08-15T10:00:00Z",
     "doctor": "Dr. John Doe",
-    "type": "Follow-up",
-    "notes": "Follow-up for BPH. Patient reports improvement in symptoms. PSA level is stable. Continue medication and monitor.",
+    "type": "Seguimiento",
+    "notes": "Seguimiento por HBP. Paciente reporta mejoría en los síntomas. Nivel de PSA estable. Continuar medicación y monitoreo.",
     "prescriptions": [],
     "labResults": [
       { "id": "lab-001", "testName": "PSA", "value": "4.2 ng/mL", "date": "2024-08-10T10:00:00Z" }
     ],
     "reports": [
-       { "id": "rep-001", "title": "Ultrasound Report", "date": "2024-08-12T10:00:00Z", "fileUrl": "#" }
+       { "id": "rep-001", "title": "Informe de Ecografía", "date": "2024-08-12T10:00:00Z", "fileUrl": "#" }
     ]
   },
   {
@@ -32,10 +32,10 @@
     "patientId": "p-002",
     "date": "2024-07-01T11:30:00Z",
     "doctor": "Dr. John Doe",
-    "type": "Initial",
-    "notes": "Patient presents with recurrent UTIs. Physical exam is normal. Urine culture ordered.",
+    "type": "Inicial",
+    "notes": "Paciente presenta ITU recurrentes. Examen físico normal. Se solicitó urocultivo.",
     "prescriptions": [
-      { "id": "rx-002", "medication": "Ciprofloxacin 500mg", "dosage": "2 daily", "duration": "7 days" }
+      { "id": "rx-002", "medication": "Ciprofloxacino 500mg", "dosage": "2 diarias", "duration": "7 días" }
     ],
     "labResults": [],
     "reports": []
@@ -45,8 +45,8 @@
     "patientId": "p-003",
     "date": "2023-11-10T09:00:00Z",
     "doctor": "Dr. Jane Smith",
-    "type": "Pre-operative",
-    "notes": "Patient scheduled for TURP procedure. Pre-operative assessment completed. Patient is cleared for surgery.",
+    "type": "Pre-operatorio",
+    "notes": "Paciente programado para procedimiento de RTUP. Evaluación preoperatoria completada. Paciente apto para cirugía.",
     "prescriptions": [],
     "labResults": [],
     "reports": []

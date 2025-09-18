@@ -7,9 +7,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const TABS = [
-  { name: 'Profile', href: '/settings/profile', icon: User },
-  { name: 'Security', href: '/settings/security', icon: Lock },
-  { name: 'Preferences', href: '/settings/preferences', icon: SettingsIcon },
+  { name: 'Perfil', href: '/settings/profile', icon: User },
+  { name: 'Seguridad', href: '/settings/security', icon: Lock },
+  { name: 'Preferencias', href: '/settings/preferences', icon: SettingsIcon },
 ];
 
 export default function SettingsLayout({
@@ -21,7 +21,7 @@ export default function SettingsLayout({
 
   return (
     <div className="flex flex-col gap-8">
-      <PageHeader title="Settings" />
+      <PageHeader title="Configuración" />
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
         <div className="lg:col-span-1">
           <Tabs defaultValue={pathname} orientation="vertical" className="w-full">

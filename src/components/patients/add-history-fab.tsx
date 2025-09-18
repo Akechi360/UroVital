@@ -21,14 +21,14 @@ export function AddHistoryFab({ patient }: { patient: Patient }) {
             <DialogTrigger asChild>
                 <Button className="fixed bottom-8 right-8 h-16 w-16 rounded-full shadow-lg bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90">
                     <ClipboardPlus className="h-8 w-8" />
-                    <span className="sr-only">Add Medical History</span>
+                    <span className="sr-only">Agregar Historial Médico</span>
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                <DialogTitle>Add New Consultation</DialogTitle>
+                <DialogTitle>Añadir Nueva Consulta</DialogTitle>
                 <DialogDescription>
-                    Fill in the details for the new consultation record.
+                    Rellena los detalles para el nuevo registro de consulta.
                 </DialogDescription>
                 </DialogHeader>
                 <ConsultationForm patientId={patient.id} onFormSubmit={() => setOpen(false)} />

@@ -25,18 +25,18 @@ export default async function UrologyDataPage({ params }: { params: { patientId:
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card className="rounded-2xl shadow-md hover:shadow-lg transition-all bg-card/50">
                     <CardHeader>
-                        <CardTitle>Uroflowmetry Results</CardTitle>
-                        <CardDescription>Historical uroflowmetry data for the patient.</CardDescription>
+                        <CardTitle>Resultados de Uroflujometría</CardTitle>
+                        <CardDescription>Datos históricos de uroflujometría del paciente.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                <TableHead>Date</TableHead>
+                                <TableHead>Fecha</TableHead>
                                 <TableHead>Qmax</TableHead>
-                                <TableHead>Avg. Flow</TableHead>
-                                <TableHead>Voided Volume</TableHead>
-                                <TableHead>PVR</TableHead>
+                                <TableHead>Flujo Prom.</TableHead>
+                                <TableHead>Vol. Miccional</TableHead>
+                                <TableHead>RPM</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>

@@ -14,18 +14,18 @@ export default function LabResultsCard({ labResults }: LabResultsCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Lab Results</CardTitle>
-        <CardDescription>Recent and historical lab results.</CardDescription>
+        <CardTitle>Resultados de Laboratorio</CardTitle>
+        <CardDescription>Resultados de laboratorio recientes e históricos.</CardDescription>
       </CardHeader>
       <CardContent>
         {sortedResults.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Test Name</TableHead>
-                <TableHead>Value</TableHead>
-                <TableHead>Reference</TableHead>
+                <TableHead>Fecha</TableHead>
+                <TableHead>Prueba</TableHead>
+                <TableHead>Valor</TableHead>
+                <TableHead>Referencia</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -42,8 +42,8 @@ export default function LabResultsCard({ labResults }: LabResultsCardProps) {
         ) : (
           <div className="text-center text-muted-foreground flex flex-col items-center justify-center h-48">
             <Microscope className="mx-auto h-12 w-12" />
-            <h3 className="mt-2 text-lg font-medium">No Lab Results</h3>
-            <p className="mt-1 text-sm">No lab results found for this patient.</p>
+            <h3 className="mt-2 text-lg font-medium">Sin Resultados de Laboratorio</h3>
+            <p className="mt-1 text-sm">No se encontraron resultados de laboratorio para este paciente.</p>
           </div>
         )}
       </CardContent>

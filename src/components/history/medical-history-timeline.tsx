@@ -26,8 +26,8 @@ export function MedicalHistoryTimeline({ history }: MedicalHistoryTimelineProps)
                 {history.length === 0 && (
                     <div className="text-center text-muted-foreground py-10">
                         <Stethoscope className="mx-auto h-12 w-12" />
-                        <h3 className="mt-2 text-lg font-medium">No Medical History</h3>
-                        <p className="mt-1 text-sm">Add the first consultation record for this patient.</p>
+                        <h3 className="mt-2 text-lg font-medium">Sin Historial Médico</h3>
+                        <p className="mt-1 text-sm">Añade el primer registro de consulta para este paciente.</p>
                     </div>
                 )}
             </div>

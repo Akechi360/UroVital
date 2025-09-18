@@ -18,7 +18,7 @@ export interface Appointment {
   patientId: string;
   date: string;
   reason: string;
-  status: 'Scheduled' | 'Completed' | 'Canceled';
+  status: 'Programada' | 'Completada' | 'Cancelada';
 }
 
 export interface Prescription {
@@ -49,7 +49,7 @@ export interface Consultation {
     patientId: string;
     date: string;
     doctor: string;
-    type: 'Initial' | 'Follow-up' | 'Pre-operative' | 'Post-operative';
+    type: 'Inicial' | 'Seguimiento' | 'Pre-operatorio' | 'Post-operatorio';
     notes: string;
     prescriptions: Prescription[];
     labResults: LabResult[];

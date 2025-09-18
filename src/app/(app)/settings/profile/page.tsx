@@ -7,13 +7,13 @@ export default function ProfilePage() {
   return (
     <Card className="border-none shadow-none">
       <CardHeader>
-        <CardTitle>Profile</CardTitle>
-        <CardDescription>Update your personal information.</CardDescription>
+        <CardTitle>Perfil</CardTitle>
+        <CardDescription>Actualiza tu información personal.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">Nombre</Label>
             <Input id="name" defaultValue="Dr. John Doe" />
           </div>
           <div className="space-y-2">
@@ -22,10 +22,10 @@ export default function ProfilePage() {
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="specialty">Specialty</Label>
-          <Input id="specialty" defaultValue="Urology" />
+          <Label htmlFor="specialty">Especialidad</Label>
+          <Input id="specialty" defaultValue="Urología" />
         </div>
-        <Button>Save Changes</Button>
+        <Button>Guardar Cambios</Button>
       </CardContent>
     </Card>
   )

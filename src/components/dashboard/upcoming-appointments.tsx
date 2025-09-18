@@ -19,7 +19,7 @@ export async function UpcomingAppointments({ appointments }: UpcomingAppointment
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Upcoming Appointments</CardTitle>
+        <CardTitle>Próximas Citas</CardTitle>
       </CardHeader>
       <CardContent>
         {appointmentsWithPatients.length > 0 ? (
@@ -42,7 +42,7 @@ export async function UpcomingAppointments({ appointments }: UpcomingAppointment
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">No upcoming appointments.</p>
+          <p className="text-sm text-muted-foreground">No hay próximas citas.</p>
         )}
       </CardContent>
     </Card>

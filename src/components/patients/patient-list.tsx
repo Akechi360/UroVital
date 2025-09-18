@@ -120,20 +120,20 @@ export default function PatientList({ patients }: PatientListProps) {
                     <PopoverTrigger asChild>
                         <Button variant="outline">
                             <Filter className="mr-2 h-4 w-4" />
-                            Filters
+                            Filtros
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-80">
                         <div className="grid gap-4">
                             <div className="space-y-2">
-                                <h4 className="font-medium leading-none">Filters</h4>
+                                <h4 className="font-medium leading-none">Filtros</h4>
                                 <p className="text-sm text-muted-foreground">
-                                Adjust the filters to refine the patient list.
+                                Ajusta los filtros para refinar la lista de pacientes.
                                 </p>
                             </div>
                             <div className="grid gap-2">
                                 <div className="grid grid-cols-3 items-center gap-4">
-                                    <Label htmlFor="gender">Gender</Label>
+                                    <Label htmlFor="gender">Género</Label>
                                     <Select value={genderFilter} onValueChange={setGenderFilter}>
                                         <SelectTrigger className="w-full sm:w-[180px] bg-card/50 backdrop-blur-lg col-span-2">
                                             <SelectValue placeholder="Filtrar por género" />
@@ -146,7 +146,7 @@ export default function PatientList({ patients }: PatientListProps) {
                                     </Select>
                                 </div>
                                 <div className="grid grid-cols-3 items-center gap-4">
-                                    <Label htmlFor="status">Status</Label>
+                                    <Label htmlFor="status">Estado</Label>
                                     <Select value={statusFilter} onValueChange={setStatusFilter}>
                                         <SelectTrigger className="w-full sm:w-[180px] bg-card/50 backdrop-blur-lg col-span-2">
                                             <SelectValue placeholder="Filtrar por estado" />

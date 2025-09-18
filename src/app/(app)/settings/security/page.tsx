@@ -7,23 +7,23 @@ export default function SecurityPage() {
   return (
     <Card className="border-none shadow-none">
       <CardHeader>
-        <CardTitle>Security</CardTitle>
-        <CardDescription>Change your password.</CardDescription>
+        <CardTitle>Seguridad</CardTitle>
+        <CardDescription>Cambia tu contraseña.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="current-password">Current Password</Label>
+          <Label htmlFor="current-password">Contraseña Actual</Label>
           <Input id="current-password" type="password" />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="new-password">New Password</Label>
+          <Label htmlFor="new-password">Nueva Contraseña</Label>
           <Input id="new-password" type="password" />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirm-password">Confirm New Password</Label>
+          <Label htmlFor="confirm-password">Confirmar Nueva Contraseña</Label>
           <Input id="confirm-password" type="password" />
         </div>
-        <Button>Change Password</Button>
+        <Button>Cambiar Contraseña</Button>
       </CardContent>
     </Card>
   )

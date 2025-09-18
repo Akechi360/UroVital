@@ -16,7 +16,7 @@ export function PageHeader({ title, backHref, actions }: PageHeaderProps) {
                 <Button variant="outline" size="icon" asChild>
                     <Link href={backHref}>
                         <ArrowLeft className="h-4 w-4" />
-                        <span className="sr-only">Back</span>
+                        <span className="sr-only">Volver</span>
                     </Link>
                 </Button>
             )}

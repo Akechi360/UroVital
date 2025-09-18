@@ -22,9 +22,9 @@ export default function PatientDetailHeader({ patient }: PatientDetailHeaderProp
           <div className="flex-1 space-y-3">
             <h2 className="text-2xl font-bold font-headline sr-only">{patient.name}</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm text-muted-foreground">
-              <div className="flex items-center"><User className="w-4 h-4 mr-2 text-primary" /> {patient.age} years old</div>
+              <div className="flex items-center"><User className="w-4 h-4 mr-2 text-primary" /> {patient.age} años</div>
               <div className="flex items-center"><HeartPulse className="w-4 h-4 mr-2 text-primary" /> {patient.gender}</div>
-              <div className="flex items-center"><Droplets className="w-4 h-4 mr-2 text-primary" /> Blood Type: {patient.bloodType}</div>
+              <div className="flex items-center"><Droplets className="w-4 h-4 mr-2 text-primary" /> Grupo Sanguíneo: {patient.bloodType}</div>
               <div className="flex items-center"><Phone className="w-4 h-4 mr-2 text-primary" /> {patient.contact.phone}</div>
               <div className="flex items-center col-span-2"><Mail className="w-4 h-4 mr-2 text-primary" /> {patient.contact.email}</div>
             </div>

@@ -7,15 +7,15 @@ export default function PreferencesPage() {
   return (
     <Card className="border-none shadow-none">
       <CardHeader>
-        <CardTitle>Preferences</CardTitle>
-        <CardDescription>Manage your language and notification settings.</CardDescription>
+        <CardTitle>Preferencias</CardTitle>
+        <CardDescription>Administra tu idioma y configuración de notificaciones.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="language">Language</Label>
-          <Select defaultValue="en">
+          <Label htmlFor="language">Idioma</Label>
+          <Select defaultValue="es">
             <SelectTrigger id="language" className="w-[200px]">
-              <SelectValue placeholder="Select language" />
+              <SelectValue placeholder="Seleccionar idioma" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="en">English</SelectItem>
@@ -24,14 +24,14 @@ export default function PreferencesPage() {
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Email Notifications</Label>
+          <Label>Notificaciones por Email</Label>
           <div className="flex items-center space-x-4">
-            <Button variant="outline">All</Button>
-            <Button variant="outline">Only mentions</Button>
-            <Button variant="destructive">None</Button>
+            <Button variant="outline">Todas</Button>
+            <Button variant="outline">Solo menciones</Button>
+            <Button variant="destructive">Ninguna</Button>
           </div>
         </div>
-        <Button>Save Preferences</Button>
+        <Button>Guardar Preferencias</Button>
       </CardContent>
     </Card>
   )
