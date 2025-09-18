@@ -1,40 +1,60 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+'use client';
+
 import type { LucideIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 
 interface StatCardProps {
   title: string;
   value: string | number;
   icon: LucideIcon;
-  description: string;
-  trend?: string;
-  trendColor?: 'success' | 'destructive' | 'muted';
+  subtext: string;
+  trend: 'up' | 'down' | 'stale';
+  index: number;
 }
 
-export function StatCard({ title, value, icon: Icon, description, trend, trendColor = 'muted' }: StatCardProps) {
+const trendConfig = {
+  up: {
+    icon: ArrowUpRight,
+    color: 'text-success',
+  },
+  down: {
+    icon: ArrowDownRight,
+    color: 'text-destructive',
+  },
+  stale: {
+    icon: Minus,
+    color: 'text-muted-foreground',
+  },
+};
 
-  const trendBadgeClasses = {
-    success: 'bg-success/10 text-success border-success/20',
-    destructive: 'bg-destructive/10 text-destructive border-destructive/20',
-    muted: 'bg-muted text-muted-foreground border-border',
-  }
+export function StatCard({ title, value, icon: Icon, subtext, trend, index }: StatCardProps) {
+  const TrendIcon = trendConfig[trend].icon;
+  const trendColor = trendConfig[trend].color;
 
   return (
-    <Card>
-      <CardHeader className="pb-4">
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+      className="transform-gpu"
+    >
+      <div className="group relative rounded-2xl border border-border/20 bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
         <div className="flex items-start justify-between">
-          <CardTitle className="text-sm font-medium text-muted-foreground tracking-wider uppercase">{title}</CardTitle>
-          <Icon className="h-5 w-5 text-muted-foreground" />
+            <div className="flex flex-col gap-1">
+                <h3 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">{title}</h3>
+                <p className="text-3xl font-bold text-foreground">{value}</p>
+            </div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
+                <Icon className="h-5 w-5 text-primary-foreground" />
+            </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-baseline gap-4">
-            <div className="text-4xl font-bold">{value}</div>
-            {trend && <Badge variant="outline" className={cn("text-xs", trendBadgeClasses[trendColor])}>{trend}</Badge>}
+        <div className="mt-4 flex items-center gap-2">
+            <TrendIcon className={cn("h-4 w-4", trendColor)} />
+            <p className="text-xs text-muted-foreground">{subtext}</p>
         </div>
-        <p className="text-xs text-muted-foreground pt-1">{description}</p>
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 }
