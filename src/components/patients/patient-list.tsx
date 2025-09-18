@@ -22,11 +22,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
 import { getInitials } from '@/lib/utils';
-import { Search, UserPlus } from 'lucide-react';
+import { Search, UserPlus, Filter, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Label } from '../ui/label';
 
 interface PatientListProps {
   patients: Patient[];
@@ -68,7 +70,6 @@ export default function PatientList({ patients }: PatientListProps) {
         filtered = filtered.filter((patient) => patient.status === statusFilter);
     }
     
-    // Reset to first page whenever filters change
     setCurrentPage(1);
 
     return filtered;
@@ -105,41 +106,70 @@ export default function PatientList({ patients }: PatientListProps) {
     <div className="space-y-6">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-            <div className="relative w-full sm:max-w-xs">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                placeholder="Buscar pacientes..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 w-full"
-                />
+            <div className="flex-1 w-full flex gap-4">
+                <div className="relative w-full sm:max-w-xs">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                    placeholder="Buscar pacientes..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 w-full"
+                    />
+                </div>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button variant="outline">
+                            <Filter className="mr-2 h-4 w-4" />
+                            Filters
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80">
+                        <div className="grid gap-4">
+                            <div className="space-y-2">
+                                <h4 className="font-medium leading-none">Filters</h4>
+                                <p className="text-sm text-muted-foreground">
+                                Adjust the filters to refine the patient list.
+                                </p>
+                            </div>
+                            <div className="grid gap-2">
+                                <div className="grid grid-cols-3 items-center gap-4">
+                                    <Label htmlFor="gender">Gender</Label>
+                                    <Select value={genderFilter} onValueChange={setGenderFilter}>
+                                        <SelectTrigger className="w-full sm:w-[180px] bg-card/50 backdrop-blur-lg col-span-2">
+                                            <SelectValue placeholder="Filtrar por género" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Todos">Todos los Géneros</SelectItem>
+                                            <SelectItem value="Masculino">Masculino</SelectItem>
+                                            <SelectItem value="Femenino">Femenino</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="grid grid-cols-3 items-center gap-4">
+                                    <Label htmlFor="status">Status</Label>
+                                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                                        <SelectTrigger className="w-full sm:w-[180px] bg-card/50 backdrop-blur-lg col-span-2">
+                                            <SelectValue placeholder="Filtrar por estado" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Todos">Todos los Estados</SelectItem>
+                                            <SelectItem value="Activo">Activo</SelectItem>
+                                            <SelectItem value="Inactivo">Inactivo</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+                        </div>
+                    </PopoverContent>
+                </Popover>
+                <Button variant="outline" size="icon">
+                    <Download className="h-4 w-4" />
+                </Button>
             </div>
             <Button className="w-full sm:w-auto">
                 <UserPlus className="mr-2 h-4 w-4" />
                 Agregar Paciente
             </Button>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-            <Select value={genderFilter} onValueChange={setGenderFilter}>
-                <SelectTrigger className="w-full sm:w-[180px] bg-card/50 backdrop-blur-lg">
-                    <SelectValue placeholder="Filtrar por género" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="Todos">Todos los Géneros</SelectItem>
-                    <SelectItem value="Masculino">Masculino</SelectItem>
-                    <SelectItem value="Femenino">Femenino</SelectItem>
-                </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full sm:w-[180px] bg-card/50 backdrop-blur-lg">
-                    <SelectValue placeholder="Filtrar por estado" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="Todos">Todos los Estados</SelectItem>
-                    <SelectItem value="Activo">Activo</SelectItem>
-                    <SelectItem value="Inactivo">Inactivo</SelectItem>
-                </SelectContent>
-            </Select>
         </div>
       </div>
       
@@ -276,3 +306,5 @@ export default function PatientList({ patients }: PatientListProps) {
     </div>
   );
 }
+
+    
