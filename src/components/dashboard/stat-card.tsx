@@ -58,7 +58,7 @@ export function StatCard({ title, value, iconName, subtext, trend, index }: Stat
       className="transform-gpu"
     >
       <div className={cn(
-          "group relative rounded-2xl bg-card/50 p-6 shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.02]",
+          "group relative rounded-2xl bg-white dark:bg-card p-6 shadow-sm transition-shadow hover:shadow-md border border-gray-200 dark:border-gray-700",
            glowStyle
         )}>
         <div className="flex items-start justify-between">
