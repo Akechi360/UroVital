@@ -50,7 +50,7 @@ export function StatCard({ title, value, iconName, subtext, trend, index }: Stat
       transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
       className="transform-gpu"
     >
-      <div className="group relative rounded-2xl border border-border/20 bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+      <div className="group relative rounded-2xl bg-card p-6 shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(58,109,255,0.3),0_0_40px_rgba(186,85,211,0.2)]">
         <div className="flex items-start justify-between">
             <div className="flex flex-col gap-1">
                 <h3 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">{title}</h3>

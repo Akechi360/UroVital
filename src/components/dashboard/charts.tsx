@@ -99,7 +99,7 @@ const appointmentsLineChartSeries = [
 
 export function AppointmentsLineChart() {
   return (
-    <Card className="rounded-2xl shadow-md hover:shadow-lg transition-all bg-card/50">
+    <Card className="rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(58,109,255,0.3),0_0_40px_rgba(186,85,211,0.2)]">
       <CardHeader>
         <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">Evolución de Citas</CardTitle>
       </CardHeader>
@@ -192,7 +192,7 @@ const labResultsRadialChartSeries = [12, 4];
 
 export function LabResultsBarChart() {
     return (
-        <Card className="rounded-2xl shadow-md hover:shadow-lg transition-all bg-card/50">
+        <Card className="rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(58,109,255,0.3),0_0_40px_rgba(186,85,211,0.2)]">
             <CardHeader>
                 <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">Resultados de Laboratorio</CardTitle>
             </CardHeader>
