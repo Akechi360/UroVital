@@ -44,7 +44,7 @@ export default function Nav() {
         <div className="flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg group-data-[collapsible=icon]:hidden">
             <Stethoscope className="h-7 w-7 text-primary" />
-            <span className="font-headline">UroSTAT</span>
+            <span className="font-headline">UroMedik</span>
           </Link>
           <SidebarTrigger className="group-data-[collapsible=icon]:hidden">
              <PanelLeft />
