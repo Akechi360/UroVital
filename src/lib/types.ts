@@ -63,3 +63,11 @@ export interface User {
   role: string;
   avatarUrl?: string;
 }
+
+export interface IpssScore {
+  id: string;
+  patientId: string;
+  date: string;
+  score: number;
+  category: 'Leve' | 'Moderado' | 'Severo';
+}

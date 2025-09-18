@@ -8,8 +8,9 @@ import {
     TableHeader,
     TableRow,
   } from '@/components/ui/table'
-import { getLabResultsByPatientId } from '@/lib/actions';
+import { getLabResultsByPatientId, getIpssScoresByPatientId } from '@/lib/actions';
 import LabResultsCard from '@/components/patients/lab-results-card';
+import { IpssCalculator } from '@/components/patients/ipss-calculator';
 
   const uroflowData = [
     { date: "2024-08-15", qmax: "12 mL/s", avgFlow: "7 mL/s", voidedVol: "250 mL", pvr: "50 mL" },
@@ -19,6 +20,7 @@ import LabResultsCard from '@/components/patients/lab-results-card';
 
 export default async function UrologyDataPage({ params }: { params: { patientId: string } }) {
     const labResults = await getLabResultsByPatientId(params.patientId);
+    const ipssScores = await getIpssScoresByPatientId(params.patientId);
 
     return (
         <div className="grid gap-8">
@@ -57,6 +59,8 @@ export default async function UrologyDataPage({ params }: { params: { patientId:
             </div>
             
             <PsaChart />
+
+            <IpssCalculator patientId={params.patientId} historicalScores={ipssScores} />
         </div>
     )
 }

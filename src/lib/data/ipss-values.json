@@ -1,0 +1,23 @@
+[
+  {
+    "id": "ipss-001",
+    "patientId": "p-001",
+    "date": "2024-02-15T10:00:00Z",
+    "score": 12,
+    "category": "Moderado"
+  },
+  {
+    "id": "ipss-002",
+    "patientId": "p-001",
+    "date": "2024-05-20T10:00:00Z",
+    "score": 9,
+    "category": "Moderado"
+  },
+  {
+    "id": "ipss-003",
+    "patientId": "p-003",
+    "date": "2023-10-01T09:00:00Z",
+    "score": 22,
+    "category": "Severo"
+  }
+]
