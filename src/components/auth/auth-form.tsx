@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { useRouter } from 'next/navigation';
 import { Stethoscope, LogIn } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -51,7 +50,6 @@ const formSchemas = {
 
 export default function AuthForm({ mode: initialMode }: AuthFormProps) {
   const [mode, setMode] = useState<AuthMode>(initialMode);
-  const router = useRouter();
   const { toast } = useToast();
 
   const form = useForm({
@@ -68,7 +66,7 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
         const result = await login(values as z.infer<typeof loginSchema>);
         if (result.success) {
             toast({ title: "Login successful", description: "Redirecting to dashboard..." });
-            router.push('/dashboard');
+            window.location.assign('/dashboard');
         } else {
             toast({ variant: "destructive", title: "Login Failed", description: result.error });
         }
