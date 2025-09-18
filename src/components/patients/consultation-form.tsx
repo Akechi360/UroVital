@@ -15,28 +15,42 @@ import { format } from "date-fns"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import type { Consultation } from "@/lib/types";
 
 const formSchema = z.object({
   date: z.date({ required_error: "Se requiere una fecha." }),
   doctor: z.string().min(2, "Se requiere el nombre del doctor."),
-  type: z.string().min(1, "Se requiere el tipo de consulta."),
+  type: z.enum(['Inicial' , 'Seguimiento' , 'Pre-operatorio' , 'Post-operatorio']),
   notes: z.string().min(10, "Las notas deben tener al menos 10 caracteres."),
   prescriptions: z.array(z.object({
+    id: z.string().optional(),
     medication: z.string().min(1, "Se requiere el medicamento."),
     dosage: z.string().min(1, "Se requiere la dosis."),
     duration: z.string().min(1, "Se requiere la duración."),
   })).optional(),
   reports: z.array(z.object({
+    id: z.string().optional(),
     title: z.string().min(1, "Se requiere el título del informe."),
+    date: z.string().optional(),
+    fileUrl: z.string().optional(),
+  })).optional(),
+  labResults: z.array(z.object({
+    id: z.string().optional(),
+    testName: z.string(),
+    value: z.string(),
+    referenceRange: z.string().optional(),
+    date: z.string(),
   })).optional(),
 })
 
+export type ConsultationFormValues = Omit<Consultation, 'id' | 'patientId'>;
+
+
 interface ConsultationFormProps {
-    patientId: string;
-    onFormSubmit: () => void;
+    onFormSubmit: (values: ConsultationFormValues) => void;
 }
 
-export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormProps) {
+export function ConsultationForm({ onFormSubmit }: ConsultationFormProps) {
   const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,6 +61,7 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
         notes: "",
         prescriptions: [],
         reports: [],
+        labResults: [],
     },
   })
 
@@ -61,12 +76,19 @@ export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormPr
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log({ patientId, ...values });
+    const formattedValues: ConsultationFormValues = {
+        ...values,
+        date: values.date.toISOString(),
+        prescriptions: values.prescriptions || [],
+        reports: (values.reports || []).map(r => ({...r, date: new Date().toISOString(), fileUrl: '#'})), // Mock data
+        labResults: values.labResults || [],
+    }
+    onFormSubmit(formattedValues);
     toast({
       title: "Consulta Añadida",
       description: "El nuevo registro de consulta ha sido guardado.",
     })
-    onFormSubmit();
+    form.reset();
   }
 
   return (

@@ -1,12 +1,14 @@
 import type { Patient, Consultation } from "@/lib/types"
 import { Stethoscope } from "lucide-react"
 import { ConsultationCard } from "./consultation-card"
+import { AddHistoryFab } from "../patients/add-history-fab";
 
 interface MedicalHistoryTimelineProps {
     history: Consultation[];
+    onNewConsultation: (consultation: Omit<Consultation, 'id' | 'patientId'>) => void;
 }
 
-export function MedicalHistoryTimeline({ history }: MedicalHistoryTimelineProps) {
+export function MedicalHistoryTimeline({ history, onNewConsultation }: MedicalHistoryTimelineProps) {
     const sortedHistory = [...history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
@@ -31,6 +33,7 @@ export function MedicalHistoryTimeline({ history }: MedicalHistoryTimelineProps)
                     </div>
                 )}
             </div>
+            <AddHistoryFab onFormSubmit={onNewConsultation} />
         </div>
     )
 }
