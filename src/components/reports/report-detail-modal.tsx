@@ -34,12 +34,15 @@ export function ReportDetailModal({ isOpen, setIsOpen, report }: ReportDetailMod
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-2xl">{report.title}</DialogTitle>
-          <DialogDescription className="flex items-center gap-4 pt-1">
+          <div className="flex items-center gap-4 pt-1">
             <Badge variant="secondary">{report.type}</Badge>
             <div className='flex items-center gap-2 text-sm text-muted-foreground'>
                 <Calendar className='h-4 w-4'/>
                 {new Date(report.date).toLocaleDateString()}
             </div>
+          </div>
+          <DialogDescription className="sr-only">
+            Detalles del informe: {report.title}
           </DialogDescription>
         </DialogHeader>
         <div className="py-4 space-y-6">
