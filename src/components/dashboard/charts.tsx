@@ -45,13 +45,13 @@ const appointmentsConfig = {
 
 export function AppointmentsPerMonthChart() {
   return (
-    <Card>
+    <Card className="flex flex-col h-full">
       <CardHeader>
         <CardTitle>Citas por Mes</CardTitle>
         <CardDescription>Volumen de citas en los últimos meses</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={appointmentsConfig} className="h-[300px] w-full">
+      <CardContent className="flex-1">
+        <ChartContainer config={appointmentsConfig} className="h-full w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={appointmentsData}
@@ -104,13 +104,13 @@ const ageData = [
 
 export function PatientsByAgeChart() {
     return (
-      <Card>
+      <Card className="flex flex-col h-full">
         <CardHeader>
           <CardTitle>Pacientes por Edad</CardTitle>
           <CardDescription>Distribución de pacientes por rango de edad.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <ChartContainer config={ageConfig} className="h-[300px] w-full">
+        <CardContent className="flex-1">
+          <ChartContainer config={ageConfig} className="h-full w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={ageData}
@@ -168,7 +168,7 @@ export function IpssDistributionChart() {
           <CardDescription>Severidad de síntomas prostáticos en pacientes.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-1 items-center justify-center pb-6">
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={ipssData}

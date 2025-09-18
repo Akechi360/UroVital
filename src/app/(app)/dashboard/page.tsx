@@ -61,13 +61,13 @@ export default async function DashboardPage() {
         ))}
       </div>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 h-full">
           <AppointmentsPerMonthChart />
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 h-full">
           <PatientsByAgeChart />
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 h-full">
           <IpssDistributionChart />
         </div>
       </div>
