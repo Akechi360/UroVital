@@ -2,10 +2,11 @@ export interface Patient {
   id: string;
   name: string;
   age: number;
-  gender: 'Male' | 'Female';
+  gender: 'Masculino' | 'Femenino';
   bloodType: string;
-  status: 'Active' | 'Inactive';
+  status: 'Activo' | 'Inactivo';
   avatarUrl: string;
+  lastVisit?: string;
   contact: {
     phone: string;
     email: string;

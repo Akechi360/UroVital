@@ -1,67 +1,87 @@
+
 [
   {
     "id": "p-001",
-    "name": "John Smith",
-    "age": 68,
-    "gender": "Male",
+    "name": "Roberto Vance",
+    "age": 54,
+    "gender": "Masculino",
     "bloodType": "O+",
-    "status": "Active",
+    "status": "Activo",
+    "lastVisit": "10/09/2025",
     "avatarUrl": "https://picsum.photos/seed/1/200/200",
     "contact": {
       "phone": "555-0101",
-      "email": "john.smith@example.com"
+      "email": "roberto.vance@example.com"
     }
   },
   {
     "id": "p-002",
-    "name": "Jane Doe",
-    "age": 45,
-    "gender": "Female",
+    "name": "María González",
+    "age": 42,
+    "gender": "Femenino",
     "bloodType": "A-",
-    "status": "Active",
+    "status": "Inactivo",
+    "lastVisit": "05/09/2025",
     "avatarUrl": "https://picsum.photos/seed/2/200/200",
     "contact": {
       "phone": "555-0102",
-      "email": "jane.doe@example.com"
+      "email": "maria.gonzalez@example.com"
     }
   },
   {
     "id": "p-003",
-    "name": "Robert Johnson",
+    "name": "Carlos Sánchez",
     "age": 72,
-    "gender": "Male",
+    "gender": "Masculino",
     "bloodType": "B+",
-    "status": "Active",
+    "status": "Activo",
+    "lastVisit": "12/08/2025",
     "avatarUrl": "https://picsum.photos/seed/3/200/200",
     "contact": {
       "phone": "555-0103",
-      "email": "robert.johnson@example.com"
+      "email": "carlos.sanchez@example.com"
     }
   },
   {
     "id": "p-004",
-    "name": "Emily Williams",
+    "name": "Laura Martínez",
     "age": 58,
-    "gender": "Female",
+    "gender": "Femenino",
     "bloodType": "AB+",
-    "status": "Inactive",
+    "status": "Activo",
+    "lastVisit": "15/09/2025",
     "avatarUrl": "https://picsum.photos/seed/4/200/200",
     "contact": {
       "phone": "555-0104",
-      "email": "emily.williams@example.com"
+      "email": "laura.martinez@example.com"
     }
   },
   {
     "id": "p-005",
-    "name": "Michael Brown",
+    "name": "Miguel Rodriguez",
     "age": 65,
-    "gender": "Male",
+    "gender": "Masculino",
     "bloodType": "O-",
-    "status": "Active",
+    "status": "Inactivo",
+    "lastVisit": "01/07/2025",
     "avatarUrl": "https://picsum.photos/seed/5/200/200",
     "contact": {
       "phone": "555-0105",
-      "email": "michael.brown@example.com"
+      "email": "miguel.rodriguez@example.com"
+    }
+  },
+  {
+    "id": "p-006",
+    "name": "Ana Pérez",
+    "age": 31,
+    "gender": "Femenino",
+    "bloodType": "A+",
+    "status": "Activo",
+    "lastVisit": "20/09/2025",
+    "avatarUrl": "https://picsum.photos/seed/6/200/200",
+    "contact": {
+      "phone": "555-0106",
+      "email": "ana.perez@example.com"
     }
   }
 ]

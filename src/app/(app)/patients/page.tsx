@@ -7,7 +7,7 @@ export default async function PatientsPage() {
 
   return (
     <div className="flex flex-col gap-8">
-       <PageHeader title="Patients" />
+       <PageHeader title="Pacientes" />
       <PatientList patients={patients} />
     </div>
   );
