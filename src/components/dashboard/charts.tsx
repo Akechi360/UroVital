@@ -9,15 +9,10 @@ import {
   YAxis,
   Line,
   LineChart,
-  Pie,
-  PieChart,
-  Cell,
-  Legend,
 } from 'recharts';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -26,124 +21,75 @@ import {
   ChartTooltipContent,
   ChartContainer,
 } from '@/components/ui/chart';
+import { subDays, format } from 'date-fns';
 
-const appointmentsData = [
-  { month: 'Ene', appointments: 186 },
-  { month: 'Feb', appointments: 305 },
-  { month: 'Mar', appointments: 237 },
-  { month: 'Abr', appointments: 173 },
-  { month: 'May', appointments: 209 },
-  { month: 'Jun', appointments: 214 },
-];
 
+const appointmentsData = Array.from({ length: 7 }, (_, i) => {
+    const date = subDays(new Date(), 6 - i);
+    return {
+      date: format(date, 'MMM dd'),
+      day: format(date, 'eee'),
+      appointments: Math.floor(Math.random() * 5) + 2,
+    };
+});
+  
 const appointmentsConfig = {
-  appointments: {
-    label: 'Citas',
-    color: 'hsl(var(--primary))',
-  },
+    appointments: {
+        label: 'Citas',
+        color: 'hsl(var(--primary))',
+    },
 };
 
-export function AppointmentsPerMonthChart() {
-  return (
-    <Card className="flex flex-col h-full">
-      <CardHeader>
-        <CardTitle>Citas por Mes</CardTitle>
-        <CardDescription>Volumen de citas en los últimos meses</CardDescription>
-      </CardHeader>
-      <CardContent className="flex-1">
-        <ChartContainer config={appointmentsConfig} className="h-full w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={appointmentsData}
-              margin={{ top: 20, right: 20, left: -10, bottom: 0 }}
-            >
-              <CartesianGrid vertical={false} strokeDasharray="3 3" />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                domain={[0, 400]}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dot" />}
-              />
-              <Bar dataKey="appointments" fill="var(--color-appointments)" radius={8} />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartContainer>
-      </CardContent>
-    </Card>
-  );
-}
-
-const ageData = [
-    { age: '0-10', patients: 5 },
-    { age: '11-20', patients: 10 },
-    { age: '21-30', patients: 15 },
-    { age: '31-40', patients: 25 },
-    { age: '41-50', patients: 50 },
-    { age: '51-60', patients: 75 },
-    { age: '61-70', patients: 60 },
-    { age: '71-80', patients: 30 },
-    { age: '80+', patients: 12 },
-  ];
-  
-  const ageConfig = {
-    patients: {
-      label: 'Pacientes',
-      color: 'hsl(var(--chart-2))',
-    },
-  };
-
-export function PatientsByAgeChart() {
+export function AppointmentsLastWeekChart() {
     return (
-      <Card className="flex flex-col h-full">
-        <CardHeader>
-          <CardTitle>Pacientes por Edad</CardTitle>
-          <CardDescription>Distribución de pacientes por rango de edad.</CardDescription>
+      <Card className="rounded-2xl shadow-md hover:shadow-lg transition-all">
+        <CardHeader className="p-6">
+          <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">Evolución de Citas (Últimos 7 Días)</CardTitle>
         </CardHeader>
-        <CardContent className="flex-1">
-          <ChartContainer config={ageConfig} className="h-full w-full">
+        <CardContent className="p-6 pt-0">
+          <ChartContainer config={appointmentsConfig} className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={ageData}
+                data={appointmentsData}
                 margin={{ top: 20, right: 20, left: -10, bottom: 0 }}
               >
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsla(var(--foreground), 0.2)" />
                 <XAxis
-                  dataKey="age"
+                  dataKey="day"
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
                 />
                 <YAxis
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  domain={[0, 80]}
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
                 />
                 <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent />}
+                  cursor={{stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '3 3'}}
+                  content={
+                    <ChartTooltipContent 
+                        className="bg-card/80 backdrop-blur-sm border-border/50"
+                    />
+                }
                 />
                 <Line
-                  dataKey="patients"
+                  dataKey="appointments"
                   type="monotone"
-                  stroke="var(--color-patients)"
-                  strokeWidth={2}
+                  stroke="hsl(var(--primary))"
+                  strokeWidth={3}
                   dot={{
-                    fill: 'var(--color-patients)',
-                    r: 4,
+                    r: 5,
+                    fill: 'hsl(var(--background))',
+                    stroke: 'hsl(var(--primary))',
+                    strokeWidth: 2,
                   }}
                   activeDot={{
-                    r: 6,
+                    r: 7,
+                    fill: 'hsl(var(--background))',
+                    stroke: 'hsl(var(--primary))',
                   }}
                 />
               </LineChart>
@@ -152,49 +98,69 @@ export function PatientsByAgeChart() {
         </CardContent>
       </Card>
     );
-  }
-  
-const ipssData = [
-    { name: 'Leve', value: 400, color: 'hsl(var(--chart-2))' },
-    { name: 'Moderado', value: 300, color: 'hsl(var(--chart-4))' },
-    { name: 'Severo', value: 200, color: 'hsl(var(--destructive))' },
-]
+}
 
-export function IpssDistributionChart() {
+const labResultsData = [
+    { name: 'Completados', value: 45, color: 'hsl(var(--success))' },
+    { name: 'Pendientes', value: 8, color: 'hsl(var(--destructive))' },
+];
+
+const labResultsConfig = {
+    value: {
+      label: 'Resultados',
+    },
+    Completados: {
+        label: 'Completados',
+        color: 'hsl(var(--success))',
+    },
+    Pendientes: {
+        label: 'Pendientes',
+        color: 'hsl(var(--destructive))',
+    },
+};
+
+export function LabResultsSummaryChart() {
     return (
-      <Card className="flex h-full flex-col">
-        <CardHeader>
-          <CardTitle>Distribución IPSS</CardTitle>
-          <CardDescription>Severidad de síntomas prostáticos en pacientes.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-1 items-center justify-center pb-6">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={ipssData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={80}
-                  dataKey="value"
-                  
-                >
-                  {ipssData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Legend
-                  layout="vertical"
-                  align="right"
-                  verticalAlign="middle"
-                  iconSize={10}
-                  iconType="circle"
-                  formatter={(value) => <span className="text-sm text-muted-foreground">{value}</span>}
-                 />
-              </PieChart>
-            </ResponsiveContainer>
-        </CardContent>
-      </Card>
-    )
-  }
-  
+        <Card className="rounded-2xl shadow-md hover:shadow-lg transition-all">
+            <CardHeader className="p-6">
+                <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">Resumen de Resultados de Laboratorio</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 pt-0">
+                <ChartContainer config={labResultsConfig} className="h-64 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart 
+                            layout="vertical" 
+                            data={labResultsData}
+                            margin={{ top: 20, right: 20, left: 20, bottom: 0 }}
+                        >
+                             <CartesianGrid horizontal={false} stroke="hsla(var(--foreground), 0.2)" />
+                            <YAxis
+                                dataKey="name"
+                                type="category"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={10}
+                                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 14 }}
+                            />
+                            <XAxis dataKey="value" type="number" hide />
+                            <ChartTooltip
+                                cursor={{fill: 'hsla(var(--foreground), 0.1)'}}
+                                content={
+                                    <ChartTooltipContent 
+                                        className="bg-card/80 backdrop-blur-sm border-border/50"
+                                        indicator="dot"
+                                    />
+                                }
+                            />
+                            <Bar dataKey="value" radius={8}>
+                                {labResultsData.map((entry) => (
+                                    <Cell key={`cell-${entry.name}`} fill={entry.color} />
+                                ))}
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </ChartContainer>
+            </CardContent>
+        </Card>
+    );
+}
