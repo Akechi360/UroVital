@@ -213,7 +213,7 @@ export default function PatientList({ patients }: PatientListProps) {
                         <TableCell>
                         <div className="flex items-center gap-3">
                             <Avatar>
-                            <AvatarImage src={patient.avatarUrl} alt={patient.name} />
+                            <AvatarImage src={patient.avatarUrl} alt={patient.name} data-ai-hint="patient portrait" />
                             <AvatarFallback>{getInitials(patient.name)}</AvatarFallback>
                             </Avatar>
                             <span className="font-medium">{patient.name}</span>
@@ -254,7 +254,7 @@ export default function PatientList({ patients }: PatientListProps) {
                     <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Avatar>
-                        <AvatarImage src={patient.avatarUrl} alt={patient.name} />
+                        <AvatarImage src={patient.avatarUrl} alt={patient.name} data-ai-hint="patient portrait" />
                         <AvatarFallback>{getInitials(patient.name)}</AvatarFallback>
                         </Avatar>
                         <div>

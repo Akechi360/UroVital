@@ -4,6 +4,6 @@
     "name": "Dr. John Doe",
     "email": "doctor@uroflow.com",
     "role": "urologist",
-    "avatarUrl": "https://picsum.photos/seed/100/100/100"
+    "avatarUrl": "https://picsum.photos/seed/doctor/100/100"
   }
 ]
