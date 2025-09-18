@@ -14,9 +14,7 @@ export function MedicalHistoryTimeline({ history, onNewConsultation, children }:
 
     return (
         <div className="relative pl-6">
-            <div className="absolute top-0 right-0 z-10">
-                {children}
-            </div>
+             {children}
 
             {/* Timeline line */}
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border -translate-x-1/2"></div>
