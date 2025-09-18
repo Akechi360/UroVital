@@ -23,7 +23,7 @@ export default async function UrologyDataPage({ params }: { params: { patientId:
     return (
         <div className="grid gap-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <Card>
+                <Card className="rounded-2xl shadow-md hover:shadow-lg transition-all bg-card/50">
                     <CardHeader>
                         <CardTitle>Uroflowmetry Results</CardTitle>
                         <CardDescription>Historical uroflowmetry data for the patient.</CardDescription>

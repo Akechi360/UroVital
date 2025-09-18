@@ -3,12 +3,13 @@
 import type { LucideProps } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ArrowUpRight, ArrowDownRight, Minus, Users, Calendar, FlaskConical, Activity } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Minus, Users, Calendar, FlaskConical, Activity, CalendarDays } from 'lucide-react';
 import { ElementType } from 'react';
 
 const icons: { [key: string]: ElementType } = {
     Users,
     Calendar,
+    CalendarDays,
     FlaskConical,
     Activity,
 };

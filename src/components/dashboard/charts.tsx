@@ -226,3 +226,103 @@ export function LabResultsBarChart() {
         </Card>
     );
 }
+
+const psaChartOptions: ApexOptions = {
+    chart: {
+        type: 'area',
+        height: 350,
+        toolbar: { show: false },
+        background: 'transparent',
+    },
+    stroke: {
+        curve: 'smooth',
+        width: 2,
+    },
+    colors: ['#FFC107'],
+    fill: {
+        type: 'gradient',
+        gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.3,
+            stops: [0, 90, 100]
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    grid: {
+        borderColor: 'rgba(160, 160, 160, 0.1)',
+        strokeDashArray: 3,
+    },
+    xaxis: {
+        type: 'datetime',
+        categories: [
+            "2023-02-01", "2023-05-01", "2023-08-01", 
+            "2023-11-01", "2024-02-01", "2024-05-01"
+        ],
+        labels: {
+            style: {
+                colors: '#A0A0A0',
+                fontSize: '12px',
+            },
+        },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+    },
+    yaxis: {
+        title: {
+            text: 'PSA (ng/mL)',
+            style: {
+                color: '#A0A0A0',
+                fontWeight: 500,
+            }
+        },
+        labels: {
+            style: {
+                colors: '#A0A0A0',
+                fontSize: '12px',
+            },
+        },
+    },
+    tooltip: {
+        theme: 'dark',
+        x: {
+            format: 'dd MMM yyyy'
+        }
+    },
+    markers: {
+        size: 4,
+        colors: ['#FFC107'],
+        strokeColors: '#fff',
+        strokeWidth: 2,
+        hover: {
+            size: 6,
+        },
+    }
+};
+
+const psaChartSeries = [{
+    name: 'PSA Level',
+    data: [2.5, 2.8, 3.0, 3.2, 3.5, 4.1]
+}];
+
+
+export function PsaChart() {
+    return (
+        <Card className="rounded-2xl shadow-md hover:shadow-lg transition-all bg-card/50">
+            <CardHeader>
+                <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">PSA Monitoring</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Chart
+                    options={psaChartOptions}
+                    series={psaChartSeries}
+                    type="area"
+                    height={300}
+                    width="100%"
+                />
+            </CardContent>
+        </Card>
+    )
+}
