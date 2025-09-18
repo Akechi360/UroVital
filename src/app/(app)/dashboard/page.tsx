@@ -1,8 +1,8 @@
 import { getAppointments, getPatients } from '@/lib/actions';
 import { StatCard } from '@/components/dashboard/stat-card';
 import {
-  AppointmentsLastWeekChart,
-  LabResultsSummaryChart
+  AppointmentsLineChart,
+  LabResultsBarChart,
 } from '@/components/dashboard/charts';
 import { PageHeader } from '@/components/shared/page-header';
 
@@ -60,8 +60,8 @@ export default async function DashboardPage() {
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AppointmentsLastWeekChart />
-        <LabResultsSummaryChart />
+        <AppointmentsLineChart />
+        <LabResultsBarChart />
       </div>
     </div>
   );
