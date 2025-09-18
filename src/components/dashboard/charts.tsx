@@ -9,6 +9,7 @@ import {
   YAxis,
   Line,
   LineChart,
+  Cell,
 } from 'recharts';
 import {
   Card,
