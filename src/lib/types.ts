@@ -5,7 +5,7 @@ export interface Patient {
   gender: 'Masculino' | 'Femenino';
   bloodType: string;
   status: 'Activo' | 'Inactivo';
-  avatarUrl: string;
+  avatarUrl?: string;
   lastVisit?: string;
   contact: {
     phone: string;
@@ -61,5 +61,5 @@ export interface User {
   name: string;
   email: string;
   role: string;
-  avatarUrl: string;
+  avatarUrl?: string;
 }

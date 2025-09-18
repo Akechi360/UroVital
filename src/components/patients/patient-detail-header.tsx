@@ -16,7 +16,7 @@ export default function PatientDetailHeader({ patient }: PatientDetailHeaderProp
       <Card>
         <CardContent className="p-6 flex flex-col sm:flex-row items-start gap-6">
           <Avatar className="w-24 h-24 border">
-            <AvatarImage src={patient.avatarUrl} alt={patient.name} data-ai-hint="patient portrait" />
+            {patient.avatarUrl && <AvatarImage src={patient.avatarUrl} alt={patient.name} />}
             <AvatarFallback className="text-3xl">{getInitials(patient.name)}</AvatarFallback>
           </Avatar>
           <div className="flex-1 space-y-3">

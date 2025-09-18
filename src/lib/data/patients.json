@@ -8,7 +8,6 @@
     "bloodType": "O+",
     "status": "Activo",
     "lastVisit": "10/09/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient1/200/200",
     "contact": {
       "phone": "555-0101",
       "email": "roberto.vance@example.com"
@@ -22,7 +21,6 @@
     "bloodType": "A-",
     "status": "Inactivo",
     "lastVisit": "05/09/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient2/200/200",
     "contact": {
       "phone": "555-0102",
       "email": "maria.gonzalez@example.com"
@@ -36,7 +34,6 @@
     "bloodType": "B+",
     "status": "Activo",
     "lastVisit": "12/08/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient3/200/200",
     "contact": {
       "phone": "555-0103",
       "email": "carlos.sanchez@example.com"
@@ -50,7 +47,6 @@
     "bloodType": "AB+",
     "status": "Activo",
     "lastVisit": "15/09/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient4/200/200",
     "contact": {
       "phone": "555-0104",
       "email": "laura.martinez@example.com"
@@ -64,7 +60,6 @@
     "bloodType": "O-",
     "status": "Inactivo",
     "lastVisit": "01/07/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient5/200/200",
     "contact": {
       "phone": "555-0105",
       "email": "miguel.rodriguez@example.com"
@@ -78,7 +73,6 @@
     "bloodType": "A+",
     "status": "Activo",
     "lastVisit": "20/09/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient6/200/200",
     "contact": {
       "phone": "555-0106",
       "email": "ana.perez@example.com"
@@ -92,7 +86,6 @@
     "bloodType": "B-",
     "status": "Activo",
     "lastVisit": "18/08/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient7/200/200",
     "contact": {
       "phone": "555-0107",
       "email": "javier.fernandez@example.com"
@@ -106,7 +99,6 @@
     "bloodType": "O+",
     "status": "Inactivo",
     "lastVisit": "22/07/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient8/200/200",
     "contact": {
       "phone": "555-0108",
       "email": "isabel.gomez@example.com"
@@ -120,7 +112,6 @@
     "bloodType": "A+",
     "status": "Activo",
     "lastVisit": "30/09/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient9/200/200",
     "contact": {
       "phone": "555-0109",
       "email": "david.lopez@example.com"
@@ -134,7 +125,6 @@
     "bloodType": "AB-",
     "status": "Activo",
     "lastVisit": "03/10/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient10/200/200",
     "contact": {
       "phone": "555-0110",
       "email": "elena.diaz@example.com"
@@ -148,7 +138,6 @@
     "bloodType": "O-",
     "status": "Inactivo",
     "lastVisit": "11/06/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient11/200/200",
     "contact": {
       "phone": "555-0111",
       "email": "francisco.moreno@example.com"
@@ -162,7 +151,6 @@
     "bloodType": "B+",
     "status": "Activo",
     "lastVisit": "25/09/2025",
-    "avatarUrl": "https://picsum.photos/seed/patient12/200/200",
     "contact": {
       "phone": "555-0112",
       "email": "lucia.jimenez@example.com"

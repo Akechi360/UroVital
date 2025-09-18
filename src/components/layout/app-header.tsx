@@ -55,7 +55,6 @@ export default function AppHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="https://picsum.photos/seed/doctor/100/100" alt="Dr. John Doe" data-ai-hint="doctor portrait" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
             </Button>
