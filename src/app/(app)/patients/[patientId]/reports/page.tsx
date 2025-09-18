@@ -1,9 +1,8 @@
-
-import { getPatientMedicalHistoryAsString } from '@/lib/actions';
-import ReportGenerationClient from '@/components/patients/report-generation-client';
+import { getReportsByPatientId } from "@/lib/actions";
+import ReportList from "@/components/reports/report-list";
 
 export default async function PatientReportsPage({ params }: { params: { patientId: string } }) {
-    const medicalHistory = await getPatientMedicalHistoryAsString(params.patientId);
+    const reports = await getReportsByPatientId(params.patientId);
 
-    return <ReportGenerationClient medicalHistory={medicalHistory} patientId={params.patientId} />;
+    return <ReportList initialReports={reports} patientId={params.patientId} />;
 }

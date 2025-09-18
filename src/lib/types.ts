@@ -5,7 +5,6 @@ export interface Patient {
   gender: 'Masculino' | 'Femenino';
   bloodType: string;
   status: 'Activo' | 'Inactivo';
-  avatarUrl?: string;
   lastVisit?: string;
   contact: {
     phone: string;
@@ -39,9 +38,13 @@ export interface LabResult {
 
 export interface Report {
     id: string;
+    patientId: string;
     title: string;
     date: string;
+    type: string;
+    notes: string;
     fileUrl: string;
+    attachments: string[];
 }
 
 export interface Consultation {
@@ -61,7 +64,6 @@ export interface User {
   name: string;
   email: string;
   role: string;
-  avatarUrl?: string;
 }
 
 export interface IpssScore {

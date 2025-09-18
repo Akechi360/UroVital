@@ -1,10 +1,23 @@
+
 [
   {
     "id": "rep-001",
     "patientId": "p-001",
-    "title": "Renal Ultrasound Results",
+    "title": "Informe de Ecografía Renal",
     "date": "2024-08-12T00:00:00.000Z",
+    "type": "Ecografía",
+    "notes": "La ecografía renal muestra una glándula prostática moderadamente agrandada, consistente con hiperplasia prostática benigna. No hay evidencia de hidronefrosis. Ambos riñones parecen normales en tamaño y ecotextura. La pared de la vejiga está ligeramente engrosada.",
     "fileUrl": "#",
-    "content": "The renal ultrasound shows a moderately enlarged prostate gland, consistent with benign prostatic hyperplasia. No evidence of hydronephrosis. Both kidneys appear normal in size and echotexture. Bladder wall is slightly thickened."
+    "attachments": []
+  },
+  {
+    "id": "rep-002",
+    "patientId": "p-001",
+    "title": "Resultados de Biopsia",
+    "date": "2024-09-01T00:00:00.000Z",
+    "type": "Biopsia",
+    "notes": "La biopsia de próstata no muestra evidencia de malignidad. Los hallazgos son consistentes con HBP.",
+    "fileUrl": "#",
+    "attachments": []
   }
 ]

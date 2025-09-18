@@ -6,7 +6,8 @@ import consultationsData from './data/consultations.json';
 import usersData from './data/users.json';
 import labResultsData from './data/lab-results.json';
 import ipssScoresData from './data/ipss-values.json';
-import type { Patient, Appointment, Consultation, User, LabResult, IpssScore } from './types';
+import reportsData from './data/reports.json';
+import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report } from './types';
 
 // Simulate network delay
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -39,6 +40,11 @@ export async function getLabResultsByPatientId(patientId: string): Promise<LabRe
 export async function getIpssScoresByPatientId(patientId: string): Promise<IpssScore[]> {
     await delay(100);
     return (ipssScoresData as IpssScore[]).filter(r => r.patientId === patientId);
+}
+
+export async function getReportsByPatientId(patientId: string): Promise<Report[]> {
+    await delay(100);
+    return (reportsData as Report[]).filter(r => r.patientId === patientId);
 }
 
 export async function getPatientMedicalHistoryAsString(patientId: string): Promise<string> {

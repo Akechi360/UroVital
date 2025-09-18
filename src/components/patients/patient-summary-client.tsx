@@ -1,75 +1,78 @@
 'use client'
 
-import { generatePatientReportSummary } from '@/ai/flows/generate-patient-report-summary';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Textarea } from '@/components/ui/textarea';
-import { Wand2 } from 'lucide-react';
-import { useState, useTransition } from 'react';
+import type { Patient, Appointment, Consultation, IpssScore } from "@/lib/types";
+import { QuickActions } from "./quick-actions";
+import { IndicatorCard, UpcomingAppointmentsCard } from "./patient-summary-cards";
+import { Stethoscope } from "lucide-react";
 
-export default function PatientSummaryClient({ medicalHistory }: { medicalHistory: string }) {
-    const [isPending, startTransition] = useTransition();
-    const [summary, setSummary] = useState('');
-    const [isGenerating, setIsGenerating] = useState(false);
+interface PatientSummaryClientProps {
+    patient: Patient;
+    upcomingAppointments: Appointment[];
+    latestConsultations: Consultation[];
+    latestIpss: IpssScore | null;
+}
 
-    const handleGenerateSummary = () => {
-        if (!medicalHistory || medicalHistory === "No se encontró historial médico para este paciente.") return;
-        setIsGenerating(true);
-        startTransition(async () => {
-            try {
-                const result = await generatePatientReportSummary({ patientMedicalHistory: medicalHistory });
-                setSummary(result.summary);
-            } catch (error) {
-                console.error("Fallo al generar el resumen:", error);
-                setSummary("No se pudo generar el resumen en este momento.");
-            } finally {
-                setIsGenerating(false);
-            }
-        });
-    };
+export default function PatientSummaryClient({
+    patient,
+    upcomingAppointments,
+    latestConsultations,
+    latestIpss
+}: PatientSummaryClientProps) {
+
+    // This would eventually come from lab results
+    const latestPsa = { value: "4.1", date: "2024-05-01" };
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Resumen de Paciente Generado por IA</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                 <div className="space-y-2">
-                    <h3 className="font-semibold text-sm">Historial Médico Completo</h3>
-                    <Textarea
-                        readOnly
-                        value={medicalHistory}
-                        className="h-40 bg-muted/50"
-                        />
+        <div className="space-y-8">
+            <QuickActions />
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <IndicatorCard 
+                    title="Último PSA"
+                    value={`${latestPsa.value} ng/mL`}
+                    subtext={`del ${new Date(latestPsa.date).toLocaleDateString()}`}
+                    icon="Droplets"
+                />
+                <IndicatorCard 
+                    title="Último IPSS"
+                    value={latestIpss ? latestIpss.score.toString() : 'N/A'}
+                    subtext={latestIpss ? `(${latestIpss.category})` : "Sin registro"}
+                    icon="Calculator"
+                />
+                <IndicatorCard 
+                    title="Próxima Cita"
+                    value={upcomingAppointments.length > 0 ? new Date(upcomingAppointments[0].date).toLocaleDateString() : "Ninguna"}
+                    subtext={upcomingAppointments.length > 0 ? new Date(upcomingAppointments[0].date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : " "}
+                    icon="Calendar"
+                />
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                <UpcomingAppointmentsCard appointments={upcomingAppointments} />
+                {/* Here could be another section, e.g., "Recent Lab Results" */}
+                <div className="rounded-2xl border bg-card p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4">Consultas Recientes</h3>
+                    {latestConsultations.length > 0 ? (
+                         <div className="space-y-4">
+                            {latestConsultations.map(consult => (
+                                <div key={consult.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                                    <div className="bg-primary/10 text-primary p-2 rounded-full">
+                                        <Stethoscope className="h-5 w-5" />
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold">{consult.type}</p>
+                                        <p className="text-sm text-muted-foreground">{new Date(consult.date).toLocaleDateString()}</p>
+                                    </div>
+                                </div>
+                            ))}
+                         </div>
+                    ) : (
+                        <div className="text-center text-muted-foreground py-10">
+                            <p>No hay consultas recientes.</p>
+                        </div>
+                    )}
                 </div>
-                <Button onClick={handleGenerateSummary} disabled={isPending || isGenerating || medicalHistory === "No se encontró historial médico para este paciente."}>
-                    <Wand2 className="mr-2 h-4 w-4" />
-                    {isGenerating ? 'Generando...' : 'Generar Resumen'}
-                </Button>
-                {isGenerating && (
-                    <div className="space-y-2 pt-2">
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-3/4" />
-                    </div>
-                )}
-                {summary && !isGenerating && (
-                    <div className="prose prose-sm dark:prose-invert max-w-none rounded-md border bg-card p-4 text-card-foreground">
-                        <h3 className="font-semibold text-sm mt-0">Resumen:</h3>
-                        <p className="text-sm">{summary}</p>
-                    </div>
-                )}
-                 {!summary && !isGenerating && (
-                    <div className="text-center text-muted-foreground py-10 border rounded-lg">
-                        <p>
-                            {medicalHistory === "No se encontró historial médico para este paciente."
-                            ? "No hay historial médico disponible para generar un resumen."
-                            : "Haz clic en \"Generar Resumen\" para crear un resumen del historial del paciente con IA."}
-                        </p>
-                    </div>
-                 )}
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }
