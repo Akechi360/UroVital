@@ -2,7 +2,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -12,6 +11,7 @@ import type { Report } from '@/lib/types';
 import { Badge } from '../ui/badge';
 import { FileDown, Paperclip, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import jsPDF from "jspdf";
 
 interface ReportDetailModalProps {
   isOpen: boolean;
@@ -23,10 +23,42 @@ export function ReportDetailModal({ isOpen, setIsOpen, report }: ReportDetailMod
   const { toast } = useToast();
 
   const handleExport = () => {
-    toast({
-        title: "Exportando Informe (Simulación)",
-        description: `Se descargaría un PDF del informe: ${report.title}.`,
-    });
+    try {
+        const doc = new jsPDF();
+
+        // Add title
+        doc.setFontSize(18);
+        doc.setTextColor(58, 109, 255);
+        doc.text(report.title, doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+
+        // Add date
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        const reportDate = new Date(report.date).toLocaleDateString();
+        doc.text(`Fecha del informe: ${reportDate}`, doc.internal.pageSize.getWidth() - 20, 30, { align: "right" });
+
+        // Add content
+        doc.setFontSize(12);
+        doc.setTextColor(51, 51, 51);
+        const lines = doc.splitTextToSize(report.notes, 180);
+        doc.text(lines, 15, 40);
+
+        const dateString = new Date(report.date).toISOString().slice(0,10);
+        const filename = `informe_${report.id}_${dateString}.pdf`;
+        doc.save(filename);
+
+        toast({
+            title: "Exportando Informe",
+            description: `Se ha iniciado la descarga del informe: ${report.title}.`,
+        });
+    } catch (error) {
+        toast({
+            variant: "destructive",
+            title: "Error en la exportación",
+            description: "No se pudo generar el archivo del informe.",
+        });
+        console.error("Failed to export report:", error);
+    }
   }
   
   return (
@@ -41,9 +73,6 @@ export function ReportDetailModal({ isOpen, setIsOpen, report }: ReportDetailMod
                 {new Date(report.date).toLocaleDateString()}
             </div>
           </div>
-          <DialogDescription className="sr-only">
-            Detalles del informe: {report.title}
-          </DialogDescription>
         </DialogHeader>
         <div className="py-4 space-y-6">
             <div className='space-y-2'>
