@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -76,12 +75,6 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
     }
   };
 
-  const formVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: 50 },
-  };
-
   const getTitle = () => {
     switch (mode) {
       case 'login': return 'Welcome Back';
@@ -111,14 +104,8 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <AnimatePresence mode="wait">
-              <motion.div
+              <div
                 key={mode}
-                variants={formVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                transition={{ duration: 0.3 }}
                 className="space-y-4"
               >
                 {mode === 'register' && (
@@ -173,8 +160,7 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
                     )}
                   />
                 )}
-              </motion.div>
-            </AnimatePresence>
+              </div>
 
             <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? 'Processing...' : getTitle()}
