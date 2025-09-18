@@ -1,0 +1,18 @@
+[
+  {
+    "id": "lab-001",
+    "patientId": "p-001",
+    "testName": "Prostate-Specific Antigen (PSA)",
+    "value": "4.2 ng/mL",
+    "referenceRange": "< 4.0 ng/mL",
+    "date": "2024-08-10T00:00:00.000Z"
+  },
+  {
+    "id": "lab-002",
+    "patientId": "p-002",
+    "testName": "Urine Culture",
+    "value": "Positive for E. coli (>100,000 CFU/mL)",
+    "referenceRange": "Negative",
+    "date": "2024-07-03T00:00:00.000Z"
+  }
+]

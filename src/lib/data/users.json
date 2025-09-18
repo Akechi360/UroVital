@@ -1,0 +1,9 @@
+[
+  {
+    "id": "u-001",
+    "name": "Dr. John Doe",
+    "email": "doctor@uroflow.com",
+    "role": "urologist",
+    "avatarUrl": "https://picsum.photos/seed/100/100/100"
+  }
+]

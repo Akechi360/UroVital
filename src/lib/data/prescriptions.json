@@ -1,0 +1,18 @@
+[
+  {
+    "id": "rx-001",
+    "patientId": "p-001",
+    "medication": "Tamsulosin",
+    "dosage": "0.4 mg",
+    "frequency": "Once daily",
+    "issueDate": "2024-05-20T00:00:00.000Z"
+  },
+  {
+    "id": "rx-002",
+    "patientId": "p-002",
+    "medication": "Ciprofloxacin",
+    "dosage": "500 mg",
+    "frequency": "Twice daily for 7 days",
+    "issueDate": "2024-07-01T00:00:00.000Z"
+  }
+]

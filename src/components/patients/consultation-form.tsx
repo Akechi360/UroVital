@@ -1,0 +1,225 @@
+'use client';
+import { useForm, useFieldArray } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/hooks/use-toast"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { CalendarIcon, Pill, FileText, Trash2, PlusCircle } from "lucide-react"
+import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+const formSchema = z.object({
+  date: z.date({ required_error: "A date is required." }),
+  doctor: z.string().min(2, "Doctor name is required."),
+  type: z.string().min(1, "Consultation type is required."),
+  notes: z.string().min(10, "Notes must be at least 10 characters."),
+  prescriptions: z.array(z.object({
+    medication: z.string().min(1, "Medication is required."),
+    dosage: z.string().min(1, "Dosage is required."),
+    duration: z.string().min(1, "Duration is required."),
+  })).optional(),
+  reports: z.array(z.object({
+    title: z.string().min(1, "Report title is required."),
+  })).optional(),
+})
+
+interface ConsultationFormProps {
+    patientId: string;
+    onFormSubmit: () => void;
+}
+
+export function ConsultationForm({ patientId, onFormSubmit }: ConsultationFormProps) {
+  const { toast } = useToast()
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+        date: new Date(),
+        doctor: "Dr. John Doe",
+        type: "Initial",
+        notes: "",
+        prescriptions: [],
+        reports: [],
+    },
+  })
+
+  const { fields: prescriptionFields, append: appendPrescription, remove: removePrescription } = useFieldArray({
+    control: form.control,
+    name: "prescriptions",
+  });
+
+  const { fields: reportFields, append: appendReport, remove: removeReport } = useFieldArray({
+    control: form.control,
+    name: "reports",
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log({ patientId, ...values });
+    toast({
+      title: "Consultation Added",
+      description: "The new consultation record has been saved.",
+    })
+    onFormSubmit();
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <ScrollArea className="h-[65vh] pr-6">
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date of Consultation</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select consultation type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Initial">Initial</SelectItem>
+                      <SelectItem value="Follow-up">Follow-up</SelectItem>
+                      <SelectItem value="Pre-operative">Pre-operative</SelectItem>
+                      <SelectItem value="Post-operative">Post-operative</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Enter clinical notes..." {...field} rows={5} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Accordion type="multiple" className="w-full">
+              <AccordionItem value="prescriptions">
+                <AccordionTrigger>
+                  <div className="flex items-center gap-2">
+                    <Pill className="h-5 w-5 text-primary" />
+                    Prescriptions ({prescriptionFields.length})
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4">
+                    {prescriptionFields.map((field, index) => (
+                      <div key={field.id} className="p-4 border rounded-md space-y-3 relative bg-card/50">
+                        <Button type="button" variant="ghost" size="icon" className="absolute top-1 right-1 h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removePrescription(index)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                        <FormField control={form.control} name={`prescriptions.${index}.medication`} render={({ field }) => (
+                            <FormItem><FormLabel>Medication</FormLabel><FormControl><Input placeholder="e.g. Tamsulosin" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}/>
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name={`prescriptions.${index}.dosage`} render={({ field }) => (
+                                <FormItem><FormLabel>Dosage</FormLabel><FormControl><Input placeholder="e.g. 0.4mg" {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                            <FormField control={form.control} name={`prescriptions.${index}.duration`} render={({ field }) => (
+                                <FormItem><FormLabel>Duration</FormLabel><FormControl><Input placeholder="e.g. 90 days" {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                        </div>
+                      </div>
+                    ))}
+                    <Button type="button" variant="outline" className="w-full" onClick={() => appendPrescription({ medication: "", dosage: "", duration: "" })}>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add Prescription
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="reports">
+                <AccordionTrigger>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-primary" />
+                    Reports ({reportFields.length})
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                    <div className="space-y-4">
+                    {reportFields.map((field, index) => (
+                      <div key={field.id} className="p-4 border rounded-md space-y-2 relative bg-card/50">
+                         <Button type="button" variant="ghost" size="icon" className="absolute top-1 right-1 h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeReport(index)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                        <FormField control={form.control} name={`reports.${index}.title`} render={({ field }) => (
+                            <FormItem><FormLabel>Report Title</FormLabel><FormControl><Input placeholder="e.g. Renal Ultrasound Results" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}/>
+                        <FormItem>
+                            <FormLabel>File</FormLabel>
+                            <FormControl>
+                                <Input type="file" className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"/>
+                            </FormControl>
+                        </FormItem>
+                      </div>
+                    ))}
+                     <Button type="button" variant="outline" className="w-full" onClick={() => appendReport({ title: "" })}>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add Report
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        </ScrollArea>
+        <div className="pt-4 flex justify-end">
+            <Button type="submit">Save Consultation</Button>
+        </div>
+      </form>
+    </Form>
+  )
+}

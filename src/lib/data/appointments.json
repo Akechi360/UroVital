@@ -1,0 +1,37 @@
+[
+  {
+    "id": "appt-001",
+    "patientId": "p-001",
+    "date": "2024-08-15T10:00:00.000Z",
+    "reason": "Annual Check-up",
+    "status": "Scheduled"
+  },
+  {
+    "id": "appt-002",
+    "patientId": "p-002",
+    "date": "2024-08-15T11:30:00.000Z",
+    "reason": "Follow-up",
+    "status": "Scheduled"
+  },
+  {
+    "id": "appt-003",
+    "patientId": "p-003",
+    "date": "2024-08-16T14:00:00.000Z",
+    "reason": "Post-operative check",
+    "status": "Scheduled"
+  },
+  {
+    "id": "appt-004",
+    "patientId": "p-004",
+    "date": "2024-09-01T09:00:00.000Z",
+    "reason": "New patient consultation",
+    "status": "Scheduled"
+  },
+  {
+    "id": "appt-005",
+    "patientId": "p-001",
+    "date": "2024-07-20T15:00:00.000Z",
+    "reason": "Pre-operative assessment",
+    "status": "Completed"
+  }
+]

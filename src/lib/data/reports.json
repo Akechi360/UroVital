@@ -1,0 +1,10 @@
+[
+  {
+    "id": "rep-001",
+    "patientId": "p-001",
+    "title": "Renal Ultrasound Results",
+    "date": "2024-08-12T00:00:00.000Z",
+    "fileUrl": "#",
+    "content": "The renal ultrasound shows a moderately enlarged prostate gland, consistent with benign prostatic hyperplasia. No evidence of hydronephrosis. Both kidneys appear normal in size and echotexture. Bladder wall is slightly thickened."
+  }
+]

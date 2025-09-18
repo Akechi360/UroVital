@@ -1,0 +1,67 @@
+[
+  {
+    "id": "p-001",
+    "name": "John Smith",
+    "age": 68,
+    "gender": "Male",
+    "bloodType": "O+",
+    "status": "Active",
+    "avatarUrl": "https://picsum.photos/seed/1/200/200",
+    "contact": {
+      "phone": "555-0101",
+      "email": "john.smith@example.com"
+    }
+  },
+  {
+    "id": "p-002",
+    "name": "Jane Doe",
+    "age": 45,
+    "gender": "Female",
+    "bloodType": "A-",
+    "status": "Active",
+    "avatarUrl": "https://picsum.photos/seed/2/200/200",
+    "contact": {
+      "phone": "555-0102",
+      "email": "jane.doe@example.com"
+    }
+  },
+  {
+    "id": "p-003",
+    "name": "Robert Johnson",
+    "age": 72,
+    "gender": "Male",
+    "bloodType": "B+",
+    "status": "Active",
+    "avatarUrl": "https://picsum.photos/seed/3/200/200",
+    "contact": {
+      "phone": "555-0103",
+      "email": "robert.johnson@example.com"
+    }
+  },
+  {
+    "id": "p-004",
+    "name": "Emily Williams",
+    "age": 58,
+    "gender": "Female",
+    "bloodType": "AB+",
+    "status": "Inactive",
+    "avatarUrl": "https://picsum.photos/seed/4/200/200",
+    "contact": {
+      "phone": "555-0104",
+      "email": "emily.williams@example.com"
+    }
+  },
+  {
+    "id": "p-005",
+    "name": "Michael Brown",
+    "age": 65,
+    "gender": "Male",
+    "bloodType": "O-",
+    "status": "Active",
+    "avatarUrl": "https://picsum.photos/seed/5/200/200",
+    "contact": {
+      "phone": "555-0105",
+      "email": "michael.brown@example.com"
+    }
+  }
+]
