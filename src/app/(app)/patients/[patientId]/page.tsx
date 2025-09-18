@@ -2,27 +2,28 @@
 import { getConsultationsByPatientId } from '@/lib/actions';
 import { MedicalHistoryTimeline } from '@/components/history/medical-history-timeline';
 import type { Consultation } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 
-export default function PatientHistoryPage({ params }: { params: { patientId: string } }) {
+export default function PatientHistoryPage({ params }: { params: Promise<{ patientId: string }> }) {
+  const { patientId } = use(params);
   const [history, setHistory] = useState<Consultation[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHistory = async () => {
       setLoading(true);
-      const medicalHistory = await getConsultationsByPatientId(params.patientId);
+      const medicalHistory = await getConsultationsByPatientId(patientId);
       setHistory(medicalHistory);
       setLoading(false);
     };
     fetchHistory();
-  }, [params.patientId]);
+  }, [patientId]);
 
   const handleNewConsultation = (newConsultation: Omit<Consultation, 'id' | 'patientId'>) => {
     const fullConsultation: Consultation = {
       ...newConsultation,
       id: `c-${Date.now()}`, // Mock ID
-      patientId: params.patientId,
+      patientId: patientId,
     };
     setHistory(prevHistory => [fullConsultation, ...prevHistory]);
   };
