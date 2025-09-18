@@ -1,3 +1,6 @@
+'use server';
+
+import { cookies } from 'next/headers';
 import patientsData from './data/patients.json';
 import appointmentsData from './data/appointments.json';
 import consultationsData from './data/consultations.json';
@@ -69,13 +72,20 @@ const loginSchema = {
   password: 'password123',
 };
 
-export async function login(credentials: { email: string, password?: string }): Promise<User> {
+export async function login(credentials: { email: string, password?: string }): Promise<{success: boolean, user?: User, error?: string}> {
   await delay(500);
   if (credentials.email === loginSchema.email && credentials.password === loginSchema.password) {
     const user = (usersData as User[]).find(u => u.email === credentials.email);
     if (user) {
-        return user;
+        // Set a session cookie
+        cookies().set('session', JSON.stringify(user), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 60 * 60 * 24, // 1 day
+            path: '/',
+        });
+        return { success: true, user: user };
     }
   }
-  throw new Error('Invalid email or password.');
+  return { success: false, error: 'Invalid email or password.' };
 }

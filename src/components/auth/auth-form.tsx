@@ -65,15 +65,13 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
 
   const onSubmit = async (values: z.infer<typeof loginSchema | typeof registerSchema | typeof forgotPasswordSchema>) => {
     if (mode === 'login') {
-      try {
-        await login(values as z.infer<typeof loginSchema>);
-        toast({ title: "Login successful", description: "Redirecting to dashboard..." });
-        router.push('/dashboard');
-      } catch (error) {
-        if (error instanceof Error) {
-          toast({ variant: "destructive", title: "Login Failed", description: error.message });
+        const result = await login(values as z.infer<typeof loginSchema>);
+        if (result.success) {
+            toast({ title: "Login successful", description: "Redirecting to dashboard..." });
+            router.push('/dashboard');
+        } else {
+            toast({ variant: "destructive", title: "Login Failed", description: result.error });
         }
-      }
     } else {
       toast({ title: `Mock ${mode} successful!`, description: `Data: ${JSON.stringify(values)}` });
       if (mode === 'register') setMode('login');
