@@ -1,14 +1,22 @@
 'use client';
 
-import type { LucideIcon } from 'lucide-react';
+import type { LucideProps } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Minus, Users, Calendar, FlaskConical, Activity } from 'lucide-react';
+import { ElementType } from 'react';
+
+const icons: { [key: string]: ElementType } = {
+    Users,
+    Calendar,
+    FlaskConical,
+    Activity,
+};
 
 interface StatCardProps {
   title: string;
   value: string | number;
-  icon: LucideIcon;
+  iconName: keyof typeof icons;
   subtext: string;
   trend: 'up' | 'down' | 'stale';
   index: number;
@@ -29,9 +37,10 @@ const trendConfig = {
   },
 };
 
-export function StatCard({ title, value, icon: Icon, subtext, trend, index }: StatCardProps) {
+export function StatCard({ title, value, iconName, subtext, trend, index }: StatCardProps) {
   const TrendIcon = trendConfig[trend].icon;
   const trendColor = trendConfig[trend].color;
+  const Icon = icons[iconName];
 
   return (
     <motion.div
@@ -47,7 +56,7 @@ export function StatCard({ title, value, icon: Icon, subtext, trend, index }: St
                 <p className="text-3xl font-bold text-foreground">{value}</p>
             </div>
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
-                <Icon className="h-5 w-5 text-primary-foreground" />
+                {Icon && <Icon className="h-5 w-5 text-primary-foreground" />}
             </div>
         </div>
         <div className="mt-4 flex items-center gap-2">

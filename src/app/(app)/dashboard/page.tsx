@@ -1,6 +1,5 @@
 import { getAppointments, getPatients } from '@/lib/actions';
 import { StatCard } from '@/components/dashboard/stat-card';
-import { Users, Calendar, FlaskConical, Activity } from 'lucide-react';
 import {
   AppointmentsPerMonthChart,
   PatientsByAgeChart,
@@ -25,28 +24,28 @@ export default async function DashboardPage() {
     {
       title: "Total Pacientes",
       value: patients.length,
-      icon: Users,
+      iconName: "Users",
       subtext: "+2 este mes",
       trend: "up"
     },
     {
       title: "Citas de Hoy",
       value: appointmentsToday.length,
-      icon: Calendar,
+      iconName: "Calendar",
       subtext: "-1 vs ayer",
       trend: "down"
     },
     {
       title: "Resultados Pendientes",
       value: 1,
-      icon: FlaskConical,
+      iconName: "FlaskConical",
       subtext: "Análisis requerido",
       trend: "stale"
     },
     {
         title: "Próximos Estudios",
         value: 4,
-        icon: Activity,
+        iconName: "Activity",
         subtext: "Esta semana",
         trend: "up"
       }
@@ -61,7 +60,7 @@ export default async function DashboardPage() {
                 key={card.title}
                 title={card.title}
                 value={card.value}
-                icon={card.icon}
+                iconName={card.iconName as "Users" | "Calendar" | "FlaskConical" | "Activity"}
                 subtext={card.subtext}
                 trend={card.trend as "up" | "down" | "stale"}
                 index={index}
