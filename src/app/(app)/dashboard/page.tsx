@@ -41,26 +41,19 @@ export default async function DashboardPage() {
       iconName: "FlaskConical",
       subtext: "Análisis requerido",
       trend: "stale"
-    },
-    {
-        title: "Próximos Estudios",
-        value: 4,
-        iconName: "Activity",
-        subtext: "Esta semana",
-        trend: "up"
-      }
+    }
   ]
 
   return (
     <div className="flex flex-col gap-8">
       <PageHeader title="Panel" />
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {statCards.map((card, index) => (
             <StatCard 
                 key={card.title}
                 title={card.title}
                 value={card.value}
-                iconName={card.iconName as "Users" | "Calendar" | "FlaskConical" | "Activity"}
+                iconName={card.iconName as "Users" | "Calendar" | "FlaskConical"}
                 subtext={card.subtext}
                 trend={card.trend as "up" | "down" | "stale"}
                 index={index}
