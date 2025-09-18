@@ -49,30 +49,36 @@ export async function getReportsByPatientId(patientId: string): Promise<Report[]
 
 export async function getPatientMedicalHistoryAsString(patientId: string): Promise<string> {
     await delay(100);
+    const patient = await getPatientById(patientId);
+    if (!patient) return "Paciente no encontrado.";
+
     const consultations = (consultationsData as Consultation[]).filter(c => c.patientId === patientId);
 
+    let fullHistory = `Historial Médico de: ${patient.name}\n`;
+    fullHistory += `ID de Paciente: ${patient.id}\n`;
+    fullHistory += `Edad: ${patient.age}\n`;
+    fullHistory += `Sexo: ${patient.gender}\n`;
+    fullHistory += `---------------------------------------\n\n`;
+
     if (consultations.length === 0) {
-        return "No se encontró historial médico para este paciente.";
+        return fullHistory + "No se encontró historial de consultas para este paciente.";
     }
 
     const historyString = consultations
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map(c => {
-            let entry = `Fecha: ${new Date(c.date).toLocaleDateString()}\nTipo: ${c.type}\nDoctor: ${c.doctor}\nNotas: ${c.notes}`;
+            let entry = `Fecha: ${new Date(c.date).toLocaleDateString()}\nTipo: ${c.type}\nDoctor: ${c.doctor}\n\nNotas:\n${c.notes}`;
             if (c.prescriptions && c.prescriptions.length > 0) {
-                entry += `\nRecetas: ${c.prescriptions.map(p => p.medication).join(', ')}`;
+                entry += `\n\nRecetas:\n${c.prescriptions.map(p => `- ${p.medication} (${p.dosage}, ${p.duration})`).join('\n')}`;
             }
-            if (c.labResults && c.labResults.length > 0) {
-                entry += `\nResultados de Laboratorio: ${c.labResults.map(l => `${l.testName}: ${l.value ? l.value : 'N/A'}`).join(', ')}`;
-            }
-            if(c.reports && c.reports.length > 0) {
-                entry += `\nInformes: ${c.reports.map(r => r.title).join(', ')}`;
+            if (c.reports && c.reports.length > 0) {
+                entry += `\n\nInformes Adjuntos:\n${c.reports.map(r => `- ${r.title}`).join('\n')}`;
             }
             return entry;
         })
         .join('\n\n---\n\n');
-
-    return historyString;
+    
+    return fullHistory + historyString;
 }
 
 

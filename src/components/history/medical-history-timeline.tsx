@@ -6,17 +6,22 @@ import { AddHistoryFab } from "../patients/add-history-fab";
 interface MedicalHistoryTimelineProps {
     history: Consultation[];
     onNewConsultation: (consultation: Omit<Consultation, 'id' | 'patientId'>) => void;
+    children?: React.ReactNode;
 }
 
-export function MedicalHistoryTimeline({ history, onNewConsultation }: MedicalHistoryTimelineProps) {
+export function MedicalHistoryTimeline({ history, onNewConsultation, children }: MedicalHistoryTimelineProps) {
     const sortedHistory = [...history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
         <div className="relative pl-6">
+            <div className="absolute top-0 right-0 z-10">
+                {children}
+            </div>
+
             {/* Timeline line */}
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border -translate-x-1/2"></div>
             
-            <div className="space-y-8">
+            <div className="space-y-8 pt-4">
                 {sortedHistory.map((item, index) => (
                     <div key={item.id} className="relative">
                         <div className="absolute -left-0.5 top-2.5 h-3 w-3 rounded-full bg-primary ring-4 ring-background" />

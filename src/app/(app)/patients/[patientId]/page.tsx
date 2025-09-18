@@ -1,19 +1,25 @@
 'use client';
-import { getConsultationsByPatientId } from '@/lib/actions';
+import { getConsultationsByPatientId, getPatientById } from '@/lib/actions';
 import { MedicalHistoryTimeline } from '@/components/history/medical-history-timeline';
-import type { Consultation } from '@/lib/types';
+import type { Consultation, Patient } from '@/lib/types';
 import { useEffect, useState, use } from 'react';
+import { ExportHistoryButton } from '@/components/history/export-history-button';
 
 export default function PatientHistoryPage({ params }: { params: Promise<{ patientId: string }> }) {
   const { patientId } = use(params);
   const [history, setHistory] = useState<Consultation[]>([]);
+  const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHistory = async () => {
       setLoading(true);
-      const medicalHistory = await getConsultationsByPatientId(patientId);
+      const [medicalHistory, patientData] = await Promise.all([
+        getConsultationsByPatientId(patientId),
+        getPatientById(patientId)
+      ]);
       setHistory(medicalHistory);
+      setPatient(patientData || null);
       setLoading(false);
     };
     fetchHistory();
@@ -34,6 +40,11 @@ export default function PatientHistoryPage({ params }: { params: Promise<{ patie
   }
 
   return (
-      <MedicalHistoryTimeline history={history} onNewConsultation={handleNewConsultation}/>
+      <MedicalHistoryTimeline 
+        history={history} 
+        onNewConsultation={handleNewConsultation}
+      >
+        {patient && <ExportHistoryButton patient={patient} />}
+      </MedicalHistoryTimeline>
   );
 }
