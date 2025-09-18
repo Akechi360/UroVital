@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Consultation } from "@/lib/types";
+import { FileInput } from "../ui/file-input";
 
 const formSchema = z.object({
   date: z.date({ required_error: "Se requiere una fecha." }),
@@ -32,7 +33,7 @@ const formSchema = z.object({
     id: z.string().optional(),
     title: z.string().min(1, "Se requiere el título del informe."),
     date: z.string().optional(),
-    fileUrl: z.string().optional(),
+    file: z.instanceof(File).optional(),
   })).optional(),
   labResults: z.array(z.object({
     id: z.string().optional(),
@@ -80,7 +81,15 @@ export function ConsultationForm({ onFormSubmit }: ConsultationFormProps) {
         ...values,
         date: values.date.toISOString(),
         prescriptions: values.prescriptions || [],
-        reports: (values.reports || []).map(r => ({...r, date: new Date().toISOString(), fileUrl: '#'})), // Mock data
+        reports: (values.reports || []).map(r => ({
+            id: r.id || `rep-${Date.now()}`,
+            title: r.title,
+            date: new Date().toISOString(), 
+            fileUrl: r.file?.name || '#',
+            type: 'Otro', // Or derive from file type
+            notes: '',
+            attachments: [],
+        })), // Mock data
         labResults: values.labResults || [],
     }
     onFormSubmit(formattedValues);
@@ -220,12 +229,23 @@ export function ConsultationForm({ onFormSubmit }: ConsultationFormProps) {
                         <FormField control={form.control} name={`reports.${index}.title`} render={({ field }) => (
                             <FormItem><FormLabel>Título del Informe</FormLabel><FormControl><Input placeholder="ej. Resultados Ecografía Renal" {...field} /></FormControl><FormMessage /></FormItem>
                         )}/>
-                        <FormItem>
-                            <FormLabel>Archivo</FormLabel>
-                            <FormControl>
-                                <Input type="file" className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"/>
-                            </FormControl>
-                        </FormItem>
+                        <FormField
+                            control={form.control}
+                            name={`reports.${index}.file`}
+                            render={({ field: { onChange, value, ...rest } }) => (
+                            <FormItem>
+                                <FormLabel>Archivo</FormLabel>
+                                <FormControl>
+                                    <FileInput
+                                        value={value ? [value] : []}
+                                        onValueChange={(files) => onChange(files[0])}
+                                        accept="image/*,.pdf"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+
                       </div>
                     ))}
                      <Button type="button" variant="outline" className="w-full" onClick={() => appendReport({ title: "" })}>

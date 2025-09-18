@@ -15,6 +15,7 @@ import { format } from "date-fns"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import type { Report } from "@/lib/types";
+import { FileInput } from "../ui/file-input";
 
 const reportTypes = ["Ecografía", "Tomografía", "Resonancia Magnética", "Biopsia", "Análisis de Sangre", "Uroflujometría", "Otro"];
 
@@ -23,10 +24,11 @@ const formSchema = z.object({
   date: z.date({ required_error: "Se requiere una fecha." }),
   type: z.string({ required_error: "Selecciona un tipo de informe."}),
   notes: z.string().min(10, "Las notas deben tener al menos 10 caracteres."),
-  attachments: z.array(z.string()).optional(),
+  attachments: z.array(z.instanceof(File)).optional(),
 })
 
-export type NewReportFormValues = Omit<Report, 'id' | 'patientId' | 'fileUrl'>;
+export type NewReportFormValues = Omit<Report, 'id' | 'patientId' | 'fileUrl' | 'attachments'> & { attachments: string[] };
+
 
 interface NewReportFormProps {
     onFormSubmit: (values: NewReportFormValues) => void;
@@ -48,7 +50,7 @@ export function NewReportForm({ onFormSubmit }: NewReportFormProps) {
     const formattedValues: NewReportFormValues = {
         ...values,
         date: values.date.toISOString(),
-        attachments: values.attachments || [],
+        attachments: values.attachments?.map(f => f.name) || [],
     }
     onFormSubmit(formattedValues);
     toast({
@@ -149,13 +151,25 @@ export function NewReportForm({ onFormSubmit }: NewReportFormProps) {
               )}
             />
             
-            <FormItem>
-                <FormLabel>Adjuntos</FormLabel>
-                <FormControl>
-                    <Input type="file" multiple className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"/>
-                </FormControl>
-                <FormMessage />
-            </FormItem>
+            <FormField
+              control={form.control}
+              name="attachments"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Adjuntos</FormLabel>
+                  <FormControl>
+                    <FileInput
+                        value={field.value || []}
+                        onValueChange={field.onChange}
+                        multiple
+                        accept="image/*,.pdf"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
 
           </div>
         </ScrollArea>
