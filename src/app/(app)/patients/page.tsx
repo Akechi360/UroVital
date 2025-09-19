@@ -1,5 +1,5 @@
 import { getPatients } from '@/lib/actions';
-import PatientListWrapper from '@/components/patients/patient-list-wrapper';
+import { PatientListWrapper } from '@/components/patients/patient-list-wrapper';
 import { PageHeader } from '@/components/shared/page-header';
 
 export default async function PatientsPage() {
