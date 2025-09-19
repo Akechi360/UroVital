@@ -1,5 +1,5 @@
 'use client';
-import { getPatientById } from '@/lib/actions';
+import { getCompanyById, getPatientById } from '@/lib/actions';
 import { usePathname } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
 import PatientDetailHeader from '@/components/patients/patient-detail-header';
@@ -11,7 +11,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { ExportHistoryButton } from '@/components/history/export-history-button';
-import type { Patient } from '@/lib/types';
+import type { Patient, Company } from '@/lib/types';
+
+type PatientWithCompany = Patient & { companyName?: string };
 
 export default function PatientDetailLayout({
   children,
@@ -22,10 +24,21 @@ export default function PatientDetailLayout({
 }) {
   const pathname = usePathname();
   const { patientId } = use(params);
-  const [patient, setPatient] = useState<Patient | null>(null);
+  const [patient, setPatient] = useState<PatientWithCompany | null>(null);
 
   useEffect(() => {
-    getPatientById(patientId).then(setPatient);
+    const fetchPatientData = async () => {
+      const patientData = await getPatientById(patientId);
+      if (patientData) {
+        let companyName: string | undefined;
+        if (patientData.companyId) {
+          const company = await getCompanyById(patientData.companyId);
+          companyName = company?.name;
+        }
+        setPatient({ ...patientData, companyName });
+      }
+    };
+    fetchPatientData();
   }, [patientId]);
   
   const isHistoryPage = pathname === `/patients/${patientId}`;

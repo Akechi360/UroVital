@@ -2,11 +2,11 @@ import type { Patient } from '@/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { getInitials } from '@/lib/utils';
-import { User, HeartPulse, Droplets, Phone, Mail } from 'lucide-react';
+import { User, HeartPulse, Droplets, Phone, Mail, Building } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 
 interface PatientDetailHeaderProps {
-  patient: Patient;
+  patient: Patient & { companyName?: string };
 }
 
 export default function PatientDetailHeader({ patient }: PatientDetailHeaderProps) {
@@ -26,7 +26,15 @@ export default function PatientDetailHeader({ patient }: PatientDetailHeaderProp
               <div className="flex items-center"><HeartPulse className="w-4 h-4 mr-2 text-primary" /> {patient.gender}</div>
               <div className="flex items-center"><Droplets className="w-4 h-4 mr-2 text-primary" /> Grupo Sanguíneo: {patient.bloodType}</div>
               <div className="flex items-center"><Phone className="w-4 h-4 mr-2 text-primary" /> {patient.contact.phone}</div>
-              <div className="flex items-center col-span-2"><Mail className="w-4 h-4 mr-2 text-primary" /> {patient.contact.email}</div>
+              <div className="flex items-center col-span-2 md:col-span-1"><Mail className="w-4 h-4 mr-2 text-primary" /> {patient.contact.email}</div>
+               <div className="flex items-center col-span-2 md:col-span-1">
+                <Building className="w-4 h-4 mr-2 text-primary" />
+                {patient.companyName ? (
+                    <span>{patient.companyName}</span>
+                ) : (
+                    <span className="italic text-gray-400">Paciente Particular</span>
+                )}
+              </div>
             </div>
           </div>
         </CardContent>
