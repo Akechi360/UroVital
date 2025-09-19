@@ -6,15 +6,20 @@ import { ClipboardPlus, CalendarPlus, FileDown } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ConsultationForm, ConsultationFormValues } from "./consultation-form";
-import type { Patient } from "@/lib/types";
+import type { Patient, Appointment, Consultation, IpssScore } from "@/lib/types";
 import jsPDF from "jspdf";
+import autoTable from 'jspdf-autotable';
 import { format } from 'date-fns';
 
 interface QuickActionsProps {
-    patient: Patient;
+    patient: Patient & { companyName?: string };
+    upcomingAppointments: Appointment[];
+    latestConsultations: Consultation[];
+    latestIpss: IpssScore | null;
+    latestPsa: { value: string; date: string; };
 }
 
-export function QuickActions({ patient }: QuickActionsProps) {
+export function QuickActions({ patient, upcomingAppointments, latestConsultations, latestIpss, latestPsa }: QuickActionsProps) {
     const { toast } = useToast();
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
@@ -38,23 +43,92 @@ export function QuickActions({ patient }: QuickActionsProps) {
 
     const handleExportSummary = () => {
         const doc = new jsPDF();
-        
-        doc.setFontSize(18);
-        doc.text(`Resumen del Paciente: ${patient.name}`, 14, 22);
-        doc.setFontSize(11);
+        const margin = 14;
+
+        // Título y fecha
+        doc.setFontSize(20);
+        doc.setFont("helvetica", "bold");
+        doc.text("Resumen del Paciente", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
         doc.setTextColor(150);
-        doc.text(`Generado el: ${new Date().toLocaleDateString()}`, 14, 30);
+        doc.text(`Generado el: ${format(new Date(), 'dd/MM/yyyy')}`, doc.internal.pageSize.getWidth() - margin, 20, { align: "right" });
 
-        doc.setFontSize(12);
-        doc.setTextColor(0);
-        doc.text(`ID del Paciente: ${patient.id}`, 14, 45);
-        doc.text(`Edad: ${patient.age} años`, 14, 52);
-        doc.text(`Género: ${patient.gender}`, 14, 59);
+        let y = 35;
 
-        // This is a placeholder for a real summary
-        doc.text("Aquí iría un resumen más detallado del estado del paciente...", 14, 70);
+        // Datos del Paciente
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(40);
+        doc.text("Información del Paciente", margin, y);
+        y += 8;
 
-        const filename = `Resumen-${patient.name.replace(/\s/g, '_')}-${format(new Date(), 'yyyy-MM-dd')}.pdf`;
+        autoTable(doc, {
+            startY: y,
+            theme: 'plain',
+            body: [
+                ['Nombre:', patient.name],
+                ['Edad:', `${patient.age} años`],
+                ['Género:', patient.gender],
+                ['Grupo Sanguíneo:', patient.bloodType || 'No disponible'],
+                ['Teléfono:', patient.contact.phone || 'No disponible'],
+                ['Email:', patient.contact.email || 'No disponible'],
+                ['Empresa:', patient.companyName || 'Paciente Particular'],
+            ],
+            styles: {
+                cellPadding: { top: 1, right: 0, bottom: 1, left: 0 },
+                fontSize: 11
+            },
+            columnStyles: {
+                0: { fontStyle: 'bold', cellWidth: 40 },
+                1: { fontStyle: 'normal' },
+            }
+        });
+        y = (doc as any).lastAutoTable.finalY + 10;
+        
+        // Indicadores Clave
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text("Indicadores Clave", margin, y);
+        y += 8;
+
+        autoTable(doc, {
+            startY: y,
+            theme: 'striped',
+            head: [['Indicador', 'Valor', 'Fecha/Info']],
+            body: [
+                ['Último PSA', `${latestPsa.value} ng/mL`, latestPsa.date ? format(new Date(latestPsa.date), 'dd/MM/yyyy') : 'N/A'],
+                ['Último IPSS', latestIpss ? `${latestIpss.score} (${latestIpss.category})` : 'N/A', latestIpss ? format(new Date(latestIpss.date), 'dd/MM/yyyy') : 'N/A'],
+                ['Próxima Cita', upcomingAppointments.length > 0 ? format(new Date(upcomingAppointments[0].date), 'dd/MM/yyyy HH:mm') : 'Ninguna', upcomingAppointments.length > 0 ? upcomingAppointments[0].reason : 'N/A'],
+            ],
+            headStyles: { fillColor: [58, 109, 255] },
+        });
+        y = (doc as any).lastAutoTable.finalY + 10;
+        
+        // Historial Reciente
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text("Consultas Recientes (Últimas 5)", margin, y);
+        y += 8;
+
+        if (latestConsultations.length > 0) {
+            autoTable(doc, {
+                startY: y,
+                theme: 'grid',
+                head: [['Fecha', 'Tipo', 'Doctor', 'Notas (resumen)']],
+                body: latestConsultations.slice(0, 5).map(c => [
+                    format(new Date(c.date), 'dd/MM/yyyy'),
+                    c.type,
+                    c.doctor,
+                    c.notes.substring(0, 50) + (c.notes.length > 50 ? '...' : '')
+                ]),
+            });
+        } else {
+            doc.setFont("helvetica", "normal");
+            doc.text("No hay consultas recientes.", margin, y);
+        }
+
+        const filename = `resumen_${patient.name.replace(/\s/g, '_')}.pdf`;
         doc.save(filename);
         
         toast({

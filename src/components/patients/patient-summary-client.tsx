@@ -4,6 +4,8 @@ import type { Patient, Appointment, Consultation, IpssScore } from "@/lib/types"
 import { QuickActions } from "./quick-actions";
 import { IndicatorCard, UpcomingAppointmentsCard } from "./patient-summary-cards";
 import { Stethoscope } from "lucide-react";
+import { getCompanyById } from "@/lib/actions";
+import { useState, useEffect } from "react";
 
 interface PatientSummaryClientProps {
     patient: Patient;
@@ -19,12 +21,30 @@ export default function PatientSummaryClient({
     latestIpss
 }: PatientSummaryClientProps) {
 
+    const [companyName, setCompanyName] = useState<string | undefined>(undefined);
+
+    useEffect(() => {
+        if (patient.companyId) {
+            getCompanyById(patient.companyId).then(company => {
+                setCompanyName(company?.name);
+            });
+        }
+    }, [patient.companyId]);
+
     // This would eventually come from lab results
     const latestPsa = { value: "4.1", date: "2024-05-01" };
 
+    const patientWithCompany = { ...patient, companyName };
+
     return (
         <div className="space-y-8">
-            <QuickActions patient={patient} />
+            <QuickActions 
+                patient={patientWithCompany}
+                upcomingAppointments={upcomingAppointments}
+                latestConsultations={latestConsultations}
+                latestIpss={latestIpss}
+                latestPsa={latestPsa}
+            />
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <IndicatorCard 
