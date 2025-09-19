@@ -79,4 +79,7 @@ export interface IpssScore {
 export interface Company {
   id: string;
   name: string;
+  ruc: string;
+  phone?: string;
+  email?: string;
 }

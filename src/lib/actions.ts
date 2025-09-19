@@ -9,69 +9,103 @@ import ipssScoresData from './data/ipss-values.json';
 import reportsData from './data/reports.json';
 import companiesData from './data/companies.json';
 import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company } from './types';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 // Simulate network delay
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
+// PATIENT ACTIONS
 export async function getPatients(): Promise<Patient[]> {
   await delay(100);
   return patientsData as Patient[];
 }
 
-export async function addPatient(patientData: Omit<Patient, 'id' | 'status' | 'bloodType' | 'contact' >): Promise<Patient> {
+export async function addPatient(patientData: Omit<Patient, 'id' | 'status' | 'bloodType' | 'contact' > & { contact?: Partial<Patient['contact']> }): Promise<Patient> {
     await delay(200);
     const newId = `p-${String(patientsData.length + 1).padStart(3, '0')}`;
     const newPatient: Patient = {
-        ...patientData,
         id: newId,
-        status: 'Activo', // Default status
-        bloodType: 'N/A', // Default value
+        name: patientData.name,
+        age: patientData.age,
+        gender: patientData.gender,
+        companyId: patientData.companyId,
+        status: 'Activo',
+        bloodType: 'N/A',
         lastVisit: new Date().toLocaleDateString('es-ES'),
         contact: {
-            phone: patientData.contact?.phone || 'N/A',
-            email: `${patientData.name.toLowerCase().replace(' ', '.')}@example.com`,
+            phone: patientData.contact?.phone || '',
+            email: patientData.contact?.email || `${patientData.name.toLowerCase().replace(/\s/g, '.')}@example.com`,
         }
     };
-    // Note: In a real app, you would write this to a database.
-    // Here we are just returning it to be added to the client-side store.
     return newPatient;
 }
 
-export async function getCompanies(): Promise<Company[]> {
-    await delay(50);
-    return companiesData as Company[];
-}
 
 export async function getPatientById(id: string): Promise<Patient | undefined> {
   await delay(100);
   return (patientsData as Patient[]).find(p => p.id === id);
 }
 
+export async function getPatientsByCompanyId(companyId: string): Promise<Patient[]> {
+    await delay(100);
+    return (patientsData as Patient[]).filter(p => p.companyId === companyId);
+}
+
+// COMPANY ACTIONS
+export async function getCompanies(): Promise<Company[]> {
+    await delay(50);
+    return companiesData as Company[];
+}
+
+export async function getCompanyById(id: string): Promise<Company | undefined> {
+  await delay(100);
+  return (companiesData as Company[]).find(c => c.id === id);
+}
+
+export async function addCompany(companyData: Omit<Company, 'id'>): Promise<Company> {
+    await delay(200);
+    const newId = `C${companiesData.length + 1}`;
+    const newCompany: Company = {
+        ...companyData,
+        id: newId,
+    };
+    return newCompany;
+}
+
+
+// APPOINTMENT ACTIONS
 export async function getAppointments(): Promise<Appointment[]> {
   await delay(100);
   return appointmentsData as Appointment[];
 }
 
+// CONSULTATION ACTIONS
 export async function getConsultationsByPatientId(patientId: string): Promise<Consultation[]> {
   await delay(100);
   return (consultationsData as Consultation[]).filter(c => c.patientId === patientId);
 }
 
+// LAB RESULT ACTIONS
 export async function getLabResultsByPatientId(patientId: string): Promise<LabResult[]> {
     await delay(100);
     return (labResultsData as LabResult[]).filter(r => r.patientId === patientId);
 }
 
+// IPSS SCORE ACTIONS
 export async function getIpssScoresByPatientId(patientId: string): Promise<IpssScore[]> {
     await delay(100);
     return (ipssScoresData as IpssScore[]).filter(r => r.patientId === patientId);
 }
 
+// REPORT ACTIONS
 export async function getReportsByPatientId(patientId: string): Promise<Report[]> {
     await delay(100);
     return (reportsData as Report[]).filter(r => r.patientId === patientId);
 }
 
+
+// PDF & EXPORT ACTIONS
 export async function getPatientMedicalHistoryAsString(patientId: string): Promise<string> {
     await delay(100);
     const patient = await getPatientById(patientId);

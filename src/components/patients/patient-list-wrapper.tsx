@@ -9,15 +9,13 @@ interface PatientListWrapperProps {
   initialPatients: Patient[];
 }
 
-export default function PatientListWrapper({ initialPatients }: PatientListWrapperProps) {
+export function PatientListWrapper({ initialPatients }: PatientListWrapperProps) {
   const { setPatients, isInitialized } = usePatientStore();
 
   useEffect(() => {
-    // Initialize the store only once
-    if (!isInitialized) {
-      setPatients(initialPatients);
-    }
-  }, [initialPatients, setPatients, isInitialized]);
+    // Initialize the store only once or if the initial data changes
+    setPatients(initialPatients);
+  }, [initialPatients, setPatients]);
 
   return <PatientList />;
 }

@@ -16,6 +16,7 @@ import {
   Settings,
   Stethoscope,
   PanelLeft,
+  Building,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -23,6 +24,7 @@ import { usePathname } from 'next/navigation';
 const menuItems = [
   { href: '/dashboard', label: 'Panel', icon: LayoutGrid },
   { href: '/patients', label: 'Pacientes', icon: Users },
+  { href: '/companies', label: 'Empresas', icon: Building },
   { href: '/appointments', label: 'Citas', icon: Calendar },
   { href: '/settings', label: 'Configuración', icon: Settings },
 ];

@@ -79,7 +79,8 @@
     "contact": {
       "phone": "555-0106",
       "email": "ana.perez@example.com"
-    }
+    },
+    "companyId": "C2"
   },
   {
     "id": "p-007",
@@ -159,6 +160,7 @@
     "contact": {
       "phone": "555-0112",
       "email": "lucia.jimenez@example.com"
-    }
+    },
+    "companyId": "C4"
   }
 ]
