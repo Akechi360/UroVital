@@ -84,3 +84,5 @@ export interface Company {
   email?: string;
   status: 'Activo' | 'Inactivo';
 }
+
+export type NewReportFormValues = Omit<Report, 'id' | 'fileUrl' | 'attachments'> & { attachments: string[] };

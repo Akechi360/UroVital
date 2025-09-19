@@ -24,7 +24,7 @@ export default function PatientSummaryClient({
 
     return (
         <div className="space-y-8">
-            <QuickActions />
+            <QuickActions patient={patient} />
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <IndicatorCard 
