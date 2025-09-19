@@ -4,7 +4,7 @@ export interface Patient {
   age: number;
   gender: 'Masculino' | 'Femenino' | 'Otro';
   bloodType: string;
-  status: 'Activo' | 'Inactivo' | 'En tratamiento';
+  status: 'Activo' | 'Inactivo';
   lastVisit?: string;
   contact: {
     phone: string;
@@ -82,4 +82,5 @@ export interface Company {
   ruc: string;
   phone?: string;
   email?: string;
+  status: 'Activo' | 'Inactivo';
 }

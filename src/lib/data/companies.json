@@ -1,7 +1,7 @@
 
 [
-  { "id": "C1", "name": "Seguros Atlas", "ruc": "SAL870401H57", "phone": "55-1234-5678", "email": "contacto@segurosatlas.com" },
-  { "id": "C2", "name": "MetLife México", "ruc": "MET920101A12", "phone": "55-9876-5432", "email": "info@metlife.com.mx" },
-  { "id": "C3", "name": "GNP Seguros", "ruc": "GNP951128B34", "phone": "55-5555-5555", "email": "atencion@gnp.com.mx" },
-  { "id": "C4", "name": "AXA Seguros", "ruc": "AXA080115C45", "phone": "800-900-1292", "email": "servicio@axa.com.mx" }
+  { "id": "C1", "name": "Seguros Atlas", "ruc": "SAL870401H57", "phone": "55-1234-5678", "email": "contacto@segurosatlas.com", "status": "Activo" },
+  { "id": "C2", "name": "MetLife México", "ruc": "MET920101A12", "phone": "55-9876-5432", "email": "info@metlife.com.mx", "status": "Activo" },
+  { "id": "C3", "name": "GNP Seguros", "ruc": "GNP951128B34", "phone": "55-5555-5555", "email": "atencion@gnp.com.mx", "status": "Inactivo" },
+  { "id": "C4", "name": "AXA Seguros", "ruc": "AXA080115C45", "phone": "800-900-1292", "email": "servicio@axa.com.mx", "status": "Activo" }
 ]

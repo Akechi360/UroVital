@@ -203,7 +203,6 @@ export default function PatientList() {
                                             <SelectItem value="Todos">Todos los Estados</SelectItem>
                                             <SelectItem value="Activo">Activo</SelectItem>
                                             <SelectItem value="Inactivo">Inactivo</SelectItem>
-                                            <SelectItem value="En tratamiento">En tratamiento</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -285,7 +284,7 @@ export default function PatientList() {
                         <TableCell>{patient.gender}</TableCell>
                         <TableCell>{patient.lastVisit || 'N/A'}</TableCell>
                         <TableCell>
-                        <Badge variant={patient.status === 'Activo' ? 'success' : patient.status === 'Inactivo' ? 'destructive' : 'secondary'}>
+                        <Badge variant={patient.status === 'Activo' ? 'success' : 'destructive'}>
                             {patient.status}
                         </Badge>
                         </TableCell>
@@ -324,7 +323,7 @@ export default function PatientList() {
                         <p className="text-sm text-muted-foreground">{patient.age} años • {patient.gender}</p>
                         </div>
                     </div>
-                    <Badge variant={patient.status === 'Activo' ? 'success' : patient.status === 'Inactivo' ? 'destructive' : 'secondary'}>
+                    <Badge variant={patient.status === 'Activo' ? 'success' : 'destructive'}>
                         {patient.status}
                     </Badge>
                     </div>

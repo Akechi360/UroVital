@@ -63,12 +63,13 @@ export async function getCompanyById(id: string): Promise<Company | undefined> {
   return (companiesData as Company[]).find(c => c.id === id);
 }
 
-export async function addCompany(companyData: Omit<Company, 'id'>): Promise<Company> {
+export async function addCompany(companyData: Omit<Company, 'id' | 'status'>): Promise<Company> {
     await delay(200);
     const newId = `C${companiesData.length + 1}`;
     const newCompany: Company = {
         ...companyData,
         id: newId,
+        status: 'Activo',
     };
     return newCompany;
 }

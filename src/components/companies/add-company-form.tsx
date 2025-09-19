@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { addCompany } from '@/lib/actions';
 import { useCompanyStore } from '@/lib/store/company-store';
+import type { Company } from '@/lib/types';
 
 const formSchema = z.object({
   name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres.'),
@@ -48,8 +49,11 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const newCompany = await addCompany(values);
-      addCompanyToStore({ ...newCompany, patientCount: 0 });
+      const newCompany : (Company & {patientCount: number}) = {
+        ...(await addCompany(values)),
+        patientCount: 0,
+      }
+      addCompanyToStore(newCompany);
       toast({
         title: 'Empresa Agregada',
         description: `${newCompany.name} ha sido agregada a la lista.`,

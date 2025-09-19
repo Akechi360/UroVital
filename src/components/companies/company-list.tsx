@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { AddCompanyForm } from './add-company-form';
 import { cn } from '@/lib/utils';
 import type { Company } from '@/lib/types';
+import { Badge } from '../ui/badge';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -30,7 +31,7 @@ export default function CompanyList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
-  const companies = useCompanyStore((state) => state.companies) as (Company & { patientCount: number })[];
+  const companies = useCompanyStore((state) => state.companies);
 
   const filteredCompanies = useMemo(() => {
     return companies.filter((company) =>
@@ -118,12 +119,17 @@ export default function CompanyList() {
                 onClick={() => handleCompanyClick(company.id)}
                >
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                        <Building className="h-6 w-6 text-primary" />
-                    </div>
-                    <span>{company.name}</span>
-                  </CardTitle>
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="flex items-center gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                          <Building className="h-6 w-6 text-primary" />
+                      </div>
+                      <span>{company.name}</span>
+                    </CardTitle>
+                    <Badge variant={company.status === 'Activo' ? 'success' : 'destructive'}>
+                        {company.status}
+                    </Badge>
+                  </div>
                   <CardDescription>RUC: {company.ruc}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow space-y-2 text-sm text-muted-foreground">
