@@ -29,6 +29,8 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Label } from '../ui/label';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface PatientListProps {
   patients: Patient[];
@@ -52,6 +54,48 @@ export default function PatientList({ patients }: PatientListProps) {
 
   const router = useRouter();
   const { toast } = useToast();
+
+  const handleExport = () => {
+    try {
+      const doc = new jsPDF();
+
+      // Encabezado
+      doc.setFontSize(18);
+      doc.text("Lista de Pacientes - UroVital", 14, 20);
+      doc.setFontSize(12);
+      doc.text(`Fecha de generación: ${new Date().toLocaleDateString()}`, 14, 30);
+
+      // Crear tabla con los datos
+      autoTable(doc, {
+        startY: 40,
+        head: [['ID', 'Nombre', 'Edad', 'Sexo', 'Teléfono', 'Email']],
+        body: patients.map(p => [
+          p.id,
+          p.name,
+          p.age,
+          p.gender,
+          p.contact.phone || "N/A",
+          p.contact.email || "N/A"
+        ]),
+      });
+
+      // Descargar archivo
+      doc.save("Lista_Pacientes.pdf");
+      
+      toast({
+        title: "Exportación completada",
+        description: "La descarga de la lista de pacientes ha comenzado.",
+      });
+
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error en la exportación",
+        description: "No se pudo generar el archivo PDF.",
+      });
+      console.error("Failed to export patients list:", error);
+    }
+  };
 
   const filteredPatients = useMemo(() => {
     let filtered = patients;
@@ -162,7 +206,7 @@ export default function PatientList({ patients }: PatientListProps) {
                         </div>
                     </PopoverContent>
                 </Popover>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" onClick={handleExport}>
                     <Download className="h-4 w-4" />
                 </Button>
             </div>

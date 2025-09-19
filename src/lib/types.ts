@@ -10,6 +10,7 @@ export interface Patient {
     phone: string;
     email: string;
   };
+  avatarUrl?: string;
 }
 
 export interface Appointment {
