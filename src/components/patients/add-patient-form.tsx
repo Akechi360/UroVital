@@ -106,7 +106,7 @@ export function AddPatientForm({ onSuccess }: AddPatientFormProps) {
               <FormItem>
                 <FormLabel>Edad</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Ej: 45" {...field} onChange={e => field.onChange(e.target.valueAsNumber)} />
+                  <Input type="number" placeholder="Ej: 45" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : e.target.valueAsNumber)} value={field.value ?? ''} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
