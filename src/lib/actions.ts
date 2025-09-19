@@ -7,7 +7,8 @@ import usersData from './data/users.json';
 import labResultsData from './data/lab-results.json';
 import ipssScoresData from './data/ipss-values.json';
 import reportsData from './data/reports.json';
-import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report } from './types';
+import companiesData from './data/companies.json';
+import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company } from './types';
 
 // Simulate network delay
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -15,6 +16,30 @@ const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 export async function getPatients(): Promise<Patient[]> {
   await delay(100);
   return patientsData as Patient[];
+}
+
+export async function addPatient(patientData: Omit<Patient, 'id' | 'status' | 'bloodType' | 'contact' >): Promise<Patient> {
+    await delay(200);
+    const newId = `p-${String(patientsData.length + 1).padStart(3, '0')}`;
+    const newPatient: Patient = {
+        ...patientData,
+        id: newId,
+        status: 'Activo', // Default status
+        bloodType: 'N/A', // Default value
+        lastVisit: new Date().toLocaleDateString('es-ES'),
+        contact: {
+            phone: patientData.contact?.phone || 'N/A',
+            email: `${patientData.name.toLowerCase().replace(' ', '.')}@example.com`,
+        }
+    };
+    // Note: In a real app, you would write this to a database.
+    // Here we are just returning it to be added to the client-side store.
+    return newPatient;
+}
+
+export async function getCompanies(): Promise<Company[]> {
+    await delay(50);
+    return companiesData as Company[];
 }
 
 export async function getPatientById(id: string): Promise<Patient | undefined> {

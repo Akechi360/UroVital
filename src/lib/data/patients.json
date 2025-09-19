@@ -11,7 +11,8 @@
     "contact": {
       "phone": "555-0101",
       "email": "roberto.vance@example.com"
-    }
+    },
+    "companyId": "C1"
   },
   {
     "id": "p-002",
@@ -32,12 +33,13 @@
     "age": 72,
     "gender": "Masculino",
     "bloodType": "B+",
-    "status": "Activo",
+    "status": "En tratamiento",
     "lastVisit": "12/08/2025",
     "contact": {
       "phone": "555-0103",
       "email": "carlos.sanchez@example.com"
-    }
+    },
+    "companyId": "C2"
   },
   {
     "id": "p-004",
@@ -63,7 +65,8 @@
     "contact": {
       "phone": "555-0105",
       "email": "miguel.rodriguez@example.com"
-    }
+    },
+    "companyId": "C3"
   },
   {
     "id": "p-006",
@@ -89,7 +92,8 @@
     "contact": {
       "phone": "555-0107",
       "email": "javier.fernandez@example.com"
-    }
+    },
+    "companyId": "C1"
   },
   {
     "id": "p-008",
@@ -128,7 +132,8 @@
     "contact": {
       "phone": "555-0110",
       "email": "elena.diaz@example.com"
-    }
+    },
+    "companyId": "C2"
   },
   {
     "id": "p-011",

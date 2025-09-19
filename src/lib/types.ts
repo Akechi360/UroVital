@@ -2,15 +2,16 @@ export interface Patient {
   id: string;
   name: string;
   age: number;
-  gender: 'Masculino' | 'Femenino';
+  gender: 'Masculino' | 'Femenino' | 'Otro';
   bloodType: string;
-  status: 'Activo' | 'Inactivo';
+  status: 'Activo' | 'Inactivo' | 'En tratamiento';
   lastVisit?: string;
   contact: {
     phone: string;
     email: string;
   };
   avatarUrl?: string;
+  companyId?: string;
 }
 
 export interface Appointment {
@@ -73,4 +74,9 @@ export interface IpssScore {
   date: string;
   score: number;
   category: 'Leve' | 'Moderado' | 'Severo';
+}
+
+export interface Company {
+  id: string;
+  name: string;
 }

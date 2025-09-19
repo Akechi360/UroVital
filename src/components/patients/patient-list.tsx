@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Patient } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import {
@@ -31,10 +31,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Label } from '../ui/label';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
-interface PatientListProps {
-  patients: Patient[];
-}
+import { usePatientStore } from '@/lib/store/patient-store';
+import { AddPatientForm } from './add-patient-form';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '../ui/dialog';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -46,14 +45,16 @@ const glowStyles = [
     "hover:shadow-[0_0_20px_rgba(75,0,130,0.25),0_0_40px_rgba(238,130,238,0.25)]",
 ]
 
-export default function PatientList({ patients }: PatientListProps) {
+export default function PatientList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [genderFilter, setGenderFilter] = useState('Todos');
   const [statusFilter, setStatusFilter] = useState('Todos');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
   const { toast } = useToast();
+  const patients = usePatientStore((state) => state.patients);
 
   const handleExport = () => {
     try {
@@ -114,10 +115,12 @@ export default function PatientList({ patients }: PatientListProps) {
         filtered = filtered.filter((patient) => patient.status === statusFilter);
     }
     
-    setCurrentPage(1);
-
     return filtered;
   }, [patients, searchTerm, genderFilter, statusFilter]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, genderFilter, statusFilter]);
 
   const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
   const paginatedPatients = filteredPatients.slice(
@@ -186,6 +189,7 @@ export default function PatientList({ patients }: PatientListProps) {
                                             <SelectItem value="Todos">Todos los Géneros</SelectItem>
                                             <SelectItem value="Masculino">Masculino</SelectItem>
                                             <SelectItem value="Femenino">Femenino</SelectItem>
+                                            <SelectItem value="Otro">Otro</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -199,6 +203,7 @@ export default function PatientList({ patients }: PatientListProps) {
                                             <SelectItem value="Todos">Todos los Estados</SelectItem>
                                             <SelectItem value="Activo">Activo</SelectItem>
                                             <SelectItem value="Inactivo">Inactivo</SelectItem>
+                                            <SelectItem value="En tratamiento">En tratamiento</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -210,10 +215,23 @@ export default function PatientList({ patients }: PatientListProps) {
                     <Download className="h-4 w-4" />
                 </Button>
             </div>
-            <Button className="w-full sm:w-auto">
-                <UserPlus className="mr-2 h-4 w-4" />
-                Agregar Paciente
-            </Button>
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogTrigger asChild>
+                    <Button className="w-full sm:w-auto">
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        Agregar Paciente
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[480px]">
+                    <DialogHeader>
+                        <DialogTitle>Agregar Nuevo Paciente</DialogTitle>
+                        <DialogDescription>
+                            Complete el formulario para registrar un nuevo paciente en el sistema.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <AddPatientForm onSuccess={() => setIsModalOpen(false)} />
+                </DialogContent>
+            </Dialog>
         </div>
       </div>
       
@@ -267,7 +285,7 @@ export default function PatientList({ patients }: PatientListProps) {
                         <TableCell>{patient.gender}</TableCell>
                         <TableCell>{patient.lastVisit || 'N/A'}</TableCell>
                         <TableCell>
-                        <Badge variant={patient.status === 'Activo' ? 'success' : 'destructive'}>
+                        <Badge variant={patient.status === 'Activo' ? 'success' : patient.status === 'Inactivo' ? 'destructive' : 'secondary'}>
                             {patient.status}
                         </Badge>
                         </TableCell>
@@ -306,9 +324,9 @@ export default function PatientList({ patients }: PatientListProps) {
                         <p className="text-sm text-muted-foreground">{patient.age} años • {patient.gender}</p>
                         </div>
                     </div>
-                    <Badge variant={patient.status === 'Activo' ? 'success' : 'destructive'}>
-                            {patient.status}
-                        </Badge>
+                    <Badge variant={patient.status === 'Activo' ? 'success' : patient.status === 'Inactivo' ? 'destructive' : 'secondary'}>
+                        {patient.status}
+                    </Badge>
                     </div>
                     <div className="mt-4 pt-4 border-t border-border/50 text-sm text-muted-foreground">
                         Última Visita: {patient.lastVisit || 'N/A'}
@@ -350,5 +368,3 @@ export default function PatientList({ patients }: PatientListProps) {
     </div>
   );
 }
-
-    
