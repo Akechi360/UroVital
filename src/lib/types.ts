@@ -85,4 +85,4 @@ export interface Company {
   status: 'Activo' | 'Inactivo';
 }
 
-export type NewReportFormValues = Omit<Report, 'id' | 'fileUrl' | 'attachments'> & { attachments: string[] };
+export type NewReportFormValues = Omit<Report, 'id' | 'patientId' | 'fileUrl' | 'attachments'> & { attachments: string[] };

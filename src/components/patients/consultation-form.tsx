@@ -80,7 +80,7 @@ export function ConsultationForm({ onFormSubmit }: ConsultationFormProps) {
     const formattedValues: ConsultationFormValues = {
         ...values,
         date: values.date.toISOString(),
-        prescriptions: values.prescriptions || [],
+        prescriptions: (values.prescriptions || []).map(p => ({ ...p, id: p.id || `rx-${Date.now()}-${Math.random()}` })),
         reports: (values.reports || []).map(r => ({
             id: r.id || `rep-${Date.now()}`,
             title: r.title,
