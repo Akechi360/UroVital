@@ -85,4 +85,21 @@ export interface Company {
   status: 'Activo' | 'Inactivo';
 }
 
-export type NewReportFormValues = Omit<Report, 'id' | 'patientId' | 'fileUrl'>;
+export type NewReportFormValues = Omit<Report, 'id' | 'patientId' | 'fileUrl'> & { patientId?: string };
+
+export interface Supply {
+  id: string;
+  name: string;
+  category: string;
+  stock: number;
+  unit: string;
+  expiryDate: string;
+}
+
+export interface Provider {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+}

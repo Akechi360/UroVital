@@ -8,6 +8,8 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   SidebarTrigger,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
 } from '@/components/ui/sidebar';
 import {
   LayoutGrid,
@@ -17,22 +19,34 @@ import {
   Stethoscope,
   PanelLeft,
   Building,
+  Box,
+  Truck,
+  Bell,
+  ChevronDown,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
-const menuItems = [
+const mainMenuItems = [
   { href: '/dashboard', label: 'Panel', icon: LayoutGrid },
   { href: '/patients', label: 'Pacientes', icon: Users },
   { href: '/companies', label: 'Empresas', icon: Building },
   { href: '/appointments', label: 'Citas', icon: Calendar },
-  { href: '/settings', label: 'Configuración', icon: Settings },
 ];
+
+const adminMenuItems = [
+    { href: '/administrativo/supplies', label: 'Suministros', icon: Box },
+    { href: '/administrativo/providers', label: 'Proveedores', icon: Truck },
+    { href: '/administrativo/alerts', label: 'Alertas', icon: Bell },
+]
+
+const settingsMenuItem = { href: '/settings', label: 'Configuración', icon: Settings };
 
 export default function Nav() {
   const pathname = usePathname();
+  const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/administrativo'));
 
-  // A simple way to check for an exact match or if the path starts with the href
   const isActive = (href: string) => {
     if (href === '/dashboard') {
         return pathname === href;
@@ -55,7 +69,7 @@ export default function Nav() {
       </SidebarHeader>
       <SidebarContent className="p-2">
         <SidebarMenu>
-          {menuItems.map((item) => (
+          {mainMenuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 asChild
@@ -69,6 +83,45 @@ export default function Nav() {
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+            
+            <SidebarMenuItem>
+                <SidebarMenuButton
+                    onClick={() => setIsAdminOpen(!isAdminOpen)}
+                    isActive={isActive('/administrativo')}
+                    tooltip={{ children: 'Administrativo' }}
+                >
+                    <Box />
+                    <span>Administrativo</span>
+                    <ChevronDown className={`ml-auto h-5 w-5 transition-transform ${isAdminOpen ? 'rotate-180' : ''}`} />
+                </SidebarMenuButton>
+                {isAdminOpen && (
+                    <SidebarMenuSub>
+                        {adminMenuItems.map(item => (
+                            <SidebarMenuSubItem key={item.href}>
+                                <SidebarMenuSubButton asChild isActive={pathname === item.href}>
+                                    <Link href={item.href}>
+                                        <item.icon />
+                                        <span>{item.label}</span>
+                                    </Link>
+                                </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                        ))}
+                    </SidebarMenuSub>
+                )}
+            </SidebarMenuItem>
+
+          <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={isActive(settingsMenuItem.href)}
+                tooltip={{ children: settingsMenuItem.label }}
+              >
+                <Link href={settingsMenuItem.href}>
+                  <settingsMenuItem.icon />
+                  <span>{settingsMenuItem.label}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:hidden">

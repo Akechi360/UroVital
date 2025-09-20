@@ -8,7 +8,9 @@ import labResultsData from './data/lab-results.json';
 import ipssScoresData from './data/ipss-values.json';
 import reportsData from './data/reports.json';
 import companiesData from './data/companies.json';
-import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company } from './types';
+import suppliesData from './data/supplies.json';
+import providersData from './data/providers.json';
+import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company, Supply, Provider } from './types';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -139,6 +141,38 @@ export async function getPatientMedicalHistoryAsString(patientId: string): Promi
         .join('\n\n---\n\n');
     
     return fullHistory + historyString;
+}
+
+// SUPPLY ACTIONS
+export async function getSupplies(): Promise<Supply[]> {
+    await delay(100);
+    return suppliesData as Supply[];
+}
+
+export async function addSupply(supplyData: Omit<Supply, 'id'>): Promise<Supply> {
+    await delay(200);
+    const newId = `sup-${String(suppliesData.length + 1).padStart(3, '0')}`;
+    const newSupply: Supply = {
+        ...supplyData,
+        id: newId,
+    };
+    return newSupply;
+}
+
+// PROVIDER ACTIONS
+export async function getProviders(): Promise<Provider[]> {
+    await delay(100);
+    return providersData as Provider[];
+}
+
+export async function addProvider(providerData: Omit<Provider, 'id'>): Promise<Provider> {
+    await delay(200);
+    const newId = `prov-${String(providersData.length + 1).padStart(3, '0')}`;
+    const newProvider: Provider = {
+        ...providerData,
+        id: newId,
+    };
+    return newProvider;
 }
 
 

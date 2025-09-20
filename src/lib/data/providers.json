@@ -1,0 +1,23 @@
+[
+  {
+    "id": "prov-001",
+    "name": "Medline Industries",
+    "phone": "800-633-5463",
+    "email": "service@medline.com",
+    "address": "123 Main St, Northfield, IL"
+  },
+  {
+    "id": "prov-002",
+    "name": "Cardinal Health",
+    "phone": "800-964-5227",
+    "email": "support@cardinalhealth.com",
+    "address": "456 Health Ave, Dublin, OH"
+  },
+  {
+    "id": "prov-003",
+    "name": "Pfizer",
+    "phone": "800-438-1985",
+    "email": "info@pfizer.com",
+    "address": "789 Pharma Blvd, New York, NY"
+  }
+]

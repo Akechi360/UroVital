@@ -1,0 +1,42 @@
+[
+  {
+    "id": "sup-001",
+    "name": "Guantes de Nitrilo",
+    "category": "Descartables",
+    "stock": 15,
+    "unit": "cajas",
+    "expiryDate": "2026-12-31"
+  },
+  {
+    "id": "sup-002",
+    "name": "Tamsulosina 0.4mg",
+    "category": "Medicinas",
+    "stock": 50,
+    "unit": "cajas",
+    "expiryDate": "2025-08-01"
+  },
+  {
+    "id": "sup-003",
+    "name": "Sondas Foley 16Fr",
+    "category": "Material Quirúrgico",
+    "stock": 8,
+    "unit": "unidades",
+    "expiryDate": "2027-01-01"
+  },
+  {
+    "id": "sup-004",
+    "name": "Jeringas 10ml",
+    "category": "Descartables",
+    "stock": 200,
+    "unit": "unidades",
+    "expiryDate": "2028-05-20"
+  },
+  {
+    "id": "sup-005",
+    "name": "Ciprofloxacino 500mg",
+    "category": "Medicinas",
+    "stock": 30,
+    "unit": "cajas",
+    "expiryDate": "2024-09-15"
+  }
+]
