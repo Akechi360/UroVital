@@ -10,6 +10,7 @@ import {
   SidebarTrigger,
   SidebarMenuSub,
   SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import {
   LayoutGrid,
