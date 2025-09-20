@@ -120,13 +120,13 @@ export function ReportDetailModal({ isOpen, setIsOpen, report }: ReportDetailMod
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-2xl">{report.title}</DialogTitle>
-          <DialogDescription className="flex items-center gap-4 pt-1">
+          <div className="flex items-center gap-4 pt-1 text-sm text-muted-foreground">
             <Badge variant="secondary">{report.type}</Badge>
-            <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+            <div className='flex items-center gap-2'>
                 <Calendar className='h-4 w-4'/>
                 {new Date(report.date).toLocaleDateString()}
             </div>
-          </DialogDescription>
+          </div>
         </DialogHeader>
         <div className="py-4 space-y-6 max-h-[60vh] overflow-y-auto pr-4">
             <div className='space-y-2'>
