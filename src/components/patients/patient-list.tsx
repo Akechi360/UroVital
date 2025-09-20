@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import type { Patient } from '@/lib/types';
+import type { Company, Patient } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -32,8 +32,10 @@ import { Label } from '../ui/label';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { usePatientStore } from '@/lib/store/patient-store';
+import { useCompanyStore } from '@/lib/store/company-store';
 import { AddPatientForm } from './add-patient-form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '../ui/dialog';
+import { format } from 'date-fns';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -55,33 +57,57 @@ export default function PatientList() {
   const router = useRouter();
   const { toast } = useToast();
   const patients = usePatientStore((state) => state.patients);
+  const companies = useCompanyStore((state) => state.companies);
+  const companyMap = useMemo(() => new Map(companies.map(c => [c.id, c.name])), [companies]);
+
 
   const handleExport = () => {
     try {
       const doc = new jsPDF();
+      const exportTime = new Date();
 
       // Encabezado
       doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(58, 109, 255);
       doc.text("Lista de Pacientes - UroVital", 14, 20);
-      doc.setFontSize(12);
-      doc.text(`Fecha de generación: ${new Date().toLocaleDateString()}`, 14, 30);
+
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(150);
+      doc.text(`Generado el: ${format(exportTime, 'dd/MM/yyyy HH:mm')}`, doc.internal.pageSize.getWidth() - 14, 20, { align: "right" });
+
 
       // Crear tabla con los datos
       autoTable(doc, {
-        startY: 40,
-        head: [['ID', 'Nombre', 'Edad', 'Sexo', 'Teléfono', 'Email']],
-        body: patients.map(p => [
-          p.id,
+        startY: 30,
+        head: [['Nombre', 'Edad', 'Género', 'Teléfono', 'Email', 'Empresa', 'Estado']],
+        body: filteredPatients.map(p => [
           p.name,
           p.age,
           p.gender,
           p.contact.phone || "N/A",
-          p.contact.email || "N/A"
+          p.contact.email || "N/A",
+          p.companyId ? companyMap.get(p.companyId) || 'N/A' : 'Particular',
+          p.status
         ]),
+        headStyles: {
+            fillColor: [58, 109, 255], // Primary color
+            textColor: 255,
+            fontStyle: 'bold',
+        },
+        alternateRowStyles: {
+            fillColor: [242, 242, 242] // A very light gray for zebra-striping
+        },
+        styles: {
+            cellPadding: 3,
+            fontSize: 9,
+            valign: 'middle'
+        },
       });
 
       // Descargar archivo
-      doc.save("Lista_Pacientes.pdf");
+      doc.save(`pacientes-${format(exportTime, 'yyyy-MM-dd')}.pdf`);
       
       toast({
         title: "Exportación completada",
@@ -367,3 +393,5 @@ export default function PatientList() {
     </div>
   );
 }
+
+    
