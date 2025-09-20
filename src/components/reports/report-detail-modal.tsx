@@ -5,16 +5,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import type { Report } from '@/lib/types';
+import type { Company, Patient, Report } from '@/lib/types';
 import { Badge } from '../ui/badge';
 import { FileDown, Paperclip, Calendar, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
 import { format } from 'date-fns';
+import { getCompanyById, getPatientById } from '@/lib/actions';
 
 interface ReportDetailModalProps {
   isOpen: boolean;
@@ -25,8 +25,23 @@ interface ReportDetailModalProps {
 export function ReportDetailModal({ isOpen, setIsOpen, report }: ReportDetailModalProps) {
   const { toast } = useToast();
 
-  const handleExport = () => {
+  const handleExport = async () => {
     try {
+        const patient = await getPatientById(report.patientId);
+        if (!patient) {
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'No se pudo cargar la información del paciente para exportar.'
+            });
+            return;
+        }
+        
+        let company: Company | undefined;
+        if (patient.companyId) {
+            company = await getCompanyById(patient.companyId);
+        }
+
         const doc = new jsPDF();
         const margin = 14;
         const exportDate = new Date();
@@ -41,11 +56,38 @@ export function ReportDetailModal({ isOpen, setIsOpen, report }: ReportDetailMod
         doc.setTextColor(150);
         doc.text(`Generado el: ${format(exportDate, 'dd/MM/yyyy')}`, doc.internal.pageSize.getWidth() - margin, 20, { align: "right" });
 
-        let y = 40;
+        let y = 35;
 
+        // Datos del Paciente
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
         doc.setTextColor(40);
+        doc.text("Información del Paciente", margin, y);
+        y += 8;
+
+         autoTable(doc, {
+            startY: y,
+            theme: 'plain',
+            body: [
+                ['Nombre:', patient.name],
+                ['Edad:', `${patient.age} años`],
+                ['Género:', patient.gender],
+                ['Empresa:', company?.name || 'Paciente Particular'],
+            ],
+             styles: {
+                cellPadding: { top: 1, right: 0, bottom: 1, left: 0 },
+                fontSize: 11
+            },
+            columnStyles: {
+                0: { fontStyle: 'bold', cellWidth: 40 },
+                1: { fontStyle: 'normal' },
+            }
+        });
+        y = (doc as any).lastAutoTable.finalY + 10;
+
+        // Detalles del Informe
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
         doc.text("Detalles del Informe", margin, y);
         y+= 8;
 
