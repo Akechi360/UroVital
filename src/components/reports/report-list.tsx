@@ -19,6 +19,7 @@ export default function ReportList({ initialReports, patientId }: ReportListProp
       ...report,
       id: `rep-${Date.now()}`,
       patientId: patientId,
+      fileUrl: (report.attachments && report.attachments.length > 0) ? report.attachments[0] : '#',
     };
     setReports(prev => [newReport, ...prev].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
   };

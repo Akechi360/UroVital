@@ -27,8 +27,7 @@ const formSchema = z.object({
   attachments: z.array(z.instanceof(File)).optional(),
 })
 
-export type NewReportFormValues = Omit<Report, 'id' | 'patientId' | 'fileUrl' | 'attachments'> & { attachments: string[] };
-
+export type NewReportFormValues = Omit<Report, 'id' | 'patientId' | 'fileUrl'>;
 
 interface NewReportFormProps {
     onFormSubmit: (values: NewReportFormValues) => void;
@@ -41,6 +40,7 @@ export function NewReportForm({ onFormSubmit }: NewReportFormProps) {
     defaultValues: {
         title: "",
         date: new Date(),
+        type: undefined,
         notes: "",
         attachments: [],
     },
