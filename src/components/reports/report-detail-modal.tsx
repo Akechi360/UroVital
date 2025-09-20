@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import type { Report } from '@/lib/types';
 import { Badge } from '../ui/badge';
-import { FileDown, Paperclip, Calendar } from 'lucide-react';
+import { FileDown, Paperclip, Calendar, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
