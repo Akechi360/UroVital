@@ -10,7 +10,10 @@ import reportsData from './data/reports.json';
 import companiesData from './data/companies.json';
 import suppliesData from './data/supplies.json';
 import providersData from './data/providers.json';
-import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company, Supply, Provider } from './types';
+import paymentMethodsData from './data/payment-methods.json';
+import paymentTypesData from './data/payment-types.json';
+import paymentsData from './data/payments.json';
+import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company, Supply, Provider, PaymentMethod, PaymentType, Payment } from './types';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -175,6 +178,43 @@ export async function addProvider(providerData: Omit<Provider, 'id'>): Promise<P
     return newProvider;
 }
 
+// FINANCE ACTIONS
+export async function getPaymentMethods(): Promise<PaymentMethod[]> {
+    await delay(50);
+    return paymentMethodsData as PaymentMethod[];
+}
+
+export async function addPaymentMethod(data: Omit<PaymentMethod, 'id'>): Promise<PaymentMethod> {
+    await delay(200);
+    const newId = `pm-${paymentMethodsData.length + 1}`;
+    const newItem: PaymentMethod = { ...data, id: newId };
+    return newItem;
+}
+
+export async function getPaymentTypes(): Promise<PaymentType[]> {
+    await delay(50);
+    return paymentTypesData as PaymentType[];
+}
+
+export async function addPaymentType(data: Omit<PaymentType, 'id'>): Promise<PaymentType> {
+    await delay(200);
+    const newId = `pt-${paymentTypesData.length + 1}`;
+    const newItem: PaymentType = { ...data, id: newId };
+    return newItem;
+}
+
+export async function getPayments(): Promise<Payment[]> {
+    await delay(100);
+    return paymentsData as Payment[];
+}
+
+export async function addPayment(data: Omit<Payment, 'id'>): Promise<Payment> {
+    await delay(200);
+    const newId = `pay-${paymentsData.length + 1}`;
+    const newItem: Payment = { ...data, id: newId };
+    return newItem;
+}
+
 
 // --- Mock Auth Actions ---
 
@@ -188,8 +228,8 @@ export async function login(credentials: { email: string, password?: string }): 
   if (credentials.email === loginSchema.email && credentials.password === loginSchema.password) {
     const user = (usersData as User[]).find(u => u.email === credentials.email);
     if (user) {
-        return { success: true, user: user };
+        return { success: true, user };
     }
   }
-  return { success: false, error: 'Email o contraseña inválidos.' };
+  return { success: false, error: 'Credenciales inválidas. Por favor, inténtalo de nuevo.' };
 }

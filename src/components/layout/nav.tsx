@@ -24,6 +24,7 @@ import {
   Truck,
   Bell,
   ChevronDown,
+  CreditCard,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -42,11 +43,19 @@ const adminMenuItems = [
     { href: '/administrativo/alerts', label: 'Alertas', icon: Bell },
 ]
 
+const financeMenuItems = [
+    { href: '/administrativo/finanzas/metodos', label: 'Métodos de Pago' },
+    { href: '/administrativo/finanzas/tipos', label: 'Tipos de Pago' },
+    { href: '/administrativo/finanzas/pagos', label: 'Pagos Directos' },
+    { href: '/administrativo/finanzas/facturacion', label: 'Facturación' },
+]
+
 const settingsMenuItem = { href: '/settings', label: 'Configuración', icon: Settings };
 
 export default function Nav() {
   const pathname = usePathname();
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/administrativo'));
+  const [isFinanceOpen, setIsFinanceOpen] = useState(pathname.startsWith('/administrativo/finanzas'));
 
   const isActive = (href: string) => {
     if (href === '/dashboard') {
@@ -107,6 +116,29 @@ export default function Nav() {
                                 </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                         ))}
+                        <SidebarMenuSubItem>
+                            <SidebarMenuSubButton
+                                onClick={() => setIsFinanceOpen(!isFinanceOpen)}
+                                isActive={isActive('/administrativo/finanzas')}
+                            >
+                                <CreditCard />
+                                <span>Finanzas</span>
+                                 <ChevronDown className={`ml-auto h-5 w-5 transition-transform ${isFinanceOpen ? 'rotate-180' : ''}`} />
+                            </SidebarMenuSubButton>
+                            {isFinanceOpen && (
+                                <SidebarMenuSub>
+                                    {financeMenuItems.map(item => (
+                                        <SidebarMenuSubItem key={item.href}>
+                                            <SidebarMenuSubButton asChild isActive={pathname === item.href}>
+                                                <Link href={item.href}>
+                                                    <span>{item.label}</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                    ))}
+                                </SidebarMenuSub>
+                            )}
+                        </SidebarMenuSubItem>
                     </SidebarMenuSub>
                 )}
             </SidebarMenuItem>
@@ -127,7 +159,4 @@ export default function Nav() {
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:hidden">
         {/* Can add footer content here */}
-      </SidebarFooter>
-    </>
-  );
-}
+      </

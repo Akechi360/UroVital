@@ -103,3 +103,28 @@ export interface Provider {
   email: string;
   address: string;
 }
+
+export interface PaymentMethod {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
+}
+
+export interface PaymentType {
+  id: string;
+  name: string;
+  description: string;
+  defaultAmount?: number;
+}
+
+export interface Payment {
+  id: string;
+  entityId: string; // patientId or companyId
+  entityType: 'patient' | 'company';
+  paymentTypeId: string;
+  paymentMethodId: string;
+  amount: number;
+  date: string;
+  status: 'Completado' | 'Pendiente' | 'Fallido';
+}

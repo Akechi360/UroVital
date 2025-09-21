@@ -1,0 +1,26 @@
+[
+  {
+    "id": "pm-1",
+    "name": "Tarjeta de Crédito",
+    "description": "Visa, MasterCard, American Express",
+    "enabled": true
+  },
+  {
+    "id": "pm-2",
+    "name": "Transferencia Bancaria",
+    "description": "Transferencia electrónica SPEI",
+    "enabled": true
+  },
+  {
+    "id": "pm-3",
+    "name": "Efectivo",
+    "description": "Pago en efectivo en la clínica",
+    "enabled": true
+  },
+  {
+    "id": "pm-4",
+    "name": "Seguro Médico",
+    "description": "Pago a través de aseguradora afiliada",
+    "enabled": false
+  }
+]

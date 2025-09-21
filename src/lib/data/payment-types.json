@@ -1,0 +1,31 @@
+[
+  {
+    "id": "pt-1",
+    "name": "Consulta General",
+    "description": "Cita de revisión o consulta médica.",
+    "defaultAmount": 800
+  },
+  {
+    "id": "pt-2",
+    "name": "Consulta de Seguimiento",
+    "description": "Cita para revisar tratamiento o resultados.",
+    "defaultAmount": 500
+  },
+  {
+    "id": "pt-3",
+    "name": "Afiliación Anual",
+    "description": "Cuota de membresía anual.",
+    "defaultAmount": 2500
+  },
+  {
+    "id": "pt-4",
+    "name": "Estudio de Laboratorio",
+    "description": "Análisis clínicos específicos.",
+    "defaultAmount": 1200
+  },
+  {
+    "id": "pt-5",
+    "name": "Procedimiento Menor",
+    "description": "Procedimientos ambulatorios en consultorio."
+  }
+]
