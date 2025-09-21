@@ -159,4 +159,7 @@ export default function Nav() {
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:hidden">
         {/* Can add footer content here */}
-      </
+      </SidebarFooter>
+    </>
+  );
+}
