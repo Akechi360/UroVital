@@ -20,15 +20,15 @@ export const useFinanceStore = create<FinanceState>((set) => ({
   paymentTypes: [],
   payments: [],
   isInitialized: false,
-  setPaymentMethods: (methods) => set({ paymentMethods: methods }),
+  setPaymentMethods: (methods) => set({ paymentMethods: methods, isInitialized: true }),
   addPaymentMethod: (method) => set((state) => ({
     paymentMethods: [method, ...state.paymentMethods]
   })),
-  setPaymentTypes: (types) => set({ paymentTypes: types }),
+  setPaymentTypes: (types) => set({ paymentTypes: types, isInitialized: true }),
   addPaymentType: (type) => set((state) => ({
     paymentTypes: [type, ...state.paymentTypes]
   })),
-  setPayments: (payments) => set({ payments: payments }),
+  setPayments: (payments) => set({ payments: payments, isInitialized: true }),
   addPayment: (payment) => set((state) => ({
     payments: [payment, ...state.payments]
   })),
