@@ -1,7 +1,9 @@
+
 [
   {
     "id": "appt-001",
     "patientId": "p-001",
+    "doctorId": "doc-001",
     "date": "2024-08-15T10:00:00.000Z",
     "reason": "Chequeo Anual",
     "status": "Programada"
@@ -9,6 +11,7 @@
   {
     "id": "appt-002",
     "patientId": "p-002",
+    "doctorId": "doc-001",
     "date": "2024-08-15T11:30:00.000Z",
     "reason": "Seguimiento",
     "status": "Programada"
@@ -16,6 +19,7 @@
   {
     "id": "appt-003",
     "patientId": "p-003",
+    "doctorId": "doc-001",
     "date": "2024-08-16T14:00:00.000Z",
     "reason": "Control postoperatorio",
     "status": "Programada"
@@ -23,6 +27,7 @@
   {
     "id": "appt-004",
     "patientId": "p-004",
+    "doctorId": "doc-001",
     "date": "2024-09-01T09:00:00.000Z",
     "reason": "Consulta nuevo paciente",
     "status": "Programada"
@@ -30,8 +35,33 @@
   {
     "id": "appt-005",
     "patientId": "p-001",
+    "doctorId": "doc-001",
     "date": "2024-07-20T15:00:00.000Z",
     "reason": "Evaluación preoperatoria",
     "status": "Completada"
+  },
+  {
+    "id": "appt-006",
+    "patientId": "p-006",
+    "doctorId": "doc-001",
+    "date": "2024-08-14T09:00:00.000Z",
+    "reason": "Consulta de resultados",
+    "status": "Completada"
+  },
+  {
+    "id": "appt-007",
+    "patientId": "p-007",
+    "doctorId": "doc-001",
+    "date": "2024-08-13T16:00:00.000Z",
+    "reason": "Procedimiento menor",
+    "status": "Cancelada"
+  },
+    {
+    "id": "appt-008",
+    "patientId": "p-009",
+    "doctorId": "doc-001",
+    "date": "2024-10-05T12:00:00.000Z",
+    "reason": "Seguimiento anual",
+    "status": "Programada"
   }
 ]
