@@ -56,12 +56,28 @@
     "reason": "Procedimiento menor",
     "status": "Cancelada"
   },
-    {
+  {
     "id": "appt-008",
     "patientId": "p-009",
     "doctorId": "doc-001",
     "date": "2024-10-05T12:00:00.000Z",
     "reason": "Seguimiento anual",
     "status": "Programada"
+  },
+  {
+    "id": "appt-009",
+    "patientId": "p-001",
+    "doctorId": "doc-001",
+    "date": "2024-11-10T10:00:00.000Z",
+    "reason": "Seguimiento HBP",
+    "status": "Programada"
+  },
+  {
+    "id": "appt-010",
+    "patientId": "p-001",
+    "date": "2024-04-10T10:00:00.000Z",
+    "doctorId": "doc-001",
+    "reason": "Consulta Inicial",
+    "status": "Completada"
   }
 ]
