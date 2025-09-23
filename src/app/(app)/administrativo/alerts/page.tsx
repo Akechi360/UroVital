@@ -1,15 +1,41 @@
+'use client';
 import { getSupplies } from "@/lib/actions";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, CalendarX2, Package } from "lucide-react";
+import { AlertTriangle, CalendarX2, Package, ShieldBan } from "lucide-react";
 import { differenceInDays, isBefore } from 'date-fns';
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/components/layout/auth-provider";
 
 const LOW_STOCK_THRESHOLD = 20;
 const EXPIRY_THRESHOLD_DAYS = 30;
 
-export default async function AlertsPage() {
-    const supplies = await getSupplies();
+function DeniedAccess() {
+    return (
+        <Card>
+            <CardContent className="p-10 flex flex-col items-center justify-center gap-4 text-center">
+                <ShieldBan className="h-12 w-12 text-destructive" />
+                <h3 className="text-xl font-semibold">Acceso Denegado</h3>
+                <p className="text-muted-foreground">No tienes permiso para ver esta sección.</p>
+            </CardContent>
+        </Card>
+    )
+}
+
+
+export default function AlertsPage() {
+    const { can } = useAuth();
+    const [supplies, setSupplies] = React.useState<Awaited<ReturnType<typeof getSupplies>>>([]);
+
+    React.useEffect(() => {
+        if (can('admin:all')) {
+            getSupplies().then(setSupplies);
+        }
+    }, [can]);
+
+    if (!can('admin:all')) {
+        return <DeniedAccess />;
+    }
 
     const lowStockAlerts = supplies.filter(s => s.stock < LOW_STOCK_THRESHOLD);
 

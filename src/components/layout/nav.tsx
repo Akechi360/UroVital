@@ -29,31 +29,33 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { useAuth } from './auth-provider';
 
 const mainMenuItems = [
-  { href: '/dashboard', label: 'Panel', icon: LayoutGrid },
-  { href: '/patients', label: 'Pacientes', icon: Users },
-  { href: '/companies', label: 'Empresas', icon: Building },
-  { href: '/appointments', label: 'Citas', icon: Calendar },
+  { href: '/dashboard', label: 'Panel', icon: LayoutGrid, permission: 'dashboard:read' },
+  { href: '/patients', label: 'Pacientes', icon: Users, permission: 'patients:read' },
+  { href: '/companies', label: 'Empresas', icon: Building, permission: 'companies:read' },
+  { href: '/appointments', label: 'Citas', icon: Calendar, permission: 'appointments:read' },
 ];
 
 const adminMenuItems = [
-    { href: '/administrativo/supplies', label: 'Suministros', icon: Box },
-    { href: '/administrativo/providers', label: 'Proveedores', icon: Truck },
-    { href: '/administrativo/alerts', label: 'Alertas', icon: Bell },
+    { href: '/administrativo/supplies', label: 'Suministros', icon: Box, permission: 'admin:all' },
+    { href: '/administrativo/providers', label: 'Proveedores', icon: Truck, permission: 'admin:all' },
+    { href: '/administrativo/alerts', label: 'Alertas', icon: Bell, permission: 'admin:all' },
 ]
 
 const financeMenuItems = [
-    { href: '/administrativo/finanzas/metodos', label: 'Métodos de Pago' },
-    { href: '/administrativo/finanzas/tipos', label: 'Tipos de Pago' },
-    { href: '/administrativo/finanzas/pagos', label: 'Pagos Directos' },
-    { href: '/administrativo/finanzas/facturacion', label: 'Facturación' },
+    { href: '/administrativo/finanzas/metodos', label: 'Métodos de Pago', permission: 'finance:write' },
+    { href: '/administrativo/finanzas/tipos', label: 'Tipos de Pago', permission: 'finance:write' },
+    { href: '/administrativo/finanzas/pagos', label: 'Pagos Directos', permission: 'finance:write' },
+    { href: '/administrativo/finanzas/facturacion', label: 'Facturación', permission: 'finance:write' },
 ]
 
-const settingsMenuItem = { href: '/settings', label: 'Configuración', icon: Settings };
+const settingsMenuItem = { href: '/settings', label: 'Configuración', icon: Settings, permission: 'settings:read' };
 
 export default function Nav() {
   const pathname = usePathname();
+  const { can } = useAuth();
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/administrativo'));
   const [isFinanceOpen, setIsFinanceOpen] = useState(pathname.startsWith('/administrativo/finanzas'));
 
@@ -63,6 +65,8 @@ export default function Nav() {
     }
     return pathname.startsWith(href);
   }
+  
+  const canViewAdmin = adminMenuItems.some(item => can(item.permission as any)) || financeMenuItems.some(item => can(item.permission as any));
 
   return (
     <>
@@ -80,6 +84,7 @@ export default function Nav() {
       <SidebarContent className="p-2">
         <SidebarMenu>
           {mainMenuItems.map((item) => (
+             can(item.permission as any) &&
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 asChild
@@ -94,6 +99,7 @@ export default function Nav() {
             </SidebarMenuItem>
           ))}
             
+            {canViewAdmin && (
             <SidebarMenuItem>
                 <SidebarMenuButton
                     onClick={() => setIsAdminOpen(!isAdminOpen)}
@@ -107,6 +113,7 @@ export default function Nav() {
                 {isAdminOpen && (
                     <SidebarMenuSub>
                         {adminMenuItems.map(item => (
+                             can(item.permission as any) &&
                             <SidebarMenuSubItem key={item.href}>
                                 <SidebarMenuSubButton asChild isActive={pathname === item.href}>
                                     <Link href={item.href}>
@@ -116,6 +123,7 @@ export default function Nav() {
                                 </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                         ))}
+                        {financeMenuItems.some(item => can(item.permission as any)) &&
                         <SidebarMenuSubItem>
                             <SidebarMenuSubButton
                                 onClick={() => setIsFinanceOpen(!isFinanceOpen)}
@@ -128,6 +136,7 @@ export default function Nav() {
                             {isFinanceOpen && (
                                 <SidebarMenuSub>
                                     {financeMenuItems.map(item => (
+                                        can(item.permission as any) &&
                                         <SidebarMenuSubItem key={item.href}>
                                             <SidebarMenuSubButton asChild isActive={pathname === item.href}>
                                                 <Link href={item.href}>
@@ -139,11 +148,13 @@ export default function Nav() {
                                 </SidebarMenuSub>
                             )}
                         </SidebarMenuSubItem>
+                        }
                     </SidebarMenuSub>
                 )}
             </SidebarMenuItem>
+            )}
 
-          <SidebarMenuItem>
+          {can(settingsMenuItem.permission as any) && <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
                 isActive={isActive(settingsMenuItem.href)}
@@ -154,7 +165,7 @@ export default function Nav() {
                   <span>{settingsMenuItem.label}</span>
                 </Link>
               </SidebarMenuButton>
-            </SidebarMenuItem>
+            </SidebarMenuItem>}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:hidden">

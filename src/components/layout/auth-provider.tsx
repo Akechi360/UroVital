@@ -1,10 +1,10 @@
-
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState, createContext, useContext, useMemo } from 'react';
+import React, { useEffect, useState, createContext, useContext, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { User } from '@/lib/types';
+import { ROLE_PERMISSIONS, type Permission, type User } from '@/lib/types';
+import { login } from '@/lib/actions';
 
 const PROTECTED_ROUTES = ['/dashboard', '/patients', '/settings', '/appointments', '/companies', '/administrativo'];
 const AUTH_ROUTES = ['/login', '/register', '/forgot-password'];
@@ -13,6 +13,7 @@ type AuthContextType = {
     currentUser: User | null;
     isAuthenticated: boolean;
     loading: boolean;
+    can: (perm: Permission) => boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,24 +56,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             router.push('/login');
         } else if (user && isAuthRoute) {
             router.push('/dashboard');
-        } else {
-            setIsAuthenticating(false);
         }
+        
     } catch (error) {
         // Corrupted user data in localStorage
         localStorage.removeItem('user');
         setCurrentUser(null);
-        setIsAuthenticating(false);
          if (PROTECTED_ROUTES.some(route => pathname.startsWith(route))) {
             router.push('/login');
         }
+    } finally {
+        setIsAuthenticating(false);
     }
   }, [pathname, router]);
+
+  const canFn = (perm: Permission) => {
+    if (!currentUser) return false;
+    // Admin has all permissions
+    if (currentUser.role === 'admin') return true;
+    return ROLE_PERMISSIONS[currentUser.role].includes(perm);
+  };
 
   const authContextValue = useMemo(() => ({
     currentUser,
     isAuthenticated: !!currentUser,
     loading: isAuthenticating,
+    can: canFn,
   }), [currentUser, isAuthenticating]);
 
   if (isAuthenticating) {

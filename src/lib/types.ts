@@ -1,3 +1,53 @@
+export const ALL_PERMISSIONS = [
+  'admin:all',
+  'dashboard:read',
+  'appointments:read',
+  'appointments:write',
+  'patients:read',
+  'patients:write',
+  'companies:read',
+  'companies:write',
+  'settings:read',
+  'finance:read',
+  'finance:write',
+] as const;
+export type Permission = typeof ALL_PERMISSIONS[number];
+
+export const ROLE_PERMISSIONS: Record<User['role'], Permission[]> = {
+  admin: [
+    'admin:all',
+    'dashboard:read',
+    'appointments:read',
+    'appointments:write',
+    'patients:read',
+    'patients:write',
+    'companies:read',
+    'companies:write',
+    'settings:read',
+    'finance:read',
+    'finance:write',
+  ],
+  doctor: [
+    'dashboard:read',
+    'appointments:read',
+    'patients:read',
+    'patients:write',
+    'settings:read',
+  ],
+  secretaria: [
+    'dashboard:read',
+    'appointments:read',
+    'appointments:write',
+    'patients:read',
+    'companies:read',
+    'finance:read', // Can see payments, but not audit
+  ],
+  patient: [
+    'appointments:read',
+    'settings:read',
+  ],
+};
+
 
 export interface Patient {
   id: string;
