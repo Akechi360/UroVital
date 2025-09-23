@@ -1,3 +1,4 @@
+'use client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PsaChart } from '@/components/dashboard/charts';
 import {
@@ -11,16 +12,67 @@ import {
 import { getLabResultsByPatientId, getIpssScoresByPatientId } from '@/lib/actions';
 import LabResultsCard from '@/components/patients/lab-results-card';
 import { IpssCalculator } from '@/components/patients/ipss-calculator';
+import { use, useEffect, useState } from 'react';
+import { useAuth } from '@/components/layout/auth-provider';
+import type { LabResult, IpssScore } from '@/lib/types';
+import { ShieldBan } from 'lucide-react';
 
-  const uroflowData = [
+const uroflowData = [
     { date: "2024-08-15", qmax: "12 mL/s", avgFlow: "7 mL/s", voidedVol: "250 mL", pvr: "50 mL" },
     { date: "2024-05-20", qmax: "10 mL/s", avgFlow: "6 mL/s", voidedVol: "220 mL", pvr: "65 mL" },
     { date: "2024-02-10", qmax: "9 mL/s", avgFlow: "5.5 mL/s", voidedVol: "200 mL", pvr: "70 mL" },
-  ]
+];
 
-export default async function UrologyDataPage({ params }: { params: { patientId: string } }) {
-    const labResults = await getLabResultsByPatientId(params.patientId);
-    const ipssScores = await getIpssScoresByPatientId(params.patientId);
+type UrologyData = {
+    labResults: LabResult[];
+    ipssScores: IpssScore[];
+}
+
+function DeniedAccess() {
+    return (
+        <Card>
+            <CardContent className="p-10 flex flex-col items-center justify-center gap-4 text-center">
+                <ShieldBan className="h-12 w-12 text-destructive" />
+                <h3 className="text-xl font-semibold">Acceso Restringido</h3>
+                <p className="text-muted-foreground">No tienes permiso para ver los datos urológicos de este paciente.</p>
+            </CardContent>
+        </Card>
+    )
+}
+
+export default function UrologyDataPage({ params }: { params: Promise<{ patientId: string }> }) {
+    const { patientId } = use(params);
+    const { currentUser, can } = useAuth();
+    const [data, setData] = useState<UrologyData | null>(null);
+    const [loading, setLoading] = useState(true);
+    
+    const canView = can('patients:write') || currentUser?.patientId === patientId;
+
+    useEffect(() => {
+        if(canView) {
+            Promise.all([
+                getLabResultsByPatientId(patientId),
+                getIpssScoresByPatientId(patientId)
+            ]).then(([labResults, ipssScores]) => {
+                setData({ labResults, ipssScores });
+                setLoading(false);
+            });
+        } else {
+            setLoading(false);
+        }
+    }, [patientId, canView]);
+
+    if(loading) {
+        return <div>Cargando datos...</div>
+    }
+
+    if (!canView) {
+        return <DeniedAccess />;
+    }
+
+    if (!data) {
+        return <div>Error al cargar datos urológicos.</div>;
+    }
 
     return (
         <div className="grid gap-8">
@@ -55,12 +107,12 @@ export default async function UrologyDataPage({ params }: { params: { patientId:
                         </Table>
                     </CardContent>
                 </Card>
-                <LabResultsCard labResults={labResults} />
+                <LabResultsCard labResults={data.labResults} />
             </div>
             
             <PsaChart />
 
-            <IpssCalculator patientId={params.patientId} historicalScores={ipssScores} />
+            <IpssCalculator patientId={patientId} historicalScores={data.ipssScores} />
         </div>
     )
 }
