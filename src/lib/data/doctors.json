@@ -119,5 +119,65 @@
     "especialidad": "Oncología Clínica",
     "area": "",
     "contacto": "04121330133"
+  },
+  {
+    "nombre": "Dr. Rafael Odreman",
+    "especialidad": "Traumatología General / Hombro",
+    "area": "Naguanagua",
+    "contacto": "04244402636"
+  },
+  {
+    "nombre": "Dr. Erasto Latuff",
+    "especialidad": "Traumatología General",
+    "area": "El Viñedo / Isabelica",
+    "contacto": "04144123747"
+  },
+  {
+    "nombre": "Dr. Lino Ojeda",
+    "especialidad": "Anestesiología – Terapias del Dolor",
+    "area": "El Viñedo / La Viña",
+    "contacto": "04244500045"
+  },
+  {
+    "nombre": "Dra. Melina Silva",
+    "especialidad": "Anestesiología",
+    "area": "El Viñedo",
+    "contacto": "04243554718"
+  },
+  {
+    "nombre": "Dra. Fabiana Bastidas",
+    "especialidad": "Anestesiología",
+    "area": "El Viñedo",
+    "contacto": "04244037523"
+  },
+  {
+    "nombre": "Dr. Ricardo Alvarado",
+    "especialidad": "Anestesiología – Terapia del Dolor",
+    "area": "El Viñedo / Las Acacias",
+    "contacto": "04244143577"
+  },
+  {
+    "nombre": "Dr. Ernesto Tellez",
+    "especialidad": "Cirujano Cardiovascular",
+    "area": "El Viñedo / Isabelica",
+    "contacto": "04143593090"
+  },
+  {
+    "nombre": "Lic. Carlos Santodomingo",
+    "especialidad": "Fisiatría y Rehabilitación",
+    "area": "Naguanagua",
+    "contacto": "04144952627"
+  },
+  {
+    "nombre": "Lic. Carlos Santodomingo",
+    "especialidad": "Fisiatría Domicilio",
+    "area": "Naguanagua / Valencia / Isabelica",
+    "contacto": "04144952627"
+  },
+  {
+    "nombre": "Lic. William Aponte",
+    "especialidad": "Fisiatría Piso Pélvico",
+    "area": "El Viñedo",
+    "contacto": "04244909213"
   }
 ]
