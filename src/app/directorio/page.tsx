@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Doctor } from '@/lib/types';
 import { getDoctors } from '@/lib/actions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,9 +24,9 @@ export default function DirectoryPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [doctors, setDoctors] = useState<Doctor[]>([]);
 
-    useState(() => {
+    useEffect(() => {
         getDoctors().then(setDoctors);
-    });
+    }, []);
 
     const filteredDoctors = useMemo(() => {
         if (!searchTerm) return doctors;
