@@ -3,6 +3,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/layout/auth-provider';
+import 'animate.css';
 
 export const metadata: Metadata = {
   title: 'UroFlow',

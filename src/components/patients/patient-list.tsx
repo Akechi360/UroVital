@@ -37,7 +37,10 @@ import { useCompanyStore } from '@/lib/store/company-store';
 import { AddPatientForm } from './add-patient-form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '../ui/dialog';
 import { format } from 'date-fns';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
+const MySwal = withReactContent(Swal);
 const ITEMS_PER_PAGE = 5;
 
 export default function PatientList() {
@@ -54,12 +57,11 @@ export default function PatientList() {
   const companyMap = useMemo(() => new Map(companies.map(c => [c.id, c.name])), [companies]);
 
 
-  const handleExport = () => {
+  const exportToPDF = () => {
     try {
       const doc = new jsPDF();
       const exportTime = new Date();
 
-      // Encabezado
       doc.setFontSize(18);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(58, 109, 255);
@@ -70,8 +72,6 @@ export default function PatientList() {
       doc.setTextColor(150);
       doc.text(`Generado el: ${format(exportTime, 'dd/MM/yyyy HH:mm')}`, doc.internal.pageSize.getWidth() - 14, 20, { align: "right" });
 
-
-      // Crear tabla con los datos
       autoTable(doc, {
         startY: 30,
         head: [['Nombre', 'Edad', 'Género', 'Teléfono', 'Email', 'Empresa', 'Estado']],
@@ -85,12 +85,12 @@ export default function PatientList() {
           p.status
         ]),
         headStyles: {
-            fillColor: [58, 109, 255], // Primary color
+            fillColor: [58, 109, 255],
             textColor: 255,
             fontStyle: 'bold',
         },
         alternateRowStyles: {
-            fillColor: [242, 242, 242] // A very light gray for zebra-striping
+            fillColor: [242, 242, 242]
         },
         styles: {
             cellPadding: 3,
@@ -99,11 +99,10 @@ export default function PatientList() {
         },
       });
 
-      // Descargar archivo
       doc.save(`pacientes-${format(exportTime, 'yyyy-MM-dd')}.pdf`);
       
       toast({
-        title: "Exportación completada",
+        title: "Exportación a PDF completada",
         description: "La descarga de la lista de pacientes ha comenzado.",
       });
 
@@ -113,8 +112,83 @@ export default function PatientList() {
         title: "Error en la exportación",
         description: "No se pudo generar el archivo PDF.",
       });
-      console.error("Failed to export patients list:", error);
+      console.error("Failed to export patients list to PDF:", error);
     }
+  };
+
+  const exportToCSV = () => {
+    try {
+        const headers = ['Nombre', 'Edad', 'Género', 'Teléfono', 'Email', 'Empresa', 'Estado'];
+        const csvContent = [
+            headers.join(','),
+            ...filteredPatients.map(p => [
+                `"${p.name}"`,
+                p.age,
+                p.gender,
+                `"${p.contact.phone || 'N/A'}"`,
+                `"${p.contact.email || 'N/A'}"`,
+                `"${p.companyId ? companyMap.get(p.companyId) || 'N/A' : 'Particular'}"`,
+                p.status
+            ].join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        if (link.href) {
+            URL.revokeObjectURL(link.href);
+        }
+        link.href = URL.createObjectURL(blob);
+        link.download = `pacientes-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        toast({
+            title: "Exportación a CSV completada",
+            description: "La descarga del archivo CSV ha comenzado.",
+        });
+
+    } catch (error) {
+        toast({
+            variant: "destructive",
+            title: "Error en la exportación",
+            description: "No se pudo generar el archivo CSV.",
+        });
+        console.error("Failed to export patients list to CSV:", error);
+    }
+  };
+
+  const handleExport = () => {
+    MySwal.fire({
+      title: 'Formato de Exportación',
+      text: 'Selecciona el formato en el que deseas exportar la lista de pacientes.',
+      showCancelButton: true,
+      confirmButtonText: 'Exportar a PDF',
+      confirmButtonColor: '#3A6DFF',
+      showDenyButton: true,
+      denyButtonText: 'Exportar a CSV',
+      denyButtonColor: '#14B8A6',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        popup: 'rounded-2xl bg-card/80 backdrop-blur-md shadow-2xl',
+        title: 'text-foreground',
+        htmlContainer: 'text-muted-foreground',
+        confirmButton: 'transition-all duration-300 ease-in-out hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]',
+        denyButton: 'transition-all duration-300 ease-in-out hover:shadow-[0_0_20px_rgba(20,184,166,0.4)]',
+      },
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown animate__faster'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp animate__faster'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        exportToPDF();
+      } else if (result.isDenied) {
+        exportToCSV();
+      }
+    });
   };
 
   const filteredPatients = useMemo(() => {
