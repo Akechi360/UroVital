@@ -49,6 +49,14 @@ export async function addPatient(patientData: Omit<Patient, 'id' | 'status' | 'b
     return newPatient;
 }
 
+export async function deletePatient(patientId: string): Promise<{ success: boolean }> {
+    await delay(300);
+    // In a real app, this would delete from the database.
+    // Here we just simulate a successful deletion.
+    console.log(`Simulating deletion of patient ${patientId}`);
+    return { success: true };
+}
+
 
 export async function getPatientById(id: string): Promise<Patient | undefined> {
   await delay(100);

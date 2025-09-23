@@ -24,7 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
 import { getInitials } from '@/lib/utils';
-import { Search, UserPlus, Filter, Download } from 'lucide-react';
+import { Search, UserPlus, Filter, Download, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -40,6 +40,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { deletePatient } from '@/lib/actions';
 
 const MySwal = withReactContent(Swal);
 const ITEMS_PER_PAGE = 5;
@@ -53,10 +54,52 @@ export default function PatientList() {
 
   const router = useRouter();
   const { toast } = useToast();
-  const patients = usePatientStore((state) => state.patients);
+  const { patients, removePatient } = usePatientStore();
   const companies = useCompanyStore((state) => state.companies);
   const companyMap = useMemo(() => new Map(companies.map(c => [c.id, c.name])), [companies]);
 
+    const handleDelete = (patientId: string) => {
+        MySwal.fire({
+            title: '¿Eliminar paciente?',
+            text: "Esta acción es irreversible. El paciente y todos sus datos asociados serán eliminados del sistema.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            customClass: {
+                popup: 'rounded-2xl bg-card/80 backdrop-blur-md shadow-2xl',
+                title: 'text-foreground',
+                htmlContainer: 'text-muted-foreground',
+                confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all duration-300 ease-in-out hover:shadow-[0_0_20px_rgba(220,38,38,0.4)]',
+                cancelButton: 'bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg transition-all',
+            },
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster'
+            },
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deletePatient(patientId);
+                    removePatient(patientId);
+                    toast({
+                        title: "Paciente eliminado ✅",
+                        description: "El paciente ha sido eliminado exitosamente.",
+                    });
+                } catch (error) {
+                    toast({
+                        variant: "destructive",
+                        title: "Error",
+                        description: "No se pudo eliminar al paciente.",
+                    });
+                }
+            }
+        });
+    };
 
   const exportToPDF = () => {
     try {
@@ -223,7 +266,6 @@ export default function PatientList() {
   );
 
   const handlePatientClick = (patient: Patient) => {
-    toast({ title: "Paciente seleccionado", description: patient.name });
     router.push(`/patients/${patient.id}`);
   };
 
@@ -351,6 +393,7 @@ export default function PatientList() {
                     <TableHead>Género</TableHead>
                     <TableHead>Última Visita</TableHead>
                     <TableHead>Estado</TableHead>
+                    <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -359,12 +402,9 @@ export default function PatientList() {
                         key={patient.id}
                         variants={itemVariants}
                         layout
-                        onClick={() => handlePatientClick(patient)}
-                        className={cn(
-                            "cursor-pointer transition-all duration-300 ease-in-out hover:bg-muted/50"
-                        )}
+                        className="group"
                     >
-                        <TableCell>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">
                         <div className="flex items-center gap-3">
                             <Avatar>
                             {patient.avatarUrl && <AvatarImage src={patient.avatarUrl} alt={patient.name} />}
@@ -373,13 +413,18 @@ export default function PatientList() {
                             <span className="font-medium">{patient.name}</span>
                         </div>
                         </TableCell>
-                        <TableCell>{patient.age}</TableCell>
-                        <TableCell>{patient.gender}</TableCell>
-                        <TableCell>{patient.lastVisit || 'N/A'}</TableCell>
-                        <TableCell>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">{patient.age}</TableCell>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">{patient.gender}</TableCell>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">{patient.lastVisit || 'N/A'}</TableCell>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">
                         <Badge variant={patient.status === 'Activo' ? 'success' : 'destructive'}>
                             {patient.status}
                         </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                            <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleDelete(patient.id); }}>
+                                <Trash2 className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-destructive" />
+                            </Button>
                         </TableCell>
                     </motion.tr>
                     ))}
@@ -399,29 +444,34 @@ export default function PatientList() {
                     key={patient.id}
                     variants={itemVariants}
                     layout
-                    onClick={() => handlePatientClick(patient)}
                     className={cn(
-                        "rounded-2xl bg-card p-4 shadow-md transition-all duration-300 ease-in-out hover:scale-[1.03] active:scale-[0.99]",
-                        "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]"
+                        "relative rounded-2xl bg-card p-4 shadow-md transition-all duration-300 ease-in-out active:scale-[0.99]",
                     )}
                 >
-                    <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <Avatar>
-                        {patient.avatarUrl && <AvatarImage src={patient.avatarUrl} alt={patient.name} />}
-                        <AvatarFallback>{getInitials(patient.name)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                        <p className="font-bold">{patient.name}</p>
-                        <p className="text-sm text-muted-foreground">{patient.age} años • {patient.gender}</p>
+                    <div className='absolute top-2 right-2'>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); handleDelete(patient.id); }}>
+                            <Trash2 className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                    </div>
+                    <div onClick={() => handlePatientClick(patient)} className='cursor-pointer'>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <Avatar>
+                                {patient.avatarUrl && <AvatarImage src={patient.avatarUrl} alt={patient.name} />}
+                                <AvatarFallback>{getInitials(patient.name)}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                <p className="font-bold">{patient.name}</p>
+                                <p className="text-sm text-muted-foreground">{patient.age} años • {patient.gender}</p>
+                                </div>
+                            </div>
+                            <Badge variant={patient.status === 'Activo' ? 'success' : 'destructive'}>
+                                {patient.status}
+                            </Badge>
                         </div>
-                    </div>
-                    <Badge variant={patient.status === 'Activo' ? 'success' : 'destructive'}>
-                        {patient.status}
-                    </Badge>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-border/50 text-sm text-muted-foreground">
-                        Última Visita: {patient.lastVisit || 'N/A'}
+                        <div className="mt-4 pt-4 border-t border-border/50 text-sm text-muted-foreground">
+                            Última Visita: {patient.lastVisit || 'N/A'}
+                        </div>
                     </div>
                 </motion.div>
                 ))}
@@ -460,5 +510,3 @@ export default function PatientList() {
     </div>
   );
 }
-
-    
