@@ -1,0 +1,62 @@
+[
+  {
+    "nombre": "Dr. Francisco Torres",
+    "especialidad": "Medicina Interna / Intensiva",
+    "area": "Naguanagua",
+    "contacto": "04144040886"
+  },
+  {
+    "nombre": "Dra. Maribel Gonzalez",
+    "especialidad": "Medicina Interna",
+    "area": "El Viñedo",
+    "contacto": "04244056975"
+  },
+  {
+    "nombre": "Dr. Ramon Cedeño",
+    "especialidad": "Cardiología",
+    "area": "Naguanagua / Viña",
+    "contacto": ""
+  },
+  {
+    "nombre": "Dra. Vilma Hernandez",
+    "especialidad": "Ginecología",
+    "area": "Las Acacias",
+    "contacto": "04144117976"
+  },
+  {
+    "nombre": "Dra. Isabel Rosales",
+    "especialidad": "Ginecología",
+    "area": "La Viña",
+    "contacto": "04244943104"
+  },
+  {
+    "nombre": "Dr. Carlos Guevara",
+    "especialidad": "Ginecología",
+    "area": "Los Mangos",
+    "contacto": "04143411356"
+  },
+  {
+    "nombre": "Dr. Wilfredo Diaz",
+    "especialidad": "Medicina Ocupacional",
+    "area": "San Diego / El Viñedo",
+    "contacto": "04141471527"
+  },
+  {
+    "nombre": "Dr. Jose Avelardo Sanchez",
+    "especialidad": "Medicina Familiar",
+    "area": "La Isabelica / El Viñedo",
+    "contacto": "04245073538"
+  },
+  {
+    "nombre": "Dra. Yaritza Perez",
+    "especialidad": "Nefrología",
+    "area": "Las Acacias / El Viñedo",
+    "contacto": "04144389540"
+  },
+  {
+    "nombre": "Dr. Jose Gregorio Valera",
+    "especialidad": "Cirugía Pediátrica",
+    "area": "Las Acacias",
+    "contacto": "04121432188"
+  }
+]
