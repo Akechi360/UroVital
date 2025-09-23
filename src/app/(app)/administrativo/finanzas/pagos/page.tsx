@@ -29,11 +29,13 @@ type PageData = {
 
 
 export default function DirectPaymentsPage() {
-  const { can } = useAuth();
+  const { can, currentUser } = useAuth();
   const [data, setData] = React.useState<PageData | null>(null);
 
+  const canAccess = can('admin:all') || can('finance:write') || currentUser?.role === 'patient';
+
   React.useEffect(() => {
-    if (can('admin:all') || can('finance:write')) {
+    if (canAccess) {
         Promise.all([
             getPayments(),
             getPatients(),
@@ -41,12 +43,17 @@ export default function DirectPaymentsPage() {
             getPaymentTypes(),
             getPaymentMethods(),
         ]).then(([initialPayments, patients, companies, paymentTypes, paymentMethods]) => {
-            setData({ initialPayments, patients, companies, paymentTypes, paymentMethods });
+            let filteredPayments = initialPayments;
+            // If user is patient, filter their payments only
+            if (currentUser?.role === 'patient') {
+                filteredPayments = initialPayments.filter(p => p.entityId === currentUser.patientId);
+            }
+            setData({ initialPayments: filteredPayments, patients, companies, paymentTypes, paymentMethods });
         });
     }
-  }, [can]);
+  }, [canAccess, currentUser]);
 
-  if (!can('admin:all') && !can('finance:write')) {
+  if (!canAccess) {
     return <DeniedAccess />;
   }
 

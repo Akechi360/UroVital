@@ -5,6 +5,8 @@ import { PageHeader } from '@/components/shared/page-header';
 import { useEffect, useState } from 'react';
 import type { Company, Patient } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/components/layout/auth-provider';
+import { redirect } from 'next/navigation';
 
 function PatientPageSkeleton() {
     return (
@@ -37,19 +39,27 @@ function PatientPageSkeleton() {
 
 
 export default function PatientsPage() {
+  const { currentUser } = useAuth();
   const [initialPatients, setInitialPatients] = useState<Patient[] | null>(null);
   const [initialCompanies, setInitialCompanies] = useState<Company[] | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
+        setLoading(true);
         const [patients, companies] = await Promise.all([getPatients(), getCompanies()]);
         setInitialPatients(patients);
         setInitialCompanies(companies);
+        setLoading(false);
     }
     fetchData();
   }, []);
 
-  if (!initialPatients || !initialCompanies) {
+  if (currentUser?.role === 'patient' && currentUser.patientId) {
+    redirect(`/patients/${currentUser.patientId}`);
+  }
+
+  if (loading || !initialPatients || !initialCompanies) {
     return <PatientPageSkeleton />;
   }
 
