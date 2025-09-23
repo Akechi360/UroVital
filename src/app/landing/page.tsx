@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone } from 'lucide-react';
+import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone, FlaskConical, ZoomIn } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const fadeIn = {
@@ -169,8 +169,39 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Studies Section */}
+      <section className="py-20 md:py-32 bg-background">
+        <div className="container mx-auto px-4 text-center">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer}>
+                <motion.h2 variants={fadeIn} className="text-3xl font-bold md:text-4xl font-headline">Estudios Urológicos</motion.h2>
+                <motion.p variants={fadeIn} className="max-w-2xl mx-auto mt-4 text-muted-foreground">
+                    Más de 50 estudios y procedimientos especializados en urología y uroginecología.
+                </motion.p>
+                <motion.div variants={fadeIn} className="max-w-2xl mx-auto mt-8 flex flex-wrap justify-center gap-4 text-sm">
+                    <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
+                        <ZoomIn className="h-4 w-4 text-primary" />
+                        <span>Cistoscopia</span>
+                    </div>
+                     <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
+                        <FlaskConical className="h-4 w-4 text-primary" />
+                        <span>Uroflujometría</span>
+                    </div>
+                     <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
+                        <HeartPulse className="h-4 w-4 text-primary" />
+                        <span>Resonancia multiparamétrica</span>
+                    </div>
+                </motion.div>
+                <motion.div variants={fadeIn} className="mt-12">
+                    <Button asChild>
+                        <Link href="/estudios">Ver todos los estudios</Link>
+                    </Button>
+                </motion.div>
+            </motion.div>
+        </div>
+      </section>
+
       {/* Final CTA Section */}
-      <footer className="py-20 text-center md:py-32 bg-background">
+      <footer className="py-20 text-center md:py-32 bg-gray-50 dark:bg-gray-900/50">
         <div className="container mx-auto px-4">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer}>
                 <motion.h2 variants={fadeIn} className="text-4xl font-extrabold md:text-5xl font-headline">¿Listo para mejorar tu salud?</motion.h2>

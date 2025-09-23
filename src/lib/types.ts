@@ -1,3 +1,4 @@
+
 export const ALL_PERMISSIONS = [
   'admin:all',
   'dashboard:read',
@@ -188,4 +189,10 @@ export interface Doctor {
     especialidad: string;
     area: string;
     contacto: string;
+}
+
+export interface Estudio {
+    id: string;
+    categoria: string;
+    nombre: string;
 }
