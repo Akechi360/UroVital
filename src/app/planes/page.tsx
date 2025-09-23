@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Stethoscope, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const fadeIn = (delay: number) => ({
   hidden: { opacity: 0, y: 20 },
@@ -24,28 +25,41 @@ const fadeIn = (delay: number) => ({
 const plans = [
     {
         name: "Tarjeta Saludable",
-        description: "Ideal para individuos y familias pequeñas que buscan una cobertura esencial y accesible.",
-        price: "Individual + 2 Beneficiarios",
+        subtitle: "Individual + 2 Beneficiarios",
         features: [
             "Consultas médicas gratuitas (hasta 6 al año).",
-            "Descuentos en estudios de laboratorio e imagenología.",
-            "Acceso a consultas de fisiatría y rehabilitación.",
+            "Descuentos en laboratorio e imagenología.",
+            "Acceso a fisiatría y rehabilitación.",
             "Descuentos en procedimientos quirúrgicos.",
             "Kit de afiliación con carnet digital."
-        ]
+        ],
+        pricing: [
+            { label: "Contado", value: "150 / año" },
+            { label: "Fraccionado", value: "50 inicial + 10 mensuales" },
+            { label: "Afiliación", value: "0" },
+        ],
+        note: "Montos referenciales en divisas. Sujeto a alianzas y disponibilidad."
     },
     {
         name: "Fondo Espíritu Santo",
-        description: "Cobertura completa y flexible para grupos y empresas, garantizando la tranquilidad de tus colaboradores.",
-        price: "Grupos de 200-500 afiliados",
+        subtitle: "Grupos de 200–500 afiliados",
         features: [
-            "Cobertura anual desde 35.000 hasta 87.500 USD.",
-            "Atención en emergencias y accidentes.",
-            "Consultas médicas y Atención Primaria en Salud (APS).",
-            "Estudios especializados e imagenología.",
-            "Procedimientos quirúrgicos y hospitalización.",
-            "Traslados en ambulancia y atención 24/7."
-        ]
+            "Cobertura anual integral (emergencias, APS, estudios, hospitalización).",
+            "Procedimientos quirúrgicos electivos o de emergencia.",
+            "Traslados en ambulancia (regional/nacional) y atención 24/7."
+        ],
+        coverage: {
+            fund: "35.000 (200 afiliados) — 87.500 (500 afiliados)",
+            adminFee: "250",
+            breakdown: [
+                { service: "Servicios quirúrgicos (electiva/emergencia)", "200": "14.000", "500": "35.000" },
+                { service: "Atención Primaria en Salud (APS)", "200": "11.150", "500": "27.125" },
+                { service: "Laboratorio, enfermería y consulta domiciliaria", "200": "5.250", "500": "13.125" },
+                { service: "Traslados de ambulancia (regional/nacional)", "200": "2.000", "500": "5.250" },
+                { service: "Insumos, material médico, alquiler de equipos", "200": "2.600", "500": "7.000" },
+            ]
+        },
+        note: "Coberturas sujetas al tamaño del grupo (200–500). Aplican clínicas convenidas."
     }
 ]
 
@@ -79,7 +93,7 @@ export default function PlansPage() {
                 </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto items-start">
                 {plans.map((plan, index) => (
                     <motion.div
                         key={plan.name}
@@ -93,10 +107,9 @@ export default function PlansPage() {
                             )}>
                             <CardHeader>
                                 <CardTitle className="text-2xl font-bold font-headline text-primary-landing">{plan.name}</CardTitle>
-                                <CardDescription>{plan.description}</CardDescription>
+                                <CardDescription>{plan.subtitle}</CardDescription>
                             </CardHeader>
-                            <CardContent className="flex-grow space-y-4">
-                                <p className="font-semibold text-lg">{plan.price}</p>
+                            <CardContent className="flex-grow space-y-6">
                                 <ul className="space-y-3">
                                     {plan.features.map(feature => (
                                         <li key={feature} className="flex items-start">
@@ -105,8 +118,50 @@ export default function PlansPage() {
                                         </li>
                                     ))}
                                 </ul>
+
+                                {plan.pricing && (
+                                    <div className="space-y-2 pt-4 border-t">
+                                         <h4 className="font-semibold">Precios (US$)</h4>
+                                         {plan.pricing.map(item => (
+                                            <div key={item.label} className="flex justify-between text-sm">
+                                                <span className="text-muted-foreground">{item.label}:</span>
+                                                <span className="font-medium">{item.value}</span>
+                                            </div>
+                                         ))}
+                                    </div>
+                                )}
+
+                                {plan.coverage && (
+                                    <div className="space-y-4 pt-4 border-t">
+                                        <h4 className="font-semibold">Coberturas y Costos Clave (US$)</h4>
+                                        <div className="text-sm space-y-1">
+                                            <div className="flex justify-between"><span className="text-muted-foreground">Cobertura anual del fondo:</span> <span className="font-medium text-right">{plan.coverage.fund}</span></div>
+                                            <div className="flex justify-between"><span className="text-muted-foreground">Cuota anual administrativa:</span> <span className="font-medium">{plan.coverage.adminFee}</span></div>
+                                        </div>
+                                        <Table className="text-xs">
+                                            <TableHeader>
+                                                <TableRow>
+                                                    <TableHead>Rubro</TableHead>
+                                                    <TableHead className="text-right">200 afiliados</TableHead>
+                                                    <TableHead className="text-right">500 afiliados</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {plan.coverage.breakdown.map(item => (
+                                                    <TableRow key={item.service}>
+                                                        <TableCell className="font-medium">{item.service}</TableCell>
+                                                        <TableCell className="text-right">{item['200']}</TableCell>
+                                                        <TableCell className="text-right">{item['500']}</TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+                                )}
+                                
                             </CardContent>
-                            <CardFooter>
+                            <CardFooter className="flex flex-col items-start gap-4 !pt-0">
+                                <p className="text-xs text-muted-foreground italic w-full pt-4 border-t">{plan.note}</p>
                                 <Button size="lg" className="w-full bg-primary-landing hover:bg-primary-landing/90">
                                     Afíliate Ahora
                                 </Button>
