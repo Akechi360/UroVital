@@ -1,8 +1,10 @@
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { ApexOptions } from 'apexcharts';
 import dynamic from 'next/dynamic';
+import { cn } from '@/lib/utils';
 
 // Dynamically import Chart to avoid SSR issues with ApexCharts
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -99,7 +101,7 @@ const appointmentsLineChartSeries = [
 
 export function AppointmentsLineChart() {
   return (
-    <Card className="rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(58,109,255,0.3),0_0_40px_rgba(186,85,211,0.2)]">
+    <Card className={cn("rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02]", "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]")}>
       <CardHeader>
         <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">Evolución de Citas</CardTitle>
       </CardHeader>
@@ -195,7 +197,7 @@ const labResultsRadialChartSeries = [12, 4];
 
 export function LabResultsBarChart() {
     return (
-        <Card className="rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(58,109,255,0.3),0_0_40px_rgba(186,85,211,0.2)]">
+        <Card className={cn("rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02]", "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]")}>
             <CardHeader>
                 <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">Resultados de Laboratorio</CardTitle>
             </CardHeader>

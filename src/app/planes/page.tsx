@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Stethoscope, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 const fadeIn = (delay: number) => ({
   hidden: { opacity: 0, y: 20 },
@@ -86,7 +87,10 @@ export default function PlansPage() {
                         animate="visible"
                         variants={fadeIn(0.2 * (index + 1))}
                     >
-                         <Card className="flex flex-col h-full rounded-2xl shadow-lg transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02] hover:shadow-primary-landing/20 hover:shadow-2xl">
+                         <Card className={cn(
+                            "flex flex-col h-full rounded-2xl shadow-lg transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02]",
+                            "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]"
+                            )}>
                             <CardHeader>
                                 <CardTitle className="text-2xl font-bold font-headline text-primary-landing">{plan.name}</CardTitle>
                                 <CardDescription>{plan.description}</CardDescription>
@@ -122,4 +126,3 @@ export default function PlansPage() {
     </div>
   );
 }
-

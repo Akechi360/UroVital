@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { LucideProps } from 'lucide-react';
@@ -38,17 +39,10 @@ const trendConfig = {
   },
 };
 
-const glowStyles = [
-    "hover:shadow-[0_0_20px_rgba(0,255,128,0.25),0_0_40px_rgba(0,128,255,0.25)]", // Patients: Green + Blue
-    "hover:shadow-[0_0_20px_rgba(58,109,255,0.3),0_0_40px_rgba(186,85,211,0.25)]",   // Appointments: Blue + Violet
-    "hover:shadow-[0_0_20px_rgba(255,165,0,0.25),0_0_40px_rgba(255,105,180,0.25)]", // Lab Results: Orange + Pink
-]
-
 export function StatCard({ title, value, iconName, subtext, trend, index }: StatCardProps) {
   const TrendIcon = trendConfig[trend].icon;
   const trendColor = trendConfig[trend].color;
   const Icon = icons[iconName];
-  const glowStyle = glowStyles[index % glowStyles.length];
 
   return (
     <motion.div
@@ -59,7 +53,7 @@ export function StatCard({ title, value, iconName, subtext, trend, index }: Stat
     >
       <div className={cn(
           "group relative rounded-2xl bg-white dark:bg-card p-6 shadow-sm transition-shadow hover:shadow-md border border-gray-200 dark:border-gray-700",
-           glowStyle
+           "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]"
         )}>
         <div className="flex items-start justify-between">
             <div className="flex flex-col gap-1">

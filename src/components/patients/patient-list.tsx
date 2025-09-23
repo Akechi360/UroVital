@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -38,14 +39,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { format } from 'date-fns';
 
 const ITEMS_PER_PAGE = 5;
-
-const glowStyles = [
-    "hover:shadow-[0_0_20px_rgba(0,255,128,0.25),0_0_40px_rgba(0,128,255,0.25)]",
-    "hover:shadow-[0_0_20px_rgba(58,109,255,0.3),0_0_40px_rgba(186,85,211,0.25)]",
-    "hover:shadow-[0_0_20px_rgba(255,165,0,0.25),0_0_40px_rgba(255,105,180,0.25)]",
-    "hover:shadow-[0_0_20px_rgba(255,215,0,0.25),0_0_40px_rgba(255,69,0,0.25)]",
-    "hover:shadow-[0_0_20px_rgba(75,0,130,0.25),0_0_40px_rgba(238,130,238,0.25)]",
-]
 
 export default function PatientList() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -293,8 +286,7 @@ export default function PatientList() {
                         layout
                         onClick={() => handlePatientClick(patient)}
                         className={cn(
-                            "cursor-pointer transition-all duration-300 ease-in-out hover:scale-[1.01]",
-                            glowStyles[index % glowStyles.length]
+                            "cursor-pointer transition-all duration-300 ease-in-out hover:bg-muted/50"
                         )}
                     >
                         <TableCell>
@@ -335,7 +327,7 @@ export default function PatientList() {
                     onClick={() => handlePatientClick(patient)}
                     className={cn(
                         "rounded-2xl bg-card p-4 shadow-md transition-all duration-300 ease-in-out hover:scale-[1.03] active:scale-[0.99]",
-                        glowStyles[index % glowStyles.length]
+                        "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]"
                     )}
                 >
                     <div className="flex items-center justify-between">

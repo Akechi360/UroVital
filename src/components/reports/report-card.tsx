@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import type { Report } from '@/lib/types';
@@ -7,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { FileText, Calendar, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ReportDetailModal } from './report-detail-modal';
+import { cn } from '@/lib/utils';
 
 interface ReportCardProps {
   report: Report;
@@ -24,7 +26,10 @@ export function ReportCard({ report }: ReportCardProps) {
   return (
     <>
       <motion.div variants={itemVariants}>
-        <Card className="flex h-full flex-col overflow-hidden rounded-2xl shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(58,109,255,0.3),0_0_40px_rgba(186,85,211,0.2)]">
+        <Card className={cn(
+          "flex h-full flex-col overflow-hidden rounded-2xl shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.02]",
+          "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]"
+          )}>
           <CardHeader>
             <div className="flex items-start justify-between">
               <CardTitle className="line-clamp-2">{report.title}</CardTitle>

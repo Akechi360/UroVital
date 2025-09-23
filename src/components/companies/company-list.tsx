@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -16,14 +17,6 @@ import type { Company } from '@/lib/types';
 import { Badge } from '../ui/badge';
 
 const ITEMS_PER_PAGE = 6;
-
-const glowStyles = [
-    "hover:shadow-[0_0_20px_rgba(0,255,128,0.25),0_0_40px_rgba(0,128,255,0.25)]",
-    "hover:shadow-[0_0_20px_rgba(58,109,255,0.3),0_0_40px_rgba(186,85,211,0.25)]",
-    "hover:shadow-[0_0_20px_rgba(255,165,0,0.25),0_0_40px_rgba(255,105,180,0.25)]",
-    "hover:shadow-[0_0_20px_rgba(255,215,0,0.25),0_0_40px_rgba(255,69,0,0.25)]",
-    "hover:shadow-[0_0_20px_rgba(75,0,130,0.25),0_0_40px_rgba(238,130,238,0.25)]",
-]
 
 export default function CompanyList() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -114,7 +107,7 @@ export default function CompanyList() {
               <Card 
                 className={cn(
                     "flex flex-col h-full rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02] cursor-pointer",
-                    glowStyles[index % glowStyles.length]
+                    "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]"
                 )}
                 onClick={() => handleCompanyClick(company.id)}
                >
