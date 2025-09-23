@@ -182,3 +182,10 @@ export interface Payment {
   date: string;
   status: 'Completado' | 'Pendiente' | 'Fallido';
 }
+
+export interface Doctor {
+    nombre: string;
+    especialidad: string;
+    area: string;
+    contacto: string;
+}

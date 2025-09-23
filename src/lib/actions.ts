@@ -14,7 +14,8 @@ import providersData from './data/providers.json';
 import paymentMethodsData from './data/payment-methods.json';
 import paymentTypesData from './data/payment-types.json';
 import paymentsData from './data/payments.json';
-import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company, Supply, Provider, PaymentMethod, PaymentType, Payment } from './types';
+import doctorsData from './data/doctors.json';
+import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company, Supply, Provider, PaymentMethod, PaymentType, Payment, Doctor } from './types';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -249,4 +250,10 @@ export async function login(credentials: { email: string, password?: string }): 
 export async function getUsers(): Promise<User[]> {
     await delay(50);
     return usersData as User[];
+}
+
+// --- DOCTOR ACTIONS ---
+export async function getDoctors(): Promise<Doctor[]> {
+    await delay(100);
+    return doctorsData as Doctor[];
 }
