@@ -1,3 +1,4 @@
+
 'use server';
 
 import patientsData from './data/patients.json';
@@ -218,18 +219,15 @@ export async function addPayment(data: Omit<Payment, 'id'>): Promise<Payment> {
 
 // --- Mock Auth Actions ---
 
-const loginSchema = {
-  email: 'doctor@uroflow.com',
-  password: 'password123',
-};
+const MOCK_PASS = 'password123';
 
 export async function login(credentials: { email: string, password?: string }): Promise<{success: boolean, user?: User, error?: string}> {
   await delay(500);
-  if (credentials.email === loginSchema.email && credentials.password === loginSchema.password) {
-    const user = (usersData as User[]).find(u => u.email === credentials.email);
-    if (user) {
-        return { success: true, user };
-    }
+  const user = (usersData as User[]).find(u => u.email === credentials.email);
+
+  if (user && credentials.password === MOCK_PASS) {
+    return { success: true, user };
   }
+  
   return { success: false, error: 'Credenciales inválidas. Por favor, inténtalo de nuevo.' };
 }

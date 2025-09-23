@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -14,14 +15,16 @@ import { Moon, Sun, User, LogOut, Settings, PanelLeft } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { useSidebar } from '@/components/ui/sidebar';
+import { useAuth } from './auth-provider';
 
 export default function AppHeader() {
   const { setTheme, theme } = useTheme();
   const router = useRouter();
   const { toggleSidebar, isMobile } = useSidebar();
+  const { currentUser } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user');
     router.push('/login');
   };
 
@@ -39,7 +42,11 @@ export default function AppHeader() {
           </Button>
         )}
       <div className="flex-1">
-        {/* Can add a global search here in the future */}
+        {currentUser && (
+            <div className="text-xs text-gray-500 uppercase font-semibold tracking-wider">
+                Rol: {currentUser.role}
+            </div>
+        )}
       </div>
       <div className="flex items-center gap-4">
         <Button
@@ -55,16 +62,16 @@ export default function AppHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback>{currentUser ? currentUser.name.charAt(0) : 'U'}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Dr. John Doe</p>
+                <p className="text-sm font-medium leading-none">{currentUser?.name}</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  doctor@uroflow.com
+                  {currentUser?.email}
                 </p>
               </div>
             </DropdownMenuLabel>

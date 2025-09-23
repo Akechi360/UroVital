@@ -1,8 +1,35 @@
+
 [
   {
     "id": "u-001",
     "name": "Dr. John Doe",
     "email": "doctor@uroflow.com",
-    "role": "urologist"
+    "role": "doctor"
+  },
+  {
+    "id": "u-002",
+    "name": "Admin User",
+    "email": "admin@uroflow.com",
+    "role": "admin"
+  },
+  {
+    "id": "u-003",
+    "name": "Secretaria Clinica",
+    "email": "secretaria@uroflow.com",
+    "role": "secretaria"
+  },
+  {
+    "id": "u-004",
+    "name": "Roberto Vance",
+    "email": "paciente1@uroflow.com",
+    "role": "patient",
+    "patientId": "p-001"
+  },
+  {
+    "id": "u-005",
+    "name": "María González",
+    "email": "paciente2@uroflow.com",
+    "role": "patient",
+    "patientId": "p-002"
   }
 ]

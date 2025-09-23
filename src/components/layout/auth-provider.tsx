@@ -1,11 +1,21 @@
+
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext, useContext, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { User } from '@/lib/types';
 
-const PROTECTED_ROUTES = ['/dashboard', '/patients', '/settings'];
+const PROTECTED_ROUTES = ['/dashboard', '/patients', '/settings', '/appointments', '/companies', '/administrativo'];
 const AUTH_ROUTES = ['/login', '/register', '/forgot-password'];
+
+type AuthContextType = {
+    currentUser: User | null;
+    isAuthenticated: boolean;
+    loading: boolean;
+};
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 function AuthScreen() {
     return (
@@ -26,30 +36,56 @@ function AuthScreen() {
     )
 }
 
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    try {
+        const userJson = localStorage.getItem('user');
+        const user = userJson ? JSON.parse(userJson) : null;
+        setCurrentUser(user);
 
-    const isProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
-    const isAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route));
+        const isAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route));
+        const isProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
 
-    if (!isAuthenticated && isProtectedRoute) {
-      router.push('/login');
-    } else if (isAuthenticated && isAuthRoute) {
-      router.push('/dashboard');
-    } else {
+        if (!user && isProtectedRoute) {
+            router.push('/login');
+        } else if (user && isAuthRoute) {
+            router.push('/dashboard');
+        } else {
+            setIsAuthenticating(false);
+        }
+    } catch (error) {
+        // Corrupted user data in localStorage
+        localStorage.removeItem('user');
+        setCurrentUser(null);
         setIsAuthenticating(false);
+         if (PROTECTED_ROUTES.some(route => pathname.startsWith(route))) {
+            router.push('/login');
+        }
     }
   }, [pathname, router]);
+
+  const authContextValue = useMemo(() => ({
+    currentUser,
+    isAuthenticated: !!currentUser,
+    loading: isAuthenticating,
+  }), [currentUser, isAuthenticating]);
 
   if (isAuthenticating) {
     return <AuthScreen />;
   }
 
-  return <>{children}</>;
+  return <AuthContext.Provider value={authContextValue}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+    const context = useContext(AuthContext);
+    if (context === undefined) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
 }

@@ -1,7 +1,7 @@
+
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -61,13 +61,15 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
       password: '',
     },
   });
+  
+  const { formState: { isSubmitting }, reset } = form;
 
   const onSubmit = async (values: z.infer<typeof loginSchema | typeof registerSchema | typeof forgotPasswordSchema>) => {
     if (mode === 'login') {
         const result = await login(values as z.infer<typeof loginSchema>);
-        if (result.success) {
+        if (result.success && result.user) {
             toast({ title: "Inicio de sesión exitoso", description: "Redirigiendo al panel..." });
-            localStorage.setItem("isAuthenticated", "true");
+            localStorage.setItem("user", JSON.stringify(result.user));
             router.push('/dashboard');
         } else {
             toast({ variant: "destructive", title: "Fallo en el inicio de sesión", description: result.error });
@@ -100,6 +102,11 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
         case 'register': return 'Registrarse';
         case 'forgot-password': return 'Enviar Enlace';
       }
+  }
+
+  const handleModeChange = (newMode: AuthMode) => {
+    reset();
+    setMode(newMode);
   }
 
   return (
@@ -158,7 +165,7 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
                         <div className="flex items-center justify-between">
                             <FormLabel>Contraseña</FormLabel>
                             {mode === 'login' && (
-                                <button type="button" onClick={() => setMode('forgot-password')} className="text-sm font-medium text-primary hover:underline">
+                                <button type="button" onClick={() => handleModeChange('forgot-password')} className="text-sm font-medium text-primary hover:underline">
                                     ¿Olvidaste?
                                 </button>
                             )}
@@ -173,8 +180,8 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
                 )}
               </div>
 
-            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? 'Procesando...' : getButtonText()}
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? 'Procesando...' : getButtonText()}
               <LogIn className="ml-2 h-4 w-4" />
             </Button>
           </form>
@@ -183,7 +190,7 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
           {mode === 'login' && (
             <p className="text-muted-foreground">
               ¿No tienes una cuenta?{' '}
-              <button onClick={() => {form.reset(); setMode('register')}} className="font-medium text-primary hover:underline">
+              <button onClick={() => handleModeChange('register')} className="font-medium text-primary hover:underline">
                 Regístrate
               </button>
             </p>
@@ -191,7 +198,7 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
           {mode === 'register' && (
             <p className="text-muted-foreground">
               ¿Ya tienes una cuenta?{' '}
-              <button onClick={() => {form.reset(); setMode('login')}} className="font-medium text-primary hover:underline">
+              <button onClick={() => handleModeChange('login')} className="font-medium text-primary hover:underline">
                 Inicia Sesión
               </button>
             </p>
@@ -199,7 +206,7 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
            {mode === 'forgot-password' && (
             <p className="text-muted-foreground">
               ¿Recuerdas tu contraseña?{' '}
-              <button onClick={() => {form.reset(); setMode('login')}} className="font-medium text-primary hover:underline">
+              <button onClick={() => handleModeChange('login')} className="font-medium text-primary hover:underline">
                 Inicia Sesión
               </button>
             </p>

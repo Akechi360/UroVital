@@ -1,33 +1,68 @@
+
+'use client'
 import { getAppointments, getPatients } from "@/lib/actions";
 import { PageHeader } from "@/components/shared/page-header";
 import { DoctorAppointments } from "@/components/appointments/doctor-appointments";
 import { PatientAppointments } from "@/components/appointments/patient-appointments";
+import { useAuth } from "@/components/layout/auth-provider";
+import { useEffect, useState } from "react";
+import type { Appointment, Patient } from "@/lib/types";
+import { Card, CardContent } from "@/components/ui/card";
+import { CalendarOff } from "lucide-react";
 
-// En una aplicación real, el rol y el ID del usuario se obtendrían de la sesión de autenticación.
-// Para esta simulación, podemos alternar entre 'doctor' y 'patient'.
-const currentUserRole = 'doctor'; // o 'patient'
-const currentUserId = currentUserRole === 'doctor' ? 'doc-001' : 'p-001';
+export default function AppointmentsPage() {
+  const { currentUser } = useAuth();
+  const [initialAppointments, setInitialAppointments] = useState<Appointment[]>([]);
+  const [initialPatients, setInitialPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    async function fetchData() {
+      const [appointments, patients] = await Promise.all([
+        getAppointments(),
+        getPatients(),
+      ]);
+      setInitialAppointments(appointments);
+      setInitialPatients(patients);
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
 
-export default async function AppointmentsPage() {
-  const [initialAppointments, initialPatients] = await Promise.all([
-    getAppointments(),
-    getPatients(),
-  ]);
+  if (loading || !currentUser) {
+    return (
+        <div className="flex flex-col gap-8">
+            <PageHeader title="Mis Citas" />
+            <p>Cargando citas...</p>
+        </div>
+    )
+  }
 
+  const { role, patientId: currentPatientId } = currentUser;
+  const currentUserId = role === 'doctor' ? 'doc-001' : currentPatientId;
+  
   return (
     <div className="flex flex-col gap-8">
       <PageHeader title="Mis Citas" />
-      {currentUserRole === 'doctor' ? (
+      {role === 'doctor' ? (
         <DoctorAppointments
           initialAppointments={initialAppointments}
           initialPatients={initialPatients}
-          doctorId={currentUserId}
+          doctorId={currentUserId!}
         />
-      ) : (
+      ) : role === 'patient' ? (
         <PatientAppointments
           initialAppointments={initialAppointments}
-          patientId={currentUserId}
+          patientId={currentUserId!}
         />
+      ) : (
+        <Card>
+            <CardContent className="p-10 flex flex-col items-center justify-center gap-4 text-center">
+                <CalendarOff className="h-12 w-12 text-muted-foreground" />
+                <h3 className="text-xl font-semibold">Sin Citas</h3>
+                <p className="text-muted-foreground">Tu rol actual ({role}) no tiene una vista de citas.</p>
+            </CardContent>
+        </Card>
       )}
     </div>
   );

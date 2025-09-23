@@ -1,3 +1,4 @@
+
 export interface Patient {
   id: string;
   name: string;
@@ -66,7 +67,8 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: 'doctor' | 'patient' | 'admin' | 'secretaria';
+  patientId?: string;
 }
 
 export interface IpssScore {
