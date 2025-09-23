@@ -32,6 +32,7 @@ const plans = [
             "Descuentos en procedimientos quirúrgicos.",
         ],
         priceSummary: "150$ anual o 50 inicial + 10 mensuales",
+        detailsUrl: "/planes/tarjeta-saludable",
     },
     {
         name: "Fondo Espíritu Santo",
@@ -42,6 +43,7 @@ const plans = [
             "Traslados en ambulancia y atención 24/7.",
         ],
         priceSummary: "Cobertura anual entre 35.000 y 87.500 USD",
+        detailsUrl: "/planes/fondo-espiritu-santo",
     }
 ]
 
@@ -111,8 +113,8 @@ export default function PlansPage() {
                                 <Button size="lg" className="w-full bg-primary-landing hover:bg-primary-landing/90">
                                     Afíliate Ahora
                                 </Button>
-                                <Button size="lg" variant="outline" className="w-full transition-all duration-300 ease-in-out hover:shadow-[0_0_15px_rgba(46,49,146,0.3)]">
-                                    Ver detalles
+                                <Button asChild size="lg" variant="outline" className="w-full transition-all duration-300 ease-in-out hover:shadow-[0_0_15px_rgba(46,49,146,0.3)]">
+                                    <Link href={plan.detailsUrl}>Ver detalles</Link>
                                 </Button>
                             </CardFooter>
                         </Card>
