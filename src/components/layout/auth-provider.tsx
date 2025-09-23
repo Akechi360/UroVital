@@ -4,10 +4,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState, createContext, useContext, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ROLE_PERMISSIONS, type Permission, type User } from '@/lib/types';
-import { login } from '@/lib/actions';
 
 const PROTECTED_ROUTES = ['/dashboard', '/patients', '/settings', '/appointments', '/companies', '/administrativo'];
-const AUTH_ROUTES = ['/login', '/register', '/forgot-password'];
+const AUTH_ROUTES = ['/login', '/register', '/forgot-password', '/landing'];
 
 type AuthContextType = {
     currentUser: User | null;
@@ -55,7 +54,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!user && isProtectedRoute) {
             router.push('/login');
         } else if (user && isAuthRoute) {
-            router.push('/dashboard');
+            if (pathname !== '/landing') { // Allow logged-in users to see landing page
+                router.push('/dashboard');
+            }
         }
         
     } catch (error) {
@@ -83,6 +84,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading: isAuthenticating,
     can: canFn,
   }), [currentUser, isAuthenticating]);
+
+  // Don't render children for public routes until auth check is complete,
+  // to avoid flicker on initial load to `/`.
+  const isPublicRoute = AUTH_ROUTES.includes(pathname) || pathname === '/';
+  if (isAuthenticating && isPublicRoute) {
+    return null;
+  }
 
   if (isAuthenticating) {
     return <AuthScreen />;

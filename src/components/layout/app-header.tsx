@@ -25,7 +25,7 @@ export default function AppHeader() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    router.push('/login');
+    router.push('/landing');
   };
 
   return (
