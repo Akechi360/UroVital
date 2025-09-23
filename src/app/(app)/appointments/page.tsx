@@ -62,9 +62,12 @@ export default function AppointmentsPage() {
         );
       case 'patient':
         return (
-          <PatientAppointments
-            patientId={currentPatientId!}
-          />
+            <>
+                <PatientAppointments
+                    patientId={currentPatientId!}
+                />
+                {can('appointments:write') && <AddAppointmentFab />}
+            </>
         );
       default:
         return (
@@ -86,4 +89,5 @@ export default function AppointmentsPage() {
     </div>
   );
 }
+
 

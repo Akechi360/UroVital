@@ -12,11 +12,11 @@ import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area"
 import type { Patient, User } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { getPatients, getUsers } from "@/lib/actions";
 import { Textarea } from "../ui/textarea";
+import { useAuth } from "../layout/auth-provider";
 
 const formSchema = z.object({
   patientId: z.string({ required_error: "Debe seleccionar un paciente." }),
@@ -33,8 +33,11 @@ interface AddAppointmentFormProps {
 }
 
 export function AddAppointmentForm({ onFormSubmit }: AddAppointmentFormProps) {
+  const { currentUser } = useAuth();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [doctors, setDoctors] = useState<User[]>([]);
+
+  const isPatient = currentUser?.role === 'patient';
 
   useEffect(() => {
     async function fetchData() {
@@ -51,34 +54,44 @@ export function AddAppointmentForm({ onFormSubmit }: AddAppointmentFormProps) {
   const form = useForm<AddAppointmentFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+        patientId: isPatient ? currentUser?.patientId : undefined,
         date: new Date(),
         reason: "",
     },
   })
 
+  // Set patientId for patient user after form is initialized
+  useEffect(() => {
+      if (isPatient && currentUser?.patientId) {
+          form.setValue('patientId', currentUser.patientId);
+      }
+  }, [isPatient, currentUser, form]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-4">
-        <FormField
-            control={form.control}
-            name="patientId"
-            render={({ field }) => (
-            <FormItem>
-                <FormLabel>Paciente</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Seleccione un paciente" />
-                    </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                    {patients.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
-                </SelectContent>
-                </Select>
-                <FormMessage />
-            </FormItem>
-            )}
-        />
+        {!isPatient && (
+            <FormField
+                control={form.control}
+                name="patientId"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Paciente</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Seleccione un paciente" />
+                        </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                        {patients.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                    </SelectContent>
+                    </Select>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+        )}
         <FormField
             control={form.control}
             name="doctorId"

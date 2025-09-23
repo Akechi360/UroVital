@@ -44,6 +44,7 @@ export const ROLE_PERMISSIONS: Record<User['role'], Permission[]> = {
   ],
   patient: [
     'appointments:read',
+    'appointments:write',
     'settings:read',
   ],
 };
