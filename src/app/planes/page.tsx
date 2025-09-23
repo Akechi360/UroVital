@@ -29,7 +29,6 @@ const plans = [
             "Consultas médicas gratuitas (hasta 6 al año).",
             "Descuentos en laboratorio e imagenología.",
             "Acceso a fisiatría y rehabilitación.",
-            "Descuentos en procedimientos quirúrgicos.",
         ],
         priceSummary: "150$ anual o 50 inicial + 10 mensuales",
         detailsUrl: "/planes/tarjeta-saludable",
