@@ -23,7 +23,7 @@ import { login } from '@/lib/actions';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Dirección de correo inválida.' }),
-  password: z.string().min(8, { message: 'La contraseña debe tener al menos 8 caracteres.' }),
+  password: z.string().min(3, { message: 'La contraseña debe tener al menos 3 caracteres.' }),
 });
 
 const registerSchema = z.object({
