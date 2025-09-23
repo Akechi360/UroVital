@@ -87,6 +87,18 @@ export async function getAppointments(): Promise<Appointment[]> {
   return appointmentsData as Appointment[];
 }
 
+export async function addAppointment(appointmentData: Omit<Appointment, 'id' | 'status'>): Promise<Appointment> {
+    await delay(200);
+    const newId = `appt-${String(appointmentsData.length + 1).padStart(3, '0')}`;
+    const newAppointment: Appointment = {
+        ...appointmentData,
+        id: newId,
+        status: 'Programada',
+    };
+    return newAppointment;
+}
+
+
 // CONSULTATION ACTIONS
 export async function getConsultationsByPatientId(patientId: string): Promise<Consultation[]> {
   await delay(100);
@@ -230,4 +242,11 @@ export async function login(credentials: { email: string, password?: string }): 
   }
   
   return { success: false, error: 'Credenciales inválidas. Por favor, inténtalo de nuevo.' };
+}
+
+
+// --- USER ACTIONS ---
+export async function getUsers(): Promise<User[]> {
+    await delay(50);
+    return usersData as User[];
 }

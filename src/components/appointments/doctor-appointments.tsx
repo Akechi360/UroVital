@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -33,9 +34,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { getInitials } from '@/lib/utils';
 import { es } from 'date-fns/locale';
 import { format } from 'date-fns';
+import { useAppointmentStore } from '@/lib/store/appointment-store';
 
 interface DoctorAppointmentsProps {
-  initialAppointments: Appointment[];
   initialPatients: Patient[];
   doctorId: string;
 }
@@ -65,7 +66,6 @@ const statusConfig = {
 } as const;
 
 export function DoctorAppointments({
-  initialAppointments,
   initialPatients,
   doctorId,
 }: DoctorAppointmentsProps) {
@@ -73,15 +73,16 @@ export function DoctorAppointments({
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const router = useRouter();
 
+  const appointments = useAppointmentStore(state => state.appointments);
+
   const patientsMap = useMemo(
     () => new Map(initialPatients.map((p) => [p.id, p])),
     [initialPatients]
   );
 
   const filteredAppointments = useMemo(() => {
-    const now = new Date();
-    return initialAppointments
-      .filter((appt) => appt.doctorId === doctorId)
+    return appointments
+      //.filter((appt) => appt.doctorId === doctorId) // Commented out for global view (admin/secretaria)
       .filter((appt) => {
         if (statusFilter === 'all') return true;
         return appt.status === statusFilter;
@@ -103,7 +104,7 @@ export function DoctorAppointments({
         }
       })
       .sort((a, b) => parseISO(b.date).getTime() - parseISO(a.date).getTime());
-  }, [initialAppointments, doctorId, statusFilter, dateFilter]);
+  }, [appointments, statusFilter, dateFilter]);
 
   const containerVariants = {
     hidden: { opacity: 0 },

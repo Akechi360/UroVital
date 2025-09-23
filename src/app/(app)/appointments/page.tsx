@@ -9,25 +9,31 @@ import { useEffect, useState } from "react";
 import type { Appointment, Patient } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { CalendarOff } from "lucide-react";
+import { AddAppointmentFab } from "@/components/appointments/add-appointment-fab";
+import { useAppointmentStore } from "@/lib/store/appointment-store";
 
 export default function AppointmentsPage() {
-  const { currentUser } = useAuth();
-  const [initialAppointments, setInitialAppointments] = useState<Appointment[]>([]);
+  const { currentUser, can } = useAuth();
   const [initialPatients, setInitialPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
+  const { isInitialized, initializeAppointments } = useAppointmentStore();
   
   useEffect(() => {
     async function fetchData() {
+      if (isInitialized) {
+        setLoading(false);
+        return;
+      }
       const [appointments, patients] = await Promise.all([
         getAppointments(),
         getPatients(),
       ]);
-      setInitialAppointments(appointments);
+      initializeAppointments(appointments);
       setInitialPatients(patients);
       setLoading(false);
     }
     fetchData();
-  }, []);
+  }, [isInitialized, initializeAppointments]);
 
   if (loading || !currentUser) {
     return (
@@ -45,18 +51,18 @@ export default function AppointmentsPage() {
       case 'doctor':
       case 'admin':
       case 'secretaria':
-        // Admin, Secretaria and Doctor see the global appointment view
         return (
-          <DoctorAppointments
-            initialAppointments={initialAppointments}
-            initialPatients={initialPatients}
-            doctorId={'doc-001'} // In a real app, this might differ for a global view
-          />
+          <>
+            <DoctorAppointments
+              initialPatients={initialPatients}
+              doctorId={'doc-001'} // In a real app, this might differ for a global view
+            />
+            {can('appointments:write') && <AddAppointmentFab />}
+          </>
         );
       case 'patient':
         return (
           <PatientAppointments
-            initialAppointments={initialAppointments}
             patientId={currentPatientId!}
           />
         );

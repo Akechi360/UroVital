@@ -29,9 +29,9 @@ import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 import { es } from 'date-fns/locale';
 import { format } from 'date-fns';
+import { useAppointmentStore } from '@/lib/store/appointment-store';
 
 interface PatientAppointmentsProps {
-  initialAppointments: Appointment[];
   patientId: string;
 }
 
@@ -57,14 +57,14 @@ const statusConfig = {
 } as const;
 
 export function PatientAppointments({
-  initialAppointments,
   patientId,
 }: PatientAppointmentsProps) {
   const [dateFilter, setDateFilter] = useState<DateFilter>('all');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const appointments = useAppointmentStore(state => state.appointments);
 
   const filteredAppointments = useMemo(() => {
-    return initialAppointments
+    return appointments
       .filter((appt) => appt.patientId === patientId)
       .filter((appt) => {
         if (statusFilter === 'all') return true;
@@ -87,7 +87,7 @@ export function PatientAppointments({
         }
       })
       .sort((a, b) => parseISO(b.date).getTime() - parseISO(a.date).getTime());
-  }, [initialAppointments, patientId, statusFilter, dateFilter]);
+  }, [appointments, patientId, statusFilter, dateFilter]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
