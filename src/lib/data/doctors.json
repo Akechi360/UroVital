@@ -1,3 +1,4 @@
+
 [
   {
     "nombre": "Dr. Francisco Torres",
@@ -58,5 +59,65 @@
     "especialidad": "Cirugía Pediátrica",
     "area": "Las Acacias",
     "contacto": "04121432188"
+  },
+  {
+    "nombre": "Dr. Juan Carlos Rodriguez",
+    "especialidad": "Urología General / Uroginecología",
+    "area": "Los Mangos / Isabelica / El Viñedo",
+    "contacto": "04244303262"
+  },
+  {
+    "nombre": "Dr. Luis Caricote",
+    "especialidad": "Urodinamia / Uroginecología",
+    "area": "La Viña / Valle de San Diego",
+    "contacto": "04144148271"
+  },
+  {
+    "nombre": "Dr. Carlos Vasquez",
+    "especialidad": "Cirugía General",
+    "area": "El Viñedo",
+    "contacto": "04144405860"
+  },
+  {
+    "nombre": "Dr. Juan Carlos Colina",
+    "especialidad": "Cirugía General",
+    "area": "La Viña",
+    "contacto": "04144977447"
+  },
+  {
+    "nombre": "Dr. Hebert Barreto",
+    "especialidad": "Cirugía Plástica",
+    "area": "La Viña",
+    "contacto": ""
+  },
+  {
+    "nombre": "Dra. Gianmary Miozzi",
+    "especialidad": "Infectología",
+    "area": "La Viña",
+    "contacto": "04144268181"
+  },
+  {
+    "nombre": "Dr. Jaikel Bajanchez",
+    "especialidad": "Oncología Clínica / Mastología",
+    "area": "Los Guayos / Branger",
+    "contacto": "04144319962"
+  },
+  {
+    "nombre": "Dr. Odoardo Poggioli",
+    "especialidad": "Oncología Urológica",
+    "area": "La Pastora, La Esmeralda, Clinicare",
+    "contacto": "04144231582"
+  },
+  {
+    "nombre": "Lic. Isabel Leonor Diaz",
+    "especialidad": "Psicología Clínica",
+    "area": "Los Mangos, San Diego",
+    "contacto": ""
+  },
+  {
+    "nombre": "Dr. Joel Felipe Pantoja",
+    "especialidad": "Oncología Clínica",
+    "area": "",
+    "contacto": "04121330133"
   }
 ]
