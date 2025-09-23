@@ -39,31 +39,45 @@ export default function AppointmentsPage() {
   }
 
   const { role, patientId: currentPatientId } = currentUser;
-  const currentUserId = role === 'doctor' ? 'doc-001' : currentPatientId;
   
+  const renderContent = () => {
+    switch (role) {
+      case 'doctor':
+      case 'admin':
+      case 'secretaria':
+        // Admin, Secretaria and Doctor see the global appointment view
+        return (
+          <DoctorAppointments
+            initialAppointments={initialAppointments}
+            initialPatients={initialPatients}
+            doctorId={'doc-001'} // In a real app, this might differ for a global view
+          />
+        );
+      case 'patient':
+        return (
+          <PatientAppointments
+            initialAppointments={initialAppointments}
+            patientId={currentPatientId!}
+          />
+        );
+      default:
+        return (
+          <Card>
+              <CardContent className="p-10 flex flex-col items-center justify-center gap-4 text-center">
+                  <CalendarOff className="h-12 w-12 text-muted-foreground" />
+                  <h3 className="text-xl font-semibold">Sin Citas</h3>
+                  <p className="text-muted-foreground">Tu rol actual ({role}) no tiene una vista de citas.</p>
+              </CardContent>
+          </Card>
+        );
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8">
-      <PageHeader title="Mis Citas" />
-      {role === 'doctor' ? (
-        <DoctorAppointments
-          initialAppointments={initialAppointments}
-          initialPatients={initialPatients}
-          doctorId={currentUserId!}
-        />
-      ) : role === 'patient' ? (
-        <PatientAppointments
-          initialAppointments={initialAppointments}
-          patientId={currentUserId!}
-        />
-      ) : (
-        <Card>
-            <CardContent className="p-10 flex flex-col items-center justify-center gap-4 text-center">
-                <CalendarOff className="h-12 w-12 text-muted-foreground" />
-                <h3 className="text-xl font-semibold">Sin Citas</h3>
-                <p className="text-muted-foreground">Tu rol actual ({role}) no tiene una vista de citas.</p>
-            </CardContent>
-        </Card>
-      )}
+      <PageHeader title={role === 'patient' ? "Mis Citas" : "Agenda de Citas"} />
+      {renderContent()}
     </div>
   );
 }
+
