@@ -36,6 +36,7 @@ const mainMenuItems = [
   { href: '/patients', label: 'Pacientes', icon: Users, permission: 'patients:read' },
   { href: '/companies', label: 'Empresas', icon: Building, permission: 'companies:read' },
   { href: '/appointments', label: 'Citas', icon: Calendar, permission: 'appointments:read' },
+  { href: '/finanzas', label: 'Finanzas', icon: CreditCard, permission: 'finance:read' },
 ];
 
 const adminMenuItems = [
