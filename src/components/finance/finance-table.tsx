@@ -19,7 +19,7 @@ import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
 import { format } from 'date-fns';
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 5;
 
 interface FinanceTableProps {
   initialPayments: Payment[];
