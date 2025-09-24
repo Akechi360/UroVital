@@ -22,15 +22,6 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   ├── administrativo
     │   │   │   ├── alerts
     │   │   │   │   └── page.tsx
-    │   │   │   ├── finanzas
-    │   │   │   │   ├── facturacion
-    │   │   │   │   │   └── page.tsx
-    │   │   │   │   ├── metodos
-    │   │   │   │   │   └── page.tsx
-    │   │   │   │   ├── pagos
-    │   │   │   │   │   └── page.tsx
-    │   │   │   │   └── tipos
-    │   │   │   │       └── page.tsx
     │   │   │   ├── providers
     │   │   │   │   └── page.tsx
     │   │   │   └── supplies
@@ -43,6 +34,10 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   │   └── page.tsx
     │   │   ├── dashboard
     │   │   │   ├── layout.tsx
+    │   │   │   └── page.tsx
+    │   │   ├── finanzas
+    │   │   │   ├── pagos
+    │   │   │   │   └── page.tsx
     │   │   │   └── page.tsx
     │   │   ├── layout.tsx
     │   │   ├── patients
@@ -74,9 +69,9 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │       └── page.tsx
     │   ├── directorio
     │   │   └── page.tsx
-    │   ├── globals.css
-    │   ├── landing
+    │   ├── estudios
     │   │   └── page.tsx
+    │   ├── globals.css
     │   ├── layout.tsx
     │   ├── page.tsx
     │   └── planes
@@ -196,6 +191,7 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
         │   ├── companies.json
         │   ├── consultations.json
         │   ├── doctors.json
+        │   ├── estudios.json
         │   ├── ipss-values.json
         │   ├── lab-results.json
         │   ├── patients.json
