@@ -8,17 +8,21 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
 import { getInitials } from '@/lib/utils';
-import { Search, PlusCircle, MoreHorizontal, FileDown } from 'lucide-react';
+import { Search, MoreHorizontal, FileDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
 import { format } from 'date-fns';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
+const MySwal = withReactContent(Swal);
 const ITEMS_PER_PAGE = 5;
 
 interface FinanceTableProps {
@@ -42,10 +46,13 @@ export function FinanceTable({
     paymentTypes: allPaymentTypes,
     paymentMethods: allPaymentMethods 
 }: FinanceTableProps) {
+  const [payments, setPayments] = useState(initialPayments);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('Todos');
   const [currentPage, setCurrentPage] = useState(1);
   const { toast } = useToast();
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const patientMap = useMemo(() => new Map(allPatients.map(p => [p.id, p])), [allPatients]);
   const doctorMap = useMemo(() => new Map(allDoctors.map(d => [d.id, d])), [allDoctors]);
@@ -53,9 +60,7 @@ export function FinanceTable({
   const paymentMethodMap = useMemo(() => new Map(allPaymentMethods.map(pm => [pm.id, pm.name])), [allPaymentMethods]);
 
   const filteredPayments = useMemo(() => {
-    if (!initialPayments) return [];
-    
-    let payments = initialPayments.filter(payment => {
+    let filtered = payments.filter(payment => {
       const patient = patientMap.get(payment.patientId);
       const searchTermMatch =
         patient?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -67,14 +72,14 @@ export function FinanceTable({
     });
 
     // Asignar el doctor "Dr. John Doe" si no hay doctorId
-    return payments.map(p => {
+    return filtered.map(p => {
         if (!p.doctorId) {
             const defaultDoctor = allDoctors.find(d => d.name === 'Dr. John Doe');
             return {...p, doctorId: defaultDoctor?.id || 'doc-001' }
         }
         return p;
     });
-  }, [initialPayments, searchTerm, statusFilter, patientMap, allDoctors]);
+  }, [payments, searchTerm, statusFilter, patientMap, allDoctors]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -138,7 +143,65 @@ export function FinanceTable({
             description: "No se pudo generar el archivo PDF.",
         });
     }
-  }
+  };
+
+  const handleViewDetails = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setIsDetailModalOpen(true);
+  };
+  
+  const handleDownloadPDF = (payment: Payment) => {
+    const doc = new jsPDF();
+    const patient = patientMap.get(payment.patientId);
+    
+    // Placeholder for logo
+    doc.setFontSize(10);
+    doc.text("UroVital", 14, 20);
+
+    doc.setFontSize(18);
+    doc.text("Comprobante de Pago", 105, 20, { align: 'center' });
+
+    doc.setFontSize(12);
+    doc.text(`Fecha: ${format(new Date(payment.date), 'dd/MM/yyyy')}`, 14, 40);
+    doc.text(`Paciente: ${patient?.name || 'N/A'}`, 14, 50);
+    doc.text(`ID de Comprobante: ${payment.id}`, 14, 60);
+
+    autoTable(doc, {
+        startY: 70,
+        head: [['Descripción', 'Monto']],
+        body: [
+            [paymentTypeMap.get(payment.paymentTypeId) || 'Servicio', `$${payment.monto.toFixed(2)}`]
+        ],
+        foot: [['Total', `$${payment.monto.toFixed(2)}`]],
+        headStyles: { fillColor: [58, 109, 255] },
+        footStyles: { fillColor: [232, 232, 232], textColor: 40, fontStyle: 'bold' }
+    });
+
+    doc.save(`comprobante_${payment.id}.pdf`);
+  };
+
+  const handleAnnul = (paymentId: string) => {
+    MySwal.fire({
+      title: '¿Anular comprobante?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, anular',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#e53e3e',
+      cancelButtonColor: '#718096',
+      customClass: {
+          popup: 'rounded-2xl bg-card/80 backdrop-blur-md shadow-2xl',
+          title: 'text-foreground',
+          htmlContainer: 'text-muted-foreground',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setPayments(prevPayments => prevPayments.map(p => p.id === paymentId ? { ...p, status: 'Anulado' } : p));
+        MySwal.fire('Anulado', 'El comprobante ha sido anulado.', 'success');
+      }
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -244,9 +307,9 @@ export function FinanceTable({
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align='end'>
-                            <DropdownMenuItem>Ver comprobante</DropdownMenuItem>
-                            <DropdownMenuItem>Descargar PDF</DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-500">Anular</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleViewDetails(payment)}>Ver comprobante</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDownloadPDF(payment)}>Descargar PDF</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleAnnul(payment.id)} className="text-red-500">Anular</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -295,9 +358,9 @@ export function FinanceTable({
                         </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
-                            <DropdownMenuItem>Ver comprobante</DropdownMenuItem>
-                            <DropdownMenuItem>Descargar PDF</DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-500">Anular</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleViewDetails(payment)}>Ver comprobante</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDownloadPDF(payment)}>Descargar PDF</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleAnnul(payment.id)} className="text-red-500">Anular</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
@@ -344,6 +407,28 @@ export function FinanceTable({
             Siguiente
           </Button>
         </div>
+      )}
+
+      {selectedPayment && (
+        <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Detalle del Comprobante</DialogTitle>
+                    <DialogDescription>ID: {selectedPayment.id}</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                    <p><strong>Paciente:</strong> {patientMap.get(selectedPayment.patientId)?.name}</p>
+                    <p><strong>Doctor:</strong> {doctorMap.get(selectedPayment.doctorId)?.name}</p>
+                    <p><strong>Monto:</strong> ${selectedPayment.monto.toFixed(2)}</p>
+                    <p><strong>Fecha:</strong> {new Date(selectedPayment.date).toLocaleDateString()}</p>
+                    <p><strong>Método:</strong> {paymentMethodMap.get(selectedPayment.paymentMethodId)}</p>
+                    <p><strong>Estado:</strong> <Badge className={cn('font-medium', statusColors[selectedPayment.status])}>{selectedPayment.status}</Badge></p>
+                </div>
+                <DialogFooter>
+                    <Button variant="secondary" onClick={() => setIsDetailModalOpen(false)}>Cerrar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
       )}
     </div>
   );
