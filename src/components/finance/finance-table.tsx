@@ -151,6 +151,7 @@ export function FinanceTable({
   };
   
   const handleDownloadPDF = (payment: Payment) => {
+    const isDarkMode = document.documentElement.classList.contains('dark');
      MySwal.fire({
       title: '¿Descargar comprobante?',
       text: "Se generará un archivo PDF con los datos del comprobante.",
@@ -158,13 +159,10 @@ export function FinanceTable({
       showCancelButton: true,
       confirmButtonText: 'Descargar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#3A6DFF',
+      confirmButtonColor: '#4f46e5',
       cancelButtonColor: '#6b7280',
-      customClass: {
-          popup: 'rounded-2xl bg-card/80 backdrop-blur-md shadow-2xl',
-          title: 'text-foreground',
-          htmlContainer: 'text-muted-foreground',
-      },
+      background: isDarkMode ? "#1e293b" : "#ffffff",
+      color: isDarkMode ? "#f1f5f9" : "#0f172a",
     }).then((result) => {
       if (result.isConfirmed) {
         const doc = new jsPDF();
@@ -194,12 +192,20 @@ export function FinanceTable({
 
         doc.save(`comprobante_${payment.id}.pdf`);
         
-        MySwal.fire('Descargado', 'El PDF se ha generado correctamente.', 'success');
+        MySwal.fire({
+            title: 'Descargado', 
+            text: 'El PDF se ha generado correctamente.', 
+            icon: 'success',
+            background: isDarkMode ? "#1e293b" : "#ffffff",
+            color: isDarkMode ? "#f1f5f9" : "#0f172a",
+            confirmButtonColor: '#4f46e5',
+        });
       }
     });
   };
 
   const handleAnnul = (paymentId: string) => {
+    const isDarkMode = document.documentElement.classList.contains('dark');
     MySwal.fire({
       title: '¿Anular comprobante?',
       text: "Esta acción no se puede deshacer.",
@@ -209,15 +215,19 @@ export function FinanceTable({
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#e53e3e',
       cancelButtonColor: '#718096',
-      customClass: {
-          popup: 'rounded-2xl bg-card/80 backdrop-blur-md shadow-2xl',
-          title: 'text-foreground',
-          htmlContainer: 'text-muted-foreground',
-      },
+      background: isDarkMode ? "#1e293b" : "#ffffff",
+      color: isDarkMode ? "#f1f5f9" : "#0f172a",
     }).then((result) => {
       if (result.isConfirmed) {
         setPayments(prevPayments => prevPayments.map(p => p.id === paymentId ? { ...p, status: 'Anulado' } : p));
-        MySwal.fire('Anulado', 'El comprobante ha sido anulado.', 'success');
+        MySwal.fire({
+            title: 'Anulado', 
+            text: 'El comprobante ha sido anulado.', 
+            icon: 'success',
+            background: isDarkMode ? "#1e293b" : "#ffffff",
+            color: isDarkMode ? "#f1f5f9" : "#0f172a",
+            confirmButtonColor: '#4f46e5',
+        });
       }
     });
   };
