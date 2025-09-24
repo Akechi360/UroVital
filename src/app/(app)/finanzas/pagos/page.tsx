@@ -1,37 +1,13 @@
-
-import { getPayments, getPatients, getCompanies, getPaymentTypes, getPaymentMethods } from '@/lib/actions';
-import { PageHeader } from '@/components/shared/page-header';
-import { DirectPaymentsTable } from '@/components/finance/direct-payments-table';
-
-export const metadata = {
-  title: "Pagos Directos — UroVital",
-};
-
-export default async function PagosDirectosPage() {
-    const [
-        initialPayments,
-        patients,
-        companies,
-        paymentTypes,
-        paymentMethods
-    ] = await Promise.all([
-        getPayments(),
-        getPatients(),
-        getCompanies(),
-        getPaymentTypes(),
-        getPaymentMethods(),
-    ]);
-  
+// src/app/finanzas/pagos/page.tsx
+export default function PagosDirectos() {
   return (
-    <div className="flex flex-col gap-8">
-      <PageHeader title="Pagos Directos" />
-      <DirectPaymentsTable 
-        initialPayments={initialPayments}
-        patients={patients}
-        companies={companies}
-        paymentTypes={paymentTypes}
-        paymentMethods={paymentMethods}
-       />
+    <div className="p-6 border rounded-lg bg-card">
+      <h2 className="text-xl font-semibold">[OBSOLETO] Pagos Directos</h2>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Esta vista ya no está activa. Usa el módulo independiente:
+        <span className="ml-1 font-medium">Finanzas</span>
+        (ruta <code className="mx-1 rounded bg-muted px-1.5 py-0.5 font-mono text-sm">/finanzas</code>).
+      </p>
     </div>
   );
 }
