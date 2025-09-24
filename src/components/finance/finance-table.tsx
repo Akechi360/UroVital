@@ -55,7 +55,7 @@ export function FinanceTable({
   const filteredPayments = useMemo(() => {
     if (!initialPayments) return [];
     
-    return initialPayments.filter(payment => {
+    let payments = initialPayments.filter(payment => {
       const patient = patientMap.get(payment.patientId);
       const searchTermMatch =
         patient?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -65,7 +65,16 @@ export function FinanceTable({
 
       return searchTermMatch && statusMatch;
     });
-  }, [initialPayments, searchTerm, statusFilter, patientMap]);
+
+    // Asignar el doctor "Dr. John Doe" si no hay doctorId
+    return payments.map(p => {
+        if (!p.doctorId) {
+            const defaultDoctor = allDoctors.find(d => d.name === 'Dr. John Doe');
+            return {...p, doctorId: defaultDoctor?.id || 'doc-001' }
+        }
+        return p;
+    });
+  }, [initialPayments, searchTerm, statusFilter, patientMap, allDoctors]);
 
   useEffect(() => {
     setCurrentPage(1);
