@@ -151,33 +151,52 @@ export function FinanceTable({
   };
   
   const handleDownloadPDF = (payment: Payment) => {
-    const doc = new jsPDF();
-    const patient = patientMap.get(payment.patientId);
-    
-    // Placeholder for logo
-    doc.setFontSize(10);
-    doc.text("UroVital", 14, 20);
+     MySwal.fire({
+      title: '¿Descargar comprobante?',
+      text: "Se generará un archivo PDF con los datos del comprobante.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Descargar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#3A6DFF',
+      cancelButtonColor: '#6b7280',
+      customClass: {
+          popup: 'rounded-2xl bg-card/80 backdrop-blur-md shadow-2xl',
+          title: 'text-foreground',
+          htmlContainer: 'text-muted-foreground',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const doc = new jsPDF();
+        const patient = patientMap.get(payment.patientId);
+        
+        doc.setFontSize(10);
+        doc.text("UroVital", 14, 20);
 
-    doc.setFontSize(18);
-    doc.text("Comprobante de Pago", 105, 20, { align: 'center' });
+        doc.setFontSize(18);
+        doc.text("Comprobante de Pago", 105, 20, { align: 'center' });
 
-    doc.setFontSize(12);
-    doc.text(`Fecha: ${format(new Date(payment.date), 'dd/MM/yyyy')}`, 14, 40);
-    doc.text(`Paciente: ${patient?.name || 'N/A'}`, 14, 50);
-    doc.text(`ID de Comprobante: ${payment.id}`, 14, 60);
+        doc.setFontSize(12);
+        doc.text(`Fecha: ${format(new Date(payment.date), 'dd/MM/yyyy')}`, 14, 40);
+        doc.text(`Paciente: ${patient?.name || 'N/A'}`, 14, 50);
+        doc.text(`ID de Comprobante: ${payment.id}`, 14, 60);
 
-    autoTable(doc, {
-        startY: 70,
-        head: [['Descripción', 'Monto']],
-        body: [
-            [paymentTypeMap.get(payment.paymentTypeId) || 'Servicio', `$${payment.monto.toFixed(2)}`]
-        ],
-        foot: [['Total', `$${payment.monto.toFixed(2)}`]],
-        headStyles: { fillColor: [58, 109, 255] },
-        footStyles: { fillColor: [232, 232, 232], textColor: 40, fontStyle: 'bold' }
+        autoTable(doc, {
+            startY: 70,
+            head: [['Descripción', 'Monto']],
+            body: [
+                [paymentTypeMap.get(payment.paymentTypeId) || 'Servicio', `$${payment.monto.toFixed(2)}`]
+            ],
+            foot: [['Total', `$${payment.monto.toFixed(2)}`]],
+            headStyles: { fillColor: [58, 109, 255] },
+            footStyles: { fillColor: [232, 232, 232], textColor: 40, fontStyle: 'bold' }
+        });
+
+        doc.save(`comprobante_${payment.id}.pdf`);
+        
+        MySwal.fire('Descargado', 'El PDF se ha generado correctamente.', 'success');
+      }
     });
-
-    doc.save(`comprobante_${payment.id}.pdf`);
   };
 
   const handleAnnul = (paymentId: string) => {
