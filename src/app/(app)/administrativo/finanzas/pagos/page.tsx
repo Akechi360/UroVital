@@ -1,7 +1,7 @@
 'use client';
 import { getPayments, getPatients, getCompanies, getPaymentTypes, getPaymentMethods } from '@/lib/actions';
 import { PageHeader } from '@/components/shared/page-header';
-import { DirectPayments } from '@/components/admin/finance/direct-payments';
+import DirectPayments from '@/components/admin/finance/direct-payments';
 import { useAuth } from '@/components/layout/auth-provider';
 import { Card, CardContent } from '@/components/ui/card';
 import { ShieldBan } from 'lucide-react';
@@ -64,13 +64,7 @@ export default function DirectPaymentsPage() {
   return (
     <div className="flex flex-col gap-8">
       <PageHeader title="Pagos Directos" />
-      <DirectPayments 
-        initialPayments={data.initialPayments}
-        patients={data.patients}
-        companies={data.companies}
-        paymentTypes={data.paymentTypes}
-        paymentMethods={data.paymentMethods}
-      />
+      <DirectPayments />
     </div>
   );
 }
