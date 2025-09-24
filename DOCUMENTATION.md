@@ -82,14 +82,6 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │           └── page.tsx
     ├── components
     │   ├── admin
-    │   │   ├── finance
-    │   │   │   ├── add-payment-form.tsx
-    │   │   │   ├── add-payment-method-form.tsx
-    │   │   │   ├── add-payment-type-form.tsx
-    │   │   │   ├── direct-payments.tsx
-    │   │   │   ├── invoicing-list.tsx
-    │   │   │   ├── payment-methods-list.tsx
-    │   │   │   └── payment-types-list.tsx
     │   │   ├── providers
     │   │   │   ├── add-provider-form.tsx
     │   │   │   ├── provider-list-wrapper.tsx

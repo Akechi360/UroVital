@@ -1,4 +1,3 @@
-
 export const ALL_PERMISSIONS = [
   'admin:all',
   'dashboard:read',
@@ -12,7 +11,7 @@ export const ALL_PERMISSIONS = [
   'finance:read',
   'finance:write',
 ] as const;
-export type Permission = typeof ALL_PERMISSIONS[number];
+export type Permission = (typeof ALL_PERMISSIONS)[number];
 
 export const ROLE_PERMISSIONS: Record<User['role'], Permission[]> = {
   admin: [
@@ -43,13 +42,8 @@ export const ROLE_PERMISSIONS: Record<User['role'], Permission[]> = {
     'companies:read',
     'finance:read', // Can see payments, but not audit
   ],
-  patient: [
-    'appointments:read',
-    'appointments:write',
-    'settings:read',
-  ],
+  patient: ['appointments:read', 'appointments:write', 'settings:read'],
 };
-
 
 export interface Patient {
   id: string;
@@ -93,26 +87,26 @@ export interface LabResult {
 }
 
 export interface Report {
-    id: string;
-    patientId: string;
-    title: string;
-    date: string;
-    type: string;
-    notes: string;
-    fileUrl: string;
-    attachments: string[];
+  id: string;
+  patientId: string;
+  title: string;
+  date: string;
+  type: string;
+  notes: string;
+  fileUrl: string;
+  attachments: string[];
 }
 
 export interface Consultation {
-    id: string;
-    patientId: string;
-    date: string;
-    doctor: string;
-    type: 'Inicial' | 'Seguimiento' | 'Pre-operatorio' | 'Post-operatorio';
-    notes: string;
-    prescriptions: Prescription[];
-    labResults: LabResult[];
-    reports: Report[];
+  id: string;
+  patientId: string;
+  date: string;
+  doctor: string;
+  type: 'Inicial' | 'Seguimiento' | 'Pre-operatorio' | 'Post-operatorio';
+  notes: string;
+  prescriptions: Prescription[];
+  labResults: LabResult[];
+  reports: Report[];
 }
 
 export interface User {
@@ -140,7 +134,10 @@ export interface Company {
   status: 'Activo' | 'Inactivo';
 }
 
-export type NewReportFormValues = Omit<Report, 'id' | 'patientId' | 'fileUrl'> & { patientId?: string };
+export type NewReportFormValues = Omit<
+  Report,
+  'id' | 'patientId' | 'fileUrl'
+> & { patientId?: string };
 
 export interface Supply {
   id: string;
@@ -174,25 +171,24 @@ export interface PaymentType {
 }
 
 export interface Payment {
-  id: string;
-  entityId: string; // patientId or companyId
-  entityType: 'patient' | 'company';
-  paymentTypeId: string;
-  paymentMethodId: string;
-  amount: number;
-  date: string;
-  status: 'Completado' | 'Pendiente' | 'Fallido';
+    id: string;
+    patientId: string;
+    paymentTypeId: string;
+    paymentMethodId: string;
+    date: string;
+    monto: number;
+    status: 'Pagado' | 'Pendiente' | 'Anulado';
 }
 
 export interface Doctor {
-    nombre: string;
-    especialidad: string;
-    area: string;
-    contacto: string;
+  nombre: string;
+  especialidad: string;
+  area: string;
+  contacto: string;
 }
 
 export interface Estudio {
-    id: string;
-    categoria: string;
-    nombre: string;
+  id: string;
+  categoria: string;
+  nombre: string;
 }

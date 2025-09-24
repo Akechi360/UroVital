@@ -1,33 +1,57 @@
 
 [
   {
-    "id": "pay-1",
-    "entityId": "p-001",
-    "entityType": "patient",
+    "id": "PAY-001",
+    "patientId": "p-001",
     "paymentTypeId": "pt-1",
-    "paymentMethodId": "pm-1",
-    "amount": 800,
-    "date": "2024-08-15T10:05:00Z",
-    "status": "Completado"
-  },
-  {
-    "id": "pay-2",
-    "entityId": "C2",
-    "entityType": "company",
-    "paymentTypeId": "pt-3",
     "paymentMethodId": "pm-2",
-    "amount": 5000,
-    "date": "2024-08-10T14:30:00Z",
-    "status": "Completado"
+    "date": "2024-09-20",
+    "monto": 120.00,
+    "status": "Pagado"
   },
   {
-    "id": "pay-3",
-    "entityId": "p-003",
-    "entityType": "patient",
-    "paymentTypeId": "pt-4",
+    "id": "PAY-002",
+    "patientId": "p-002",
+    "paymentTypeId": "pt-3",
     "paymentMethodId": "pm-3",
-    "amount": 1200,
-    "date": "2024-09-01T11:00:00Z",
+    "date": "2024-09-22",
+    "monto": 250.00,
     "status": "Pendiente"
+  },
+  {
+    "id": "PAY-003",
+    "patientId": "p-003",
+    "paymentTypeId": "pt-2",
+    "paymentMethodId": "pm-1",
+    "date": "2024-09-23",
+    "monto": 80.50,
+    "status": "Pagado"
+  },
+  {
+    "id": "PAY-004",
+    "patientId": "p-004",
+    "paymentTypeId": "pt-4",
+    "paymentMethodId": "pm-1",
+    "date": "2024-09-24",
+    "monto": 150.00,
+    "status": "Anulado"
+  },
+  {
+    "id": "PAY-005",
+    "patientId": "p-005",
+    "paymentTypeId": "pt-5",
+    "paymentMethodId": "pm-2",
+    "date": "2024-09-25",
+    "monto": 300.00,
+    "status": "Pendiente"
+  },
+  {
+    "id": "PAY-006",
+    "patientId": "p-006",
+    "paymentTypeId": "pt-1",
+    "paymentMethodId": "pm-3",
+    "date": "2024-09-26",
+    "monto": 100.00,
+    "status": "Pagado"
   }
 ]

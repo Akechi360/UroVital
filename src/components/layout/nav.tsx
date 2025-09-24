@@ -45,20 +45,12 @@ const adminMenuItems = [
     { href: '/administrativo/alerts', label: 'Alertas', icon: Bell, permission: 'admin:all' },
 ]
 
-const financeMenuItems = [
-    { href: '/administrativo/finanzas/metodos', label: 'Métodos de Pago', permission: 'finance:write' },
-    { href: '/administrativo/finanzas/tipos', label: 'Tipos de Pago', permission: 'finance:write' },
-    { href: '/administrativo/finanzas/pagos', label: 'Pagos Directos', permission: 'finance:write' },
-    { href: '/administrativo/finanzas/facturacion', label: 'Facturación', permission: 'finance:write' },
-]
-
 const settingsMenuItem = { href: '/settings', label: 'Configuración', icon: Settings, permission: 'settings:read' };
 
 export default function Nav() {
   const pathname = usePathname();
   const { can } = useAuth();
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/administrativo'));
-  const [isFinanceOpen, setIsFinanceOpen] = useState(pathname.startsWith('/administrativo/finanzas'));
 
   const isActive = (href: string) => {
     if (href === '/dashboard') {
@@ -67,13 +59,13 @@ export default function Nav() {
     return pathname.startsWith(href);
   }
   
-  const canViewAdmin = adminMenuItems.some(item => can(item.permission as any)) || financeMenuItems.some(item => can(item.permission as any));
+  const canViewAdmin = adminMenuItems.some(item => can(item.permission as any));
 
   return (
     <>
       <SidebarHeader>
         <div className="flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg group-data-[collapsible=icon]:hidden">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg group-data-[collapsible=icon]:hidden">
             <Stethoscope className="h-7 w-7 text-primary" />
             <span className="font-headline">UroVital</span>
           </Link>
@@ -124,32 +116,6 @@ export default function Nav() {
                                 </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                         ))}
-                        {financeMenuItems.some(item => can(item.permission as any)) &&
-                        <SidebarMenuSubItem>
-                            <SidebarMenuSubButton
-                                onClick={() => setIsFinanceOpen(!isFinanceOpen)}
-                                isActive={isActive('/administrativo/finanzas')}
-                            >
-                                <CreditCard />
-                                <span>Finanzas</span>
-                                 <ChevronDown className={`ml-auto h-5 w-5 transition-transform ${isFinanceOpen ? 'rotate-180' : ''}`} />
-                            </SidebarMenuSubButton>
-                            {isFinanceOpen && (
-                                <SidebarMenuSub>
-                                    {financeMenuItems.map(item => (
-                                        can(item.permission as any) &&
-                                        <SidebarMenuSubItem key={item.href}>
-                                            <SidebarMenuSubButton asChild isActive={pathname === item.href}>
-                                                <Link href={item.href}>
-                                                    <span>{item.label}</span>
-                                                </Link>
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                    ))}
-                                </SidebarMenuSub>
-                            )}
-                        </SidebarMenuSubItem>
-                        }
                     </SidebarMenuSub>
                 )}
             </SidebarMenuItem>
