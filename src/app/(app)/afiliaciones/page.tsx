@@ -17,7 +17,7 @@ export default function AfiliacionesPage() {
   return (
     <div className="flex flex-col gap-8">
         <PageHeader 
-            title="🤝 Afiliaciones"
+            title="Afiliaciones"
             actions={
                 <Button>
                     <PlusCircle className="mr-2 h-4 w-4" />
