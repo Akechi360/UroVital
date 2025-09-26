@@ -192,3 +192,11 @@ export interface Estudio {
   categoria: string;
   nombre: string;
 }
+
+export interface Affiliation {
+    id: string;
+    promotora: string;
+    afiliados: number;
+    ultimaAfiliacion: string;
+    estado: string;
+}

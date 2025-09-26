@@ -3,17 +3,25 @@
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
-import affiliations from '@/lib/data/affiliations.json';
+import { PlusCircle } from "lucide-react";
+import initialAffiliations from '@/lib/data/affiliations.json';
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { AffiliationStatCards } from "@/components/affiliations/stat-cards";
+import type { Affiliation } from "@/lib/types";
+import { useState } from "react";
+import AffiliationActions from "@/components/affiliations/affiliation-actions";
 
 
 export default function AfiliacionesPage() {
+  const [affiliations, setAffiliations] = useState<Affiliation[]>(initialAffiliations);
+
+  const handleRemoveAffiliation = (id: string) => {
+    setAffiliations(prev => prev.filter(item => item.id !== id));
+  };
+  
   return (
     <div className="flex flex-col gap-8">
         <PageHeader 
@@ -56,18 +64,10 @@ export default function AfiliacionesPage() {
                                     </Badge>
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem>Ver detalle</DropdownMenuItem>
-                                            <DropdownMenuItem>Editar</DropdownMenuItem>
-                                            <DropdownMenuItem className="text-red-500">Eliminar</DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    <AffiliationActions
+                                        affiliation={item}
+                                        onDelete={() => handleRemoveAffiliation(item.id)}
+                                    />
                                 </TableCell>
                             </TableRow>
                         ))}
