@@ -25,6 +25,7 @@ import {
   Bell,
   ChevronDown,
   CreditCard,
+  Handshake,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -37,7 +38,7 @@ const mainMenuItems = [
   { href: '/companies', label: 'Empresas', icon: Building, permission: 'companies:read' },
   { href: '/appointments', label: 'Citas', icon: Calendar, permission: 'appointments:read' },
   { href: '/finanzas', label: 'Finanzas', icon: CreditCard, permission: 'finance:read' },
-  { href: '/afiliaciones', label: 'Afiliaciones', icon: Users, permission: 'finance:read' },
+  { href: '/afiliaciones', label: 'Afiliaciones', icon: Handshake, permission: 'finance:read' },
 ];
 
 const adminMenuItems = [
