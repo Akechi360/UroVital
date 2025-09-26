@@ -126,7 +126,7 @@ export function AddAffiliationForm({ onSubmit, onCancel }: AddAffiliationFormPro
             control={form.control}
             name="ultimaAfiliacion"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>Fecha de Afiliación</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -134,7 +134,7 @@ export function AddAffiliationForm({ onSubmit, onCancel }: AddAffiliationFormPro
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full pl-3 text-left font-normal",
+                          "w-full pl-3 text-left font-normal h-10",
                           !field.value && "text-muted-foreground"
                         )}
                       >
@@ -164,7 +164,7 @@ export function AddAffiliationForm({ onSubmit, onCancel }: AddAffiliationFormPro
                 <FormLabel>Estado</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-10">
                       <SelectValue placeholder="Seleccione un estado" />
                     </SelectTrigger>
                   </FormControl>
