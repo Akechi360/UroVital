@@ -10,6 +10,7 @@ import affiliations from '@/lib/data/affiliations.json';
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { AffiliationStatCards } from "@/components/affiliations/stat-cards";
 
 
 export default function AfiliacionesPage() {
@@ -24,6 +25,7 @@ export default function AfiliacionesPage() {
                 </Button>
             }
         />
+        <AffiliationStatCards affiliations={affiliations} />
         <Card>
             <CardContent className="p-0">
                  <Table>
