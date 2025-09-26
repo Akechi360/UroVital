@@ -39,26 +39,16 @@ const specialtyItems = [
 
 export default function LandingPage() {
   return (
-    <div className="w-full bg-background text-foreground font-body">
+    <main className="w-full bg-background text-foreground font-body">
       {/* Hero Section */}
       <motion.section 
         initial="hidden"
         animate="visible"
         variants={fadeIn}
-        className="relative flex flex-col items-center justify-center min-h-screen p-4 text-center bg-gray-50 dark:bg-gray-900/50"
+        className="relative flex flex-col items-center justify-center min-h-screen p-4 pt-24 text-center bg-gray-50 dark:bg-gray-900/50 md:pt-32"
       >
         <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
         <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[410px] w-[410px] rounded-full bg-primary-landing/20 opacity-20 blur-[120px]"></div>
-
-        <header className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center">
-            <Link href="/landing" className="flex items-center gap-2 font-bold text-lg">
-                <Stethoscope className="h-7 w-7 text-primary-landing" />
-                <span className="font-headline text-primary-landing">UroVital</span>
-            </Link>
-            <Button asChild variant="ghost">
-                <Link href="/login">Iniciar Sesión</Link>
-            </Button>
-        </header>
 
         <motion.h1 
             variants={fadeIn}
@@ -201,7 +191,7 @@ export default function LandingPage() {
       </section>
 
       {/* Final CTA Section */}
-      <footer className="py-20 text-center md:py-32 bg-gray-50 dark:bg-gray-900/50">
+      <section className="py-20 text-center md:py-32 bg-gray-50 dark:bg-gray-900/50">
         <div className="container mx-auto px-4">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer}>
                 <motion.h2 variants={fadeIn} className="text-4xl font-extrabold md:text-5xl font-headline">¿Listo para mejorar tu salud?</motion.h2>
@@ -215,7 +205,7 @@ export default function LandingPage() {
                 </motion.div>
             </motion.div>
         </div>
-      </footer>
-    </div>
+      </section>
+    </main>
   );
 }
