@@ -1,18 +1,16 @@
 // src/app/(app)/afiliaciones/page.tsx
 'use client';
 import { PageHeader } from "@/components/shared/page-header";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { PlusCircle } from "lucide-react";
 import initialAffiliations from '@/lib/data/affiliations.json';
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { AffiliationStatCards } from "@/components/affiliations/stat-cards";
 import type { Affiliation } from "@/lib/types";
 import { useState } from "react";
 import AffiliationActions from "@/components/affiliations/affiliation-actions";
+import { AddAffiliationDialog } from "@/components/affiliations/add-affiliation-dialog";
 
 
 export default function AfiliacionesPage() {
@@ -21,16 +19,21 @@ export default function AfiliacionesPage() {
   const handleRemoveAffiliation = (id: string) => {
     setAffiliations(prev => prev.filter(item => item.id !== id));
   };
+
+  const handleAddAffiliation = (newAffiliationData: Omit<Affiliation, 'id'>) => {
+    const newAffiliation: Affiliation = {
+      ...newAffiliationData,
+      id: `AF-${String(affiliations.length + 1).padStart(3, '0')}`,
+    };
+    setAffiliations(prev => [newAffiliation, ...prev]);
+  };
   
   return (
     <div className="flex flex-col gap-8">
         <PageHeader 
             title="Afiliaciones"
             actions={
-                <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Nueva Afiliación
-                </Button>
+                <AddAffiliationDialog onAddAffiliation={handleAddAffiliation} />
             }
         />
         <AffiliationStatCards affiliations={affiliations} />
@@ -75,15 +78,6 @@ export default function AfiliacionesPage() {
                 </Table>
             </CardContent>
         </Card>
-        <div className="p-6 border rounded-lg bg-card/50 text-center mt-8">
-            <h2 className="text-xl font-semibold">Página de Lista Placeholder</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-                Esta es la página <code className="bg-muted px-1 rounded-sm">/afiliaciones/lista</code> que se usará para la gestión detallada.
-            </p>
-             <Button asChild variant="link">
-                <Link href="/afiliaciones/lista">Ir a la lista</Link>
-            </Button>
-        </div>
     </div>
   );
 }
