@@ -76,7 +76,7 @@ export default function PlansPage() {
                 </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
                 {plans.map((plan, index) => (
                     <motion.div
                         key={plan.name}
