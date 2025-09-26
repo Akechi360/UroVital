@@ -6,7 +6,7 @@ import { AuthProvider } from '@/components/layout/auth-provider';
 import 'animate.css';
 
 export const metadata: Metadata = {
-  title: 'UroFlow',
+  title: 'UroVital',
   description: 'Modern patient management for urologists.',
 };
 

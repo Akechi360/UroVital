@@ -91,7 +91,7 @@ export default function AuthForm({ mode: initialMode }: AuthFormProps) {
   const getDescription = () => {
     switch (mode) {
       case 'login': return 'Inicia sesión para acceder a tu panel.';
-      case 'register': return 'Únete a UroFlow hoy.';
+      case 'register': return 'Únete a UroVital hoy.';
       case 'forgot-password': return 'Ingresa tu correo para recibir un enlace de restablecimiento.';
     }
   };
