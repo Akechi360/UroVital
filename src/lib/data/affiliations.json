@@ -1,0 +1,31 @@
+
+[
+  {
+    "id": "AF-001",
+    "promotora": "Juan Pérez",
+    "afiliados": 12,
+    "ultimaAfiliacion": "2025-09-15",
+    "estado": "Activo"
+  },
+  {
+    "id": "AF-002",
+    "promotora": "María Gómez",
+    "afiliados": 8,
+    "ultimaAf.iacion": "2025-09-20",
+    "estado": "Activo"
+  },
+  {
+    "id": "AF-003",
+    "promotora": "Carlos Ramírez",
+    "afiliados": 5,
+    "ultimaAfiliacion": "2025-09-10",
+    "estado": "Inactivo"
+  },
+  {
+    "id": "AF-004",
+    "promotora": "Ana Torres",
+    "afiliados": 15,
+    "ultimaAfiliacion": "2025-09-22",
+    "estado": "Activo"
+  }
+]
