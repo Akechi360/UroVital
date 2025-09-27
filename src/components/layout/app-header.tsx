@@ -14,8 +14,26 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Moon, Sun, User, LogOut, Settings, PanelLeft } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
-import { useSidebar, SidebarTrigger } from '@/components/ui/sidebar';
+import { useSidebar } from '@/components/ui/sidebar';
 import { useAuth } from './auth-provider';
+import type { User as UserType } from '@/lib/types';
+
+const getGreeting = (currentUser: UserType | null): string => {
+    if (!currentUser) return '';
+
+    switch(currentUser.role) {
+        case 'admin':
+            return 'Bienvenido, Admin';
+        case 'doctor':
+            return `Bienvenido, Dr. ${currentUser.name}`;
+        case 'secretaria':
+            return 'Bienvenid@, Secretaria';
+        case 'patient':
+            return `Bienvenido, ${currentUser.name}`;
+        default:
+            return `Bienvenido, ${currentUser.name || 'Usuario'}`;
+    }
+};
 
 export default function AppHeader() {
   const { setTheme, theme } = useTheme();
@@ -30,6 +48,8 @@ export default function AppHeader() {
     router.push('/landing');
   };
 
+  const greeting = getGreeting(currentUser);
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-md md:px-6">
        {(isMobile || isCollapsed) && (
@@ -43,14 +63,13 @@ export default function AppHeader() {
             <span className="sr-only">Toggle Sidebar</span>
           </Button>
         )}
-      <div className="flex-1">
-        {currentUser && (
-            <div className="text-xs text-gray-500 uppercase font-semibold tracking-wider">
-                Rol: {currentUser.role}
-            </div>
-        )}
-      </div>
+      <div className="flex-1" />
       <div className="flex items-center gap-4">
+        {greeting && (
+            <span className="hidden sm:block text-sm font-medium text-muted-foreground">
+                {greeting}
+            </span>
+        )}
         <Button
           variant="ghost"
           size="icon"
