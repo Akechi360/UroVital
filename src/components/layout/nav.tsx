@@ -11,6 +11,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar
 } from '@/components/ui/sidebar';
 import {
   LayoutGrid,
@@ -31,6 +32,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useAuth } from './auth-provider';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const mainMenuItems = [
   { href: '/dashboard', label: 'Panel', icon: LayoutGrid, permission: 'dashboard:read' },
@@ -52,6 +54,9 @@ const settingsMenuItem = { href: '/settings', label: 'Configuración', icon: Set
 export default function Nav() {
   const pathname = usePathname();
   const { can } = useAuth();
+  const { state } = useSidebar();
+  const isCollapsed = state === 'collapsed';
+
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/administrativo'));
 
   const isActive = (href: string) => {
@@ -67,11 +72,23 @@ export default function Nav() {
     <>
       <SidebarHeader>
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg group-data-[collapsible=icon]:hidden">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg">
             <Stethoscope className="h-7 w-7 text-primary" />
-            <span className="font-headline">UroVital</span>
+            <AnimatePresence>
+                {!isCollapsed && (
+                    <motion.span 
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: 'auto' }}
+                        exit={{ opacity: 0, width: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="font-headline overflow-hidden whitespace-nowrap"
+                    >
+                        UroVital
+                    </motion.span>
+                )}
+            </AnimatePresence>
           </Link>
-          <SidebarTrigger className="group-data-[collapsible=icon]:hidden">
+          <SidebarTrigger>
              <PanelLeft />
           </SidebarTrigger>
         </div>
@@ -88,7 +105,7 @@ export default function Nav() {
               >
                 <Link href={item.href}>
                   <item.icon />
-                  <span>{item.label}</span>
+                   {!isCollapsed && <span>{item.label}</span>}
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -102,10 +119,10 @@ export default function Nav() {
                     tooltip={{ children: 'Administrativo' }}
                 >
                     <Box />
-                    <span>Administrativo</span>
-                    <ChevronDown className={`ml-auto h-5 w-5 transition-transform ${isAdminOpen ? 'rotate-180' : ''}`} />
+                    {!isCollapsed && <span>Administrativo</span>}
+                    {!isCollapsed && <ChevronDown className={`ml-auto h-5 w-5 transition-transform ${isAdminOpen ? 'rotate-180' : ''}`} />}
                 </SidebarMenuButton>
-                {isAdminOpen && (
+                {!isCollapsed && isAdminOpen && (
                     <SidebarMenuSub>
                         {adminMenuItems.map(item => (
                              can(item.permission as any) &&
@@ -131,13 +148,13 @@ export default function Nav() {
               >
                 <Link href={settingsMenuItem.href}>
                   <settingsMenuItem.icon />
-                  <span>{settingsMenuItem.label}</span>
+                  {!isCollapsed && <span>{settingsMenuItem.label}</span>}
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="group-data-[collapsible=icon]:hidden">
+      <SidebarFooter>
         {/* Can add footer content here */}
       </SidebarFooter>
     </>
