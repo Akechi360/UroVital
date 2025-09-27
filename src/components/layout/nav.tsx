@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -88,9 +89,9 @@ export default function Nav() {
                 )}
             </AnimatePresence>
           </Link>
-          <SidebarTrigger>
+          {!isCollapsed && <SidebarTrigger>
              <PanelLeft />
-          </SidebarTrigger>
+          </SidebarTrigger>}
         </div>
       </SidebarHeader>
       <SidebarContent className="p-2">

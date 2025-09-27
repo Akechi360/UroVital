@@ -14,14 +14,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Moon, Sun, User, LogOut, Settings, PanelLeft } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
-import { useSidebar } from '@/components/ui/sidebar';
+import { useSidebar, SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth } from './auth-provider';
 
 export default function AppHeader() {
   const { setTheme, theme } = useTheme();
   const router = useRouter();
-  const { toggleSidebar, isMobile } = useSidebar();
+  const { toggleSidebar, isMobile, state } = useSidebar();
   const { currentUser } = useAuth();
+  const isCollapsed = state === 'collapsed';
+
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -30,12 +32,12 @@ export default function AppHeader() {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-md md:px-6">
-       {isMobile && (
+       {(isMobile || isCollapsed) && (
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="md:hidden"
+            className="shrink-0"
           >
             <PanelLeft className="h-6 w-6" />
             <span className="sr-only">Toggle Sidebar</span>
