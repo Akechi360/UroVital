@@ -4,80 +4,63 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* UroVital Light Theme */
+    --background: 220 40% 98%;
     --foreground: 222 84% 4.9%;
-    --card: 0 0% 100%;
+    --card: 220 30% 96%;
     --card-foreground: 222 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 84% 4.9%;
-    --primary: 223 100% 61%;
+    
+    --primary: 222 83% 53%; /* UroVital Blue: ~#2563eb */
     --primary-foreground: 0 0% 100%;
-    --primary-landing: 225 73% 47%;
-    --secondary: 0 0% 96.1%;
+    
+    --secondary: 220 14% 96%;
     --secondary-foreground: 222 84% 4.9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 222 84% 4.9%;
-    --destructive: 354 70% 54%;
+
+    --muted: 220 14% 93%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 175 62% 39%; /* UroVital Teal: #26A69A */
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --success: 134 61% 40%;
-    --success-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 223 100% 61%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 222 83% 53%; /* Ring color from primary */
+
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 231 57% 11%;
-    --foreground: 0 0% 88%;
-    --card: 229 39% 19%;
-    --card-foreground: 0 0% 88%;
-    --popover: 229 39% 19%;
-    --popover-foreground: 0 0% 88%;
-    --primary: 223 100% 61%;
-    --primary-foreground: 0 0% 100%;
-    --primary-landing: 223 100% 61%;
-    --secondary: 229 39% 19%;
-    --secondary-foreground: 0 0% 88%;
-    --muted: 229 39% 22%;
-    --muted-foreground: 0 0% 63%;
-    --accent: 229 39% 22%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 354 70% 54%;
+    /* UroVital Dark Theme */
+    --background: 220 13% 11%;
+    --foreground: 210 20% 98%;
+    --card: 220 13% 15%;
+    --card-foreground: 210 20% 98%;
+    --popover: 220 13% 11%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 222 78% 61%; /* UroVital Blue (Dark) */
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 215 14% 24%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 215 14% 24%;
+    --muted-foreground: 215 10% 65%;
+
+    --accent: 175 55% 45%; /* UroVital Teal (Dark) */
+    --accent-foreground: 210 20% 98%;
+
+    --destructive: 0 63% 51%;
     --destructive-foreground: 0 0% 98%;
-    --success: 134 61% 40%;
-    --success-foreground: 0 0% 98%;
-    --border: 229 39% 22%;
-    --input: 229 39% 22%;
-    --ring: 223 100% 61%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 231 57% 11%;
-    --sidebar-foreground: 0 0% 88%;
-    --sidebar-primary: 223 100% 61%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 229 39% 22%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 229 39% 22%;
-    --sidebar-ring: 223 100% 61%;
+
+    --border: 215 14% 24%;
+    --input: 215 14% 24%;
+    --ring: 222 78% 61%; /* Ring color from primary (Dark) */
   }
 }
 
@@ -87,5 +70,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
