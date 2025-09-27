@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Stethoscope, Check, ArrowLeft } from 'lucide-react';
+import { Check, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -26,11 +26,11 @@ const costs = [
 
 export default function TarjetaSaludablePage() {
   return (
-    <main className="container mx-auto px-4 pt-28 pb-20">
+    <main className="container mx-auto px-4 pb-20">
         <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-4xl mx-auto"
         >
             <Button asChild variant="ghost" className="mb-4">
@@ -42,10 +42,10 @@ export default function TarjetaSaludablePage() {
 
             <Card className={cn(
                 "rounded-2xl shadow-sm bg-card/50 overflow-hidden",
-                "shadow-[0_0_20px_rgba(46,49,146,0.2)] dark:shadow-[0_0_30px_rgba(46,49,146,0.3)]"
+                "shadow-[0_0_20px_rgba(37,99,235,0.1)] dark:shadow-[0_0_30px_rgba(37,99,235,0.2)]"
             )}>
                 <CardHeader className="bg-muted/30 p-8">
-                    <CardTitle className="text-3xl font-bold font-headline text-primary-landing">Plan Tarjeta Saludable</CardTitle>
+                    <CardTitle className="text-3xl font-bold font-headline text-primary">Plan Tarjeta Saludable</CardTitle>
                     <CardDescription className="text-lg">Ideal para individuos y familias pequeñas que buscan acceso preferencial a servicios de salud.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-8 grid md:grid-cols-2 gap-8">
@@ -82,7 +82,7 @@ export default function TarjetaSaludablePage() {
                     </div>
                 </CardContent>
                 <CardFooter className="bg-muted/30 p-8 flex justify-end">
-                    <Button size="lg" className="w-full sm:w-auto bg-primary-landing hover:bg-primary-landing/90">
+                    <Button size="lg" className="w-full sm:w-auto">
                         Afíliate Ahora
                     </Button>
                 </CardFooter>

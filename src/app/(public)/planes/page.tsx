@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Stethoscope, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -14,7 +14,7 @@ const fadeIn = (delay: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.5,
       delay,
       ease: 'easeOut',
     },
@@ -41,21 +41,21 @@ const plans = [
             "Procedimientos quirúrgicos electivos o de emergencia.",
             "Traslados en ambulancia y atención 24/7.",
         ],
-        priceSummary: "Cobertura anual entre 35.000 y 87.500 USD",
+        priceSummary: "Cobertura anual entre $35.000 y $87.500",
         detailsUrl: "/planes/fondo-espiritu-santo",
     }
 ]
 
 export default function PlansPage() {
   return (
-    <main className="container mx-auto px-4 pt-28 pb-20">
+    <main className="container mx-auto px-4 pb-20">
         <motion.div 
             initial="hidden"
             animate="visible"
             variants={fadeIn(0)}
             className="text-center mb-16"
         >
-            <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl font-headline">
+            <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl font-headline">
                 Nuestros Planes de Salud
             </h1>
             <p className="max-w-2xl mx-auto mt-4 text-lg text-muted-foreground">
@@ -70,13 +70,14 @@ export default function PlansPage() {
                     initial="hidden"
                     animate="visible"
                     variants={fadeIn(0.2 * (index + 1))}
+                    className="flex"
                 >
                         <Card className={cn(
-                        "flex flex-col h-full rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50",
-                        "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]"
+                        "flex flex-col h-full w-full rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50",
+                        "hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]"
                         )}>
                         <CardHeader>
-                            <CardTitle className="text-2xl font-bold font-headline text-primary-landing">{plan.name}</CardTitle>
+                            <CardTitle className="text-2xl font-bold font-headline text-primary">{plan.name}</CardTitle>
                             <CardDescription>{plan.subtitle}</CardDescription>
                         </CardHeader>
                         <CardContent className="flex-grow space-y-6">
@@ -96,10 +97,10 @@ export default function PlansPage() {
                             
                         </CardContent>
                         <CardFooter className="flex-col items-stretch gap-2 !pt-4">
-                            <Button size="lg" className="w-full bg-primary-landing hover:bg-primary-landing/90">
+                            <Button size="lg" className="w-full">
                                 Afíliate Ahora
                             </Button>
-                            <Button asChild size="lg" variant="outline" className="w-full transition-all duration-300 ease-in-out hover:shadow-[0_0_15px_rgba(46,49,146,0.3)]">
+                            <Button asChild size="lg" variant="outline" className="w-full">
                                 <Link href={plan.detailsUrl}>Ver detalles</Link>
                             </Button>
                         </CardFooter>

@@ -9,8 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Search, Stethoscope, User, MapPin, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 
 export default function DirectoryPage() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -44,10 +42,10 @@ export default function DirectoryPage() {
     };
 
     return (
-        <main className="container mx-auto px-4 pt-28 pb-20">
+        <main className="container mx-auto px-4 pb-20">
             <div className="text-center mb-12">
-                <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl font-headline">Directorio Médico</h1>
-                <p className="max-w-2xl mx-auto mt-4 text-lg text-muted-foreground">Encuentra al especialista que necesitas.</p>
+                <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl font-headline">Directorio Médico</h1>
+                <p className="max-w-2xl mx-auto mt-4 text-lg text-muted-foreground">Encuentra al especialista que necesitas para tu cuidado.</p>
             </div>
 
             <div className="relative w-full max-w-lg mx-auto mb-12">
@@ -71,8 +69,8 @@ export default function DirectoryPage() {
                     {filteredDoctors.map((doc, index) => (
                         <motion.div key={doc.nombre + index} variants={itemVariants}>
                             <Card className={cn(
-                                "flex flex-col h-full rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50",
-                                "hover:shadow-[0_0_20px_rgba(46,49,146,0.4)]"
+                                "flex flex-col h-full rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50 hover:scale-[1.02]",
+                                "hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]"
                             )}>
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-3">

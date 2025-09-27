@@ -25,6 +25,7 @@ const staggerContainer = {
     opacity: 1,
     transition: {
       staggerChildren: 0.2,
+      delayChildren: 0.1,
     },
   },
 };
@@ -36,7 +37,6 @@ const specialtyItems = [
     { name: "Medicina Interna", icon: Bone },
 ];
 
-
 export default function LandingPage() {
   return (
     <main className="w-full bg-background text-foreground font-body">
@@ -45,17 +45,17 @@ export default function LandingPage() {
         initial="hidden"
         animate="visible"
         variants={fadeIn}
-        className="relative flex flex-col items-center justify-center min-h-screen p-4 pt-24 text-center bg-gray-50 dark:bg-gray-900/50 md:pt-32"
+        className="relative flex flex-col items-center justify-center min-h-screen p-4 text-center"
       >
         <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
-        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[410px] w-[410px] rounded-full bg-primary-landing/20 opacity-20 blur-[120px]"></div>
+        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[410px] w-[410px] rounded-full bg-primary/10 opacity-20 blur-[120px]"></div>
 
         <motion.h1 
             variants={fadeIn}
             className="text-4xl font-extrabold tracking-tight md:text-6xl lg:text-7xl font-headline"
         >
             Más que un servicio de salud, <br className="hidden md:block"/>
-            <span className="text-primary-landing">un aliado para tu vida</span>
+            <span className="text-primary">un aliado para tu vida</span>
         </motion.h1>
         <motion.p 
             variants={fadeIn}
@@ -63,15 +63,18 @@ export default function LandingPage() {
         >
             Programación intuitiva, portal seguro y beneficios médicos integrales.
         </motion.p>
-        <motion.div variants={fadeIn} className="mt-8">
-            <Button size="lg" className="bg-primary-landing hover:bg-primary-landing/90">
+        <motion.div variants={fadeIn} className="mt-8 flex gap-4">
+            <Button size="lg" asChild>
                 <Link href="/planes">Afíliate Ahora</Link>
+            </Button>
+             <Button size="lg" variant="outline" asChild>
+                <Link href="/directorio">Directorio Médico</Link>
             </Button>
         </motion.div>
       </motion.section>
 
       {/* Benefits Section */}
-      <section className="py-20 md:py-32 bg-background">
+      <section className="py-20 md:py-32 bg-card/30">
         <div className="container mx-auto px-4 text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer}>
             <motion.h2 variants={fadeIn} className="text-3xl font-bold md:text-4xl font-headline">Más salud por menos dinero</motion.h2>
@@ -86,28 +89,28 @@ export default function LandingPage() {
                 variants={staggerContainer} 
                 className="grid max-w-4xl grid-cols-1 gap-8 mx-auto mt-12 text-left md:grid-cols-2"
             >
-                <motion.div variants={fadeIn} className="flex items-start p-6 space-x-4 rounded-lg bg-gray-50 dark:bg-gray-900/50">
+                <motion.div variants={fadeIn} className="flex items-start p-6 space-x-4 rounded-xl bg-background/50">
                     <Check className="w-6 h-6 mt-1 text-green-500 shrink-0" />
                     <div>
                         <h3 className="font-semibold">Consultas gratuitas</h3>
                         <p className="text-sm text-muted-foreground">Accede a consultas ilimitadas con nuestros especialistas sin costo adicional.</p>
                     </div>
                 </motion.div>
-                <motion.div variants={fadeIn} className="flex items-start p-6 space-x-4 rounded-lg bg-gray-50 dark:bg-gray-900/50">
+                <motion.div variants={fadeIn} className="flex items-start p-6 space-x-4 rounded-xl bg-background/50">
                     <Check className="w-6 h-6 mt-1 text-green-500 shrink-0" />
                     <div>
                         <h3 className="font-semibold">Descuentos en estudios</h3>
                         <p className="text-sm text-muted-foreground">Obtén precios preferenciales en laboratorio e imagenología.</p>
                     </div>
                 </motion.div>
-                <motion.div variants={fadeIn} className="flex items-start p-6 space-x-4 rounded-lg bg-gray-50 dark:bg-gray-900/50">
+                <motion.div variants={fadeIn} className="flex items-start p-6 space-x-4 rounded-xl bg-background/50">
                     <Check className="w-6 h-6 mt-1 text-green-500 shrink-0" />
                     <div>
                         <h3 className="font-semibold">Cobertura quirúrgica</h3>
                         <p className="text-sm text-muted-foreground">Alianzas estratégicas para ofrecerte la mejor cobertura en procedimientos.</p>
                     </div>
                 </motion.div>
-                <motion.div variants={fadeIn} className="flex items-start p-6 space-x-4 rounded-lg bg-gray-50 dark:bg-gray-900/50">
+                <motion.div variants={fadeIn} className="flex items-start p-6 space-x-4 rounded-xl bg-background/50">
                     <Check className="w-6 h-6 mt-1 text-green-500 shrink-0" />
                     <div>
                         <h3 className="font-semibold">Atención y emergencias 24/7</h3>
@@ -126,7 +129,7 @@ export default function LandingPage() {
       </section>
 
       {/* Specialties Section */}
-      <section className="py-20 md:py-32 bg-gray-50 dark:bg-gray-900/50">
+      <section className="py-20 md:py-32 bg-background">
         <div className="container mx-auto px-4 text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer}>
                 <motion.h2 variants={fadeIn} className="text-3xl font-bold md:text-4xl font-headline">Nuestras Especialidades</motion.h2>
@@ -137,10 +140,10 @@ export default function LandingPage() {
                         const Icon = item.icon;
                         return (
                             <motion.div key={index} variants={fadeIn}>
-                                <Card className="py-8 transition-transform duration-300 transform md:py-12 hover:scale-105 hover:bg-accent/50">
+                                <Card className="py-8 transition-transform duration-300 transform md:py-12 hover:scale-105 hover:bg-accent/5">
                                     <CardContent className="flex flex-col items-center justify-center gap-4">
-                                        <div className="p-3 rounded-full bg-primary-landing/10">
-                                            <Icon className="w-8 h-8 text-primary-landing" />
+                                        <div className="p-3 rounded-full bg-primary/10">
+                                            <Icon className="w-8 h-8 text-primary" />
                                         </div>
                                         <h3 className="font-semibold text-center">{item.name}</h3>
                                     </CardContent>
@@ -149,18 +152,12 @@ export default function LandingPage() {
                         );
                     })}
                 </motion.div>
-
-                <motion.div variants={fadeIn} className="mt-12">
-                    <Button asChild>
-                        <Link href="/directorio">Ver Directorio Médico</Link>
-                    </Button>
-                </motion.div>
             </motion.div>
         </div>
       </section>
 
       {/* Studies Section */}
-      <section className="py-20 md:py-32 bg-background">
+      <section className="py-20 md:py-32 bg-card/30">
         <div className="container mx-auto px-4 text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer}>
                 <motion.h2 variants={fadeIn} className="text-3xl font-bold md:text-4xl font-headline">Estudios Urológicos</motion.h2>
@@ -168,15 +165,15 @@ export default function LandingPage() {
                     Más de 50 estudios y procedimientos especializados en urología y uroginecología.
                 </motion.p>
                 <motion.div variants={fadeIn} className="max-w-2xl mx-auto mt-8 flex flex-wrap justify-center gap-4 text-sm">
-                    <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
+                    <div className="flex items-center gap-2 p-2 px-3 rounded-md bg-background/50">
                         <ZoomIn className="h-4 w-4 text-primary" />
                         <span>Cistoscopia</span>
                     </div>
-                     <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
+                     <div className="flex items-center gap-2 p-2 px-3 rounded-md bg-background/50">
                         <FlaskConical className="h-4 w-4 text-primary" />
                         <span>Uroflujometría</span>
                     </div>
-                     <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
+                     <div className="flex items-center gap-2 p-2 px-3 rounded-md bg-background/50">
                         <HeartPulse className="h-4 w-4 text-primary" />
                         <span>Resonancia multiparamétrica</span>
                     </div>
@@ -191,7 +188,7 @@ export default function LandingPage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 text-center md:py-32 bg-gray-50 dark:bg-gray-900/50">
+      <section className="py-20 text-center md:py-32">
         <div className="container mx-auto px-4">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer}>
                 <motion.h2 variants={fadeIn} className="text-4xl font-extrabold md:text-5xl font-headline">¿Listo para mejorar tu salud?</motion.h2>
@@ -199,7 +196,7 @@ export default function LandingPage() {
                     Afíliate a UroVital y accede a nuestros beneficios exclusivos.
                 </motion.p>
                 <motion.div variants={fadeIn} className="mt-8">
-                    <Button size="lg" asChild className="bg-primary-landing hover:bg-primary-landing/90">
+                    <Button size="lg" asChild>
                         <Link href="/planes">Afíliate Ahora</Link>
                     </Button>
                 </motion.div>

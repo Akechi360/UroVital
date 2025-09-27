@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Stethoscope, Check, ArrowLeft } from 'lucide-react';
+import { Check, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -26,11 +26,11 @@ const coverage = [
 
 export default function FondoEspirituSantoPage() {
   return (
-    <main className="container mx-auto px-4 pt-28 pb-20">
+    <main className="container mx-auto px-4 pb-20">
         <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-6xl mx-auto"
         >
             <Button asChild variant="ghost" className="mb-4">
@@ -42,10 +42,10 @@ export default function FondoEspirituSantoPage() {
 
             <Card className={cn(
                 "rounded-2xl shadow-sm bg-card/50 overflow-hidden",
-                "shadow-[0_0_20px_rgba(46,49,146,0.2)] dark:shadow-[0_0_30px_rgba(46,49,146,0.3)]"
+                "shadow-[0_0_20px_rgba(37,99,235,0.1)] dark:shadow-[0_0_30px_rgba(37,99,235,0.2)]"
             )}>
                 <CardHeader className="bg-muted/30 p-8">
-                    <CardTitle className="text-3xl font-bold font-headline text-primary-landing">Fondo Autogestionado Espíritu Santo</CardTitle>
+                    <CardTitle className="text-3xl font-bold font-headline text-primary">Fondo Autogestionado Espíritu Santo</CardTitle>
                     <CardDescription className="text-lg">Una solución de salud integral diseñada para colectivos, empresas y organizaciones.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-8 space-y-8">
@@ -66,11 +66,11 @@ export default function FondoEspirituSantoPage() {
                         <div className="grid sm:grid-cols-2 gap-4 text-center">
                             <div className="p-4 bg-muted/50 rounded-lg">
                                 <p className="text-sm text-muted-foreground">Cobertura Anual del Fondo</p>
-                                <p className="font-bold text-lg text-primary-landing">35.000$ a 87.500$</p>
+                                <p className="font-bold text-lg text-primary">$35.000 a $87.500</p>
                             </div>
                             <div className="p-4 bg-muted/50 rounded-lg">
                                 <p className="text-sm text-muted-foreground">Cuota Anual Administrativa</p>
-                                <p className="font-bold text-lg text-primary-landing">250$</p>
+                                <p className="font-bold text-lg text-primary">$250</p>
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@ export default function FondoEspirituSantoPage() {
                     </div>
                 </CardContent>
                 <CardFooter className="bg-muted/30 p-8 flex justify-end">
-                    <Button size="lg" className="w-full sm:w-auto bg-primary-landing hover:bg-primary-landing/90">
+                    <Button size="lg" className="w-full sm:w-auto">
                         Contactar para Afiliación Grupal
                     </Button>
                 </CardFooter>
