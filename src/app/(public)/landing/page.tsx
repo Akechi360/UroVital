@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone, FlaskConical, ZoomIn, Play, MessageSquare, Phone, MapPin, Ambulance, UserMd, Microscope, Clock } from 'lucide-react';
+import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone, FlaskConical, ZoomIn, Play, MessageSquare, Phone, MapPin, Ambulance, Microscope, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const fadeIn = {
@@ -33,7 +33,7 @@ const staggerContainer = {
 
 const serviceCards = [
     { title: "Emergency Care", icon: Ambulance, description: "24/7 emergency services with our expert team." },
-    { title: "Expert Doctors", icon: UserMd, description: "Access to highly qualified and experienced specialists." },
+    { title: "Expert Doctors", icon: Users, description: "Access to highly qualified and experienced specialists." },
     { title: "Diagnosis & Treatment", icon: Microscope, description: "Advanced diagnostic tools for accurate results." },
     { title: "24/7 Services", icon: Clock, description: "We are here for you at any time of the day." },
 ]
