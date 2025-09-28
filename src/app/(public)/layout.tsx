@@ -13,11 +13,10 @@ import { Input } from "@/components/ui/input";
 
 const NAV_LINKS = [
     { href: "/landing", label: "Home" },
-    { href: "#about", label: "About" },
-    { href: "#services", label: "Services" },
-    { href: "#departments", label: "Departments" },
-    { href: "#doctors", label: "Doctors" },
-    { href: "#contact", label: "Contact" },
+    { href: "/planes", label: "Planes" },
+    { href: "/directorio", label: "Directorio" },
+    { href: "/estudios", label: "Estudios" },
+    { href: "#contact", label: "Contacto" },
 ]
 
 const Footer = () => {
@@ -48,10 +47,10 @@ const Footer = () => {
                     <div>
                         <h3 className="text-lg font-semibold mb-4">Useful Links</h3>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="#" className="text-gray-400 hover:text-white hover:underline">About Us</Link></li>
-                            <li><Link href="#" className="text-gray-400 hover:text-white hover:underline">Our Services</Link></li>
-                            <li><Link href="#" className="text-gray-400 hover:text-white hover:underline">Our Team</Link></li>
-                            <li><Link href="#" className="text-gray-400 hover:text-white hover:underline">Contact Us</Link></li>
+                            <li><Link href="/planes" className="text-gray-400 hover:text-white hover:underline">Planes</Link></li>
+                            <li><Link href="/directorio" className="text-gray-400 hover:text-white hover:underline">Directorio Médico</Link></li>
+                            <li><Link href="/estudios" className="text-gray-400 hover:text-white hover:underline">Estudios</Link></li>
+                            <li><Link href="#contact" className="text-gray-400 hover:text-white hover:underline">Contacto</Link></li>
                         </ul>
                     </div>
 
