@@ -13,11 +13,11 @@ import { Input } from "@/components/ui/input";
 
 const NAV_LINKS = [
     { href: "/landing", label: "Home" },
-    { href: "#", label: "About" },
-    { href: "#", label: "Services" },
-    { href: "#", label: "Departments" },
-    { href: "#", label: "Doctors" },
-    { href: "#", label: "Contact" },
+    { href: "#about", label: "About" },
+    { href: "#services", label: "Services" },
+    { href: "#departments", label: "Departments" },
+    { href: "#doctors", label: "Doctors" },
+    { href: "#contact", label: "Contact" },
 ]
 
 const Footer = () => {
@@ -155,7 +155,7 @@ export default function PublicLayout({
                     {NAV_LINKS.map(link => (
                         <Button key={link.href} asChild variant="ghost" className={cn(
                             "font-semibold",
-                            pathname.startsWith(link.href) && "text-primary"
+                            pathname === link.href && "text-primary"
                         )}>
                             <Link href={link.href}>{link.label}</Link>
                         </Button>
