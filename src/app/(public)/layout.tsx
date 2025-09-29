@@ -80,7 +80,7 @@ export default function PublicLayout({
                 </Link>
                 <nav className="hidden lg:flex items-center gap-2">
                     {NAV_LINKS.map(link => (
-                        <Button key={link.label} asChild variant="ghost" className={cn(
+                        <Button key={link.href} asChild variant="ghost" className={cn(
                             "font-semibold",
                             (pathname === link.href || (link.href !== '/landing' && pathname.startsWith(link.href))) && "text-primary"
                         )}>
