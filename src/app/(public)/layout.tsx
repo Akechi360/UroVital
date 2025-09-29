@@ -9,7 +9,6 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from 'react';
 import Footer from "@/components/layout/footer";
-import { AffiliateFlowTrigger } from "@/components/public/affiliate-flow-dialog";
 
 const NAV_LINKS = [
     { href: "/landing", label: "Inicio" },
@@ -102,9 +101,9 @@ export default function PublicLayout({
                             <Link href="/dashboard">Ir al Panel</Link>
                         </Button>
                       ) : (
-                        <AffiliateFlowTrigger planId="tarjeta-saludable">
-                            <Button>Afíliate Ahora</Button>
-                        </AffiliateFlowTrigger>
+                        <Button asChild>
+                           <Link href="/afiliacion">Afíliate Ahora</Link>
+                        </Button>
                       )}
                        <Button asChild variant="outline">
                           <Link href="/login">

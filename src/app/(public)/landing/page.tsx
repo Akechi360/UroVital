@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone, FlaskConical, ZoomIn, Play, MessageSquare, Phone, MapPin, Ambulance, Microscope, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { AffiliateFlowTrigger } from '@/components/public/affiliate-flow-dialog';
 
 const fadeIn = (delay: number = 0) => ({
   hidden: { opacity: 0, y: 20 },
@@ -343,13 +342,8 @@ export default function LandingPage() {
                             
                         </CardContent>
                         <CardFooter className="flex-col items-stretch gap-2 !pt-4">
-                            <AffiliateFlowTrigger planId={plan.id as 'tarjeta-saludable' | 'fondo-espiritu-santo'}>
-                                <Button size="lg" className="w-full">
-                                    Afíliate Ahora
-                                </Button>
-                            </AffiliateFlowTrigger>
-                            <Button asChild size="lg" variant="outline" className="w-full">
-                                <Link href={plan.detailsUrl}>Ver detalles</Link>
+                            <Button asChild size="lg" className="w-full">
+                                <Link href={`/afiliacion?plan=${plan.id}`}>Afíliate Ahora</Link>
                             </Button>
                         </CardFooter>
                     </Card>
@@ -367,9 +361,9 @@ export default function LandingPage() {
                 <p className="max-w-2xl mx-auto text-muted-foreground mb-8">
                     Potencia tu bienestar con planes flexibles y acompañamiento experto.
                 </p>
-                <AffiliateFlowTrigger planId="tarjeta-saludable">
-                     <Button size="lg">Afíliate Ahora</Button>
-                </AffiliateFlowTrigger>
+                <Button asChild size="lg">
+                     <Link href="/afiliacion?plan=tarjeta-saludable">Afíliate Ahora</Link>
+                </Button>
             </motion.div>
         </div>
       </section>

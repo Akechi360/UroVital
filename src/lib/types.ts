@@ -211,6 +211,6 @@ export interface AffiliateLead {
   address: string;
   planId: 'tarjeta-saludable' | 'fondo-espiritu-santo';
   paymentMode: 'contado' | 'credito';
-  paymentMethod: 'banvenez' | 'mercantil' | 'bnc' | 'banesco' | 'usdt' | 'wallytech' | 'zinlli' | 'paypal';
+  paymentMethod: string;
   schedule?: { upfront: number; installments: number; installmentValue: number; frequencyDays: number; };
 }
