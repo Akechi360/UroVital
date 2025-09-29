@@ -9,7 +9,7 @@ import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone, FlaskConical,
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-const fadeIn = {
+const fadeIn = (delay: number = 0) => ({
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
@@ -17,9 +17,10 @@ const fadeIn = {
     transition: {
       duration: 0.6,
       ease: 'easeOut',
+      delay,
     },
   },
-};
+});
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -86,20 +87,20 @@ export default function LandingPage() {
                   variants={staggerContainer}
                   className="text-center md:text-left"
               >
-                  <motion.p variants={fadeIn} className="text-primary font-semibold mb-2 text-sm uppercase tracking-widest">Bienvenido a UroVital</motion.p>
+                  <motion.p variants={fadeIn()} className="text-primary font-semibold mb-2 text-sm uppercase tracking-widest">Bienvenido a UroVital</motion.p>
                   <motion.h1 
-                      variants={fadeIn}
+                      variants={fadeIn()}
                       className="text-4xl lg:text-6xl font-extrabold tracking-tight font-headline"
                   >
                       Más que un servicio de salud, <br /> un <span className="text-primary">aliado</span> para tu vida
                   </motion.h1>
                   <motion.p 
-                      variants={fadeIn}
+                      variants={fadeIn()}
                       className="max-w-xl mx-auto md:mx-0 mt-6 text-base lg:text-lg text-muted-foreground"
                   >
                       Programación intuitiva, gestión segura y resultados médicos integrados.
                   </motion.p>
-                  <motion.div variants={fadeIn} className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                  <motion.div variants={fadeIn()} className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                       <Button size="lg" asChild>
                           <Link href="/planes">Afíliate Ahora</Link>
                       </Button>
@@ -147,19 +148,19 @@ export default function LandingPage() {
                 className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
               >
                 {/* TODO: Connect to real data */}
-                <motion.div variants={fadeIn}>
+                <motion.div variants={fadeIn()}>
                     <p className="text-4xl font-bold text-primary">1k+</p>
                     <p className="text-sm text-muted-foreground mt-1">Pacientes Registrados</p>
                 </motion.div>
-                <motion.div variants={fadeIn}>
+                <motion.div variants={fadeIn()}>
                     <p className="text-4xl font-bold text-primary">2</p>
                     <p className="text-sm text-muted-foreground mt-1">Planes Activos</p>
                 </motion.div>
-                <motion.div variants={fadeIn}>
+                <motion.div variants={fadeIn()}>
                     <p className="text-4xl font-bold text-primary">30+</p>
                     <p className="text-sm text-muted-foreground mt-1">Especialistas en la Red</p>
                 </motion.div>
-                <motion.div variants={fadeIn}>
+                <motion.div variants={fadeIn()}>
                     <p className="text-4xl font-bold text-primary">500+</p>
                     <p className="text-sm text-muted-foreground mt-1">Estudios Almacenados</p>
                 </motion.div>
@@ -171,7 +172,7 @@ export default function LandingPage() {
        <section className="py-20 md:py-28">
             <div className="container mx-auto px-4">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
-                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn}>
+                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn()}>
                         <p className="text-primary font-semibold text-sm uppercase mb-2">Beneficios</p>
                         <h2 className="text-3xl md:text-4xl font-bold font-headline mb-4">Más salud por menos dinero</h2>
                         <p className="text-muted-foreground mb-6">
@@ -220,8 +221,8 @@ export default function LandingPage() {
       <section className="py-20 md:py-28 bg-blue-50 dark:bg-[#0D122A]">
         <div className="container mx-auto px-4">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer} className="text-center max-w-2xl mx-auto">
-            <motion.p variants={fadeIn} className="text-primary font-semibold text-sm uppercase mb-2">Nuestros Servicios</motion.p>
-            <motion.h2 variants={fadeIn} className="text-3xl md:text-4xl font-bold font-headline mb-4">Servicios que superan tus expectativas</motion.h2>
+            <motion.p variants={fadeIn()} className="text-primary font-semibold text-sm uppercase mb-2">Nuestros Servicios</motion.p>
+            <motion.h2 variants={fadeIn()} className="text-3xl md:text-4xl font-bold font-headline mb-4">Servicios que superan tus expectativas</motion.h2>
           </motion.div>
 
           <motion.div 
@@ -234,7 +235,7 @@ export default function LandingPage() {
             {serviceCards.map((card, index) => {
                 const Icon = card.icon;
                 return (
-                    <motion.div variants={fadeIn} key={index}>
+                    <motion.div variants={fadeIn()} key={index}>
                         <Card className="text-center p-6 h-full border-b-4 border-transparent hover:border-primary transition-all duration-300">
                              <div className="inline-block p-4 bg-primary/10 rounded-full mb-4">
                                 <Icon className="w-8 h-8 text-primary" />
@@ -256,7 +257,7 @@ export default function LandingPage() {
                    <motion.div initial={{opacity: 0, scale: 0.9}} whileInView={{opacity: 1, scale: 1}} viewport={{once: true}} transition={{duration: 0.6}} className="relative">
                         <Image src="/landing/process-image.jpg" width={500} height={600} alt="Procesos Simplificados" className="rounded-lg shadow-xl" />
                     </motion.div>
-                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn}>
+                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn()}>
                         <p className="text-primary font-semibold text-sm uppercase mb-2">Cómo funciona</p>
                         <h2 className="text-3xl md:text-4xl font-bold font-headline mb-8">Procesos simples y efectivos</h2>
                         <div className="space-y-6">
@@ -281,7 +282,7 @@ export default function LandingPage() {
       <section className="py-20 md:py-28 bg-gray-50 dark:bg-[#0D122A]">
         <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn}>
+                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn()}>
                     <h2 className="text-3xl md:text-4xl font-bold font-headline mb-6">Nuestras Especialidades</h2>
                     <p className="text-muted-foreground mb-6">
                         Un equipo multidisciplinario dedicado a tu bienestar integral.
@@ -309,8 +310,8 @@ export default function LandingPage() {
       <section className="py-20 md:py-28">
         <div className="container mx-auto px-4">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer} className="text-center max-w-2xl mx-auto">
-                <motion.p variants={fadeIn} className="text-primary font-semibold text-sm uppercase mb-2">Planes de Precios</motion.p>
-                <motion.h2 variants={fadeIn} className="text-3xl md:text-4xl font-bold font-headline mb-4">Elegí el plan perfecto para vos</motion.h2>
+                <motion.p variants={fadeIn()} className="text-primary font-semibold text-sm uppercase mb-2">Planes de Precios</motion.p>
+                <motion.h2 variants={fadeIn()} className="text-3xl md:text-4xl font-bold font-headline mb-4">Elegí el plan perfecto para vos</motion.h2>
             </motion.div>
              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch mt-12">
             {pricingPlans.map((plan, index) => (
@@ -363,7 +364,7 @@ export default function LandingPage() {
       {/* Final CTA Section */}
       <section className="py-20 md:py-28 bg-blue-50 dark:bg-[#0D122A]">
         <div className="container mx-auto px-4 text-center">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn}>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn()}>
                 <h2 className="text-3xl md:text-4xl font-bold font-headline mb-4">¿Listo para mejorar tu salud?</h2>
                 <p className="max-w-2xl mx-auto text-muted-foreground mb-8">
                     Potenciá tu bienestar con planes flexibles y acompañamiento experto.
