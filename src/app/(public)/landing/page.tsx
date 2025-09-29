@@ -100,14 +100,6 @@ export default function LandingPage() {
                   >
                       Programación intuitiva, gestión segura y resultados médicos integrados.
                   </motion.p>
-                  <motion.div variants={fadeIn()} className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                      <Button size="lg" asChild>
-                          <Link href="/planes">Afíliate Ahora</Link>
-                      </Button>
-                      <Button size="lg" variant="outline" asChild>
-                          <Link href="/login">Iniciar Sesión</Link>
-                      </Button>
-                  </motion.div>
                   
               </motion.div>
               <div className="relative mt-8 md:mt-0">
@@ -208,7 +200,6 @@ export default function LandingPage() {
                                 </div>
                             </div>
                         </div>
-                         <Button asChild size="lg" className="mt-8"><Link href="/planes">Ver Planes</Link></Button>
                     </motion.div>
                     <motion.div initial={{opacity: 0, scale: 0.9}} whileInView={{opacity: 1, scale: 1}} viewport={{once: true}} transition={{duration: 0.6}} className="relative">
                         <Image src="/landing/care-image.png" width={500} height={500} alt="Cuidado Excepcional" className="rounded-lg shadow-xl" />
