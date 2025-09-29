@@ -59,6 +59,7 @@ export default function PatientList() {
   const companyMap = useMemo(() => new Map(companies.map(c => [c.id, c.name])), [companies]);
 
     const handleDelete = (patientId: string) => {
+        const isDarkMode = document.documentElement.classList.contains('dark');
         MySwal.fire({
             title: '¿Eliminar paciente?',
             text: "Esta acción es irreversible. El paciente y todos sus datos asociados serán eliminados del sistema.",
@@ -68,19 +69,8 @@ export default function PatientList() {
             cancelButtonText: 'Cancelar',
             confirmButtonColor: '#dc2626',
             cancelButtonColor: '#6b7280',
-            customClass: {
-                popup: 'rounded-2xl bg-card/80 backdrop-blur-md shadow-2xl',
-                title: 'text-foreground',
-                htmlContainer: 'text-muted-foreground',
-                confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all duration-300 ease-in-out hover:shadow-[0_0_20px_rgba(220,38,38,0.4)]',
-                cancelButton: 'bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg transition-all',
-            },
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown animate__faster'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp animate__faster'
-            },
+            background: isDarkMode ? '#1e293b' : '#ffffff',
+            color: isDarkMode ? '#f1f5f9' : '#0f172a',
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
@@ -510,3 +500,5 @@ export default function PatientList() {
     </div>
   );
 }
+
+    
