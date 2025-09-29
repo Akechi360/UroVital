@@ -1,4 +1,3 @@
-
 # UroVital App - Estructura de Archivos
 
 Este documento describe la estructura de archivos y directorios del proyecto UroVital.
@@ -26,6 +25,10 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   │   │   └── page.tsx
     │   │   │   └── supplies
     │   │   │       └── page.tsx
+    │   │   ├── afiliaciones
+    │   │   │   ├── lista
+    │   │   │   │   └── page.tsx
+    │   │   │   └── page.tsx
     │   │   ├── appointments
     │   │   │   └── page.tsx
     │   │   ├── companies
@@ -36,6 +39,8 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   │   ├── layout.tsx
     │   │   │   └── page.tsx
     │   │   ├── finanzas
+    │   │   │   ├── nuevo
+    │   │   │   │   └── page.tsx
     │   │   │   ├── pagos
     │   │   │   │   └── page.tsx
     │   │   │   └── page.tsx
@@ -67,19 +72,19 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   │   └── page.tsx
     │   │   └── register
     │   │       └── page.tsx
-    │   ├── directorio
-    │   │   └── page.tsx
-    │   ├── estudios
-    │   │   └── page.tsx
+    │   ├── (public)
+    │   │   ├── afiliacion
+    │   │   │   └── page.tsx
+    │   │   ├── directorio
+    │   │   │   └── page.tsx
+    │   │   ├── estudios
+    │   │   │   └── page.tsx
+    │   │   ├── landing
+    │   │   │   └── page.tsx
+    │   │   └── layout.tsx
     │   ├── globals.css
     │   ├── layout.tsx
-    │   ├── page.tsx
-    │   └── planes
-    │       ├── fondo-espiritu-santo
-    │       │   └── page.tsx
-    │       ├── page.tsx
-    │       └── tarjeta-saludable
-    │           └── page.tsx
+    │   └── page.tsx
     ├── components
     │   ├── admin
     │   │   ├── providers
@@ -90,6 +95,11 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │       ├── add-supply-form.tsx
     │   │       ├── supply-list-wrapper.tsx
     │   │       └── supply-list.tsx
+    │   ├── affiliations
+    │   │   ├── add-affiliation-dialog.tsx
+    │   │   ├── add-affiliation-form.tsx
+    │   │   ├── affiliation-actions.tsx
+    │   │   └── stat-cards.tsx
     │   ├── appointments
     │   │   ├── add-appointment-fab.tsx
     │   │   ├── add-appointment-form.tsx
@@ -105,6 +115,10 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   ├── charts.tsx
     │   │   ├── stat-card.tsx
     │   │   └── upcoming-appointments.tsx
+    │   ├── finance
+    │   │   ├── direct-payments-table.tsx
+    │   │   ├── finance-table.tsx
+    │   │   └── stat-cards.tsx
     │   ├── history
     │   │   ├── consultation-card.tsx
     │   │   ├── export-history-button.tsx
@@ -113,6 +127,7 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   ├── app-header.tsx
     │   │   ├── app-layout.tsx
     │   │   ├── auth-provider.tsx
+    │   │   ├── footer.tsx
     │   │   └── nav.tsx
     │   ├── patients
     │   │   ├── add-history-fab.tsx
@@ -127,6 +142,8 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   ├── patient-summary-cards.tsx
     │   │   ├── patient-summary-client.tsx
     │   │   └── quick-actions.tsx
+    │   ├── public
+    │   │   └── affiliate-enrollment.tsx
     │   ├── reports
     │   │   ├── add-report-fab.tsx
     │   │   ├── new-report-form.tsx
@@ -179,6 +196,7 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     └── lib
         ├── actions.ts
         ├── data
+        │   ├── affiliations.json
         │   ├── appointments.json
         │   ├── companies.json
         │   ├── consultations.json
@@ -195,6 +213,7 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
         │   ├── reports.json
         │   ├── supplies.json
         │   └── users.json
+        ├── payment-options.ts
         ├── placeholder-images.json
         ├── placeholder-images.ts
         ├── store
