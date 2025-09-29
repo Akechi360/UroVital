@@ -45,7 +45,7 @@ export default function PublicLayout({
       {showLandingHeader && (
         <header className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          scrolled ? "bg-background/95 shadow-md backdrop-blur-sm" : "bg-transparent"
+          scrolled ? "bg-white/80 dark:bg-[#0D122A]/80 shadow-md backdrop-blur-sm" : "bg-transparent"
         )}>
           {/* Top Bar */}
           <div className="bg-[#EBF1F8] dark:bg-gray-900/50 text-xs text-gray-600 dark:text-gray-300">
@@ -77,7 +77,7 @@ export default function PublicLayout({
           <div className="container mx-auto px-4">
               <div className="flex justify-between items-center py-4">
                   <Link href="/landing" className="flex items-center gap-2 font-bold text-lg">
-                      <div className={cn("p-2 rounded-md transition-colors", scrolled ? "bg-primary/10" : "bg-white")}>
+                      <div className={cn("p-2 rounded-md transition-colors", scrolled ? "bg-primary/10" : "bg-white dark:bg-slate-900")}>
                           <Stethoscope className="h-7 w-7 text-primary" />
                       </div>
                       <span className="font-headline text-primary">UroVital</span>
@@ -85,7 +85,7 @@ export default function PublicLayout({
                   <nav className="hidden lg:flex items-center gap-2">
                       {NAV_LINKS.map(link => (
                           <Button key={link.href} asChild variant="ghost" className={cn(
-                              "font-semibold",
+                              "font-semibold text-foreground/80 hover:text-primary",
                               (pathname === link.href || (link.href !== '/landing' && pathname.startsWith(link.href))) && "text-primary"
                           )}>
                               <Link href={link.href}>{link.label}</Link>
