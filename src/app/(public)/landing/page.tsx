@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -8,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone, FlaskConical, ZoomIn, Play, MessageSquare, Phone, MapPin, Ambulance, Microscope, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { AffiliateFlowTrigger } from '@/components/public/affiliate-flow-dialog';
 
 const fadeIn = (delay: number = 0) => ({
   hidden: { opacity: 0, y: 20 },
@@ -33,7 +35,6 @@ const staggerContainer = {
   },
 };
 
-// TODO: Define final content for these cards or remove if redundant
 const serviceCards = [
     { title: "Consultas ilimitadas", icon: Users, description: "Chatea con nuestro equipo médico en cualquier momento." },
     { title: "Cobertura de estudios", icon: Microscope, description: "Accede a radiología, uroflujometrías y más." },
@@ -41,7 +42,6 @@ const serviceCards = [
     { title: "Seguimiento digital", icon: Clock, description: "Recordatorios y acceso rápido a tus resultados." },
 ]
 
-// TODO: Define final copy for these steps if needed. Current ones are placeholders.
 const processSteps = [
     { number: "01", title: "Agenda tu cita", description: "Agenda tu cita fácilmente online o por teléfono." },
     { number: "02", title: "Elige tu especialista", description: "Revisa los perfiles y selecciona el doctor que prefieras." },
@@ -49,7 +49,6 @@ const processSteps = [
     { number: "04", title: "Comienza tu tratamiento", description: "Inicia tu camino hacia una mejor salud con nuestro apoyo." },
 ]
 
-// TODO: Define final pricing and benefits for these plans. This data should be in sync with /lib/payment-options.ts
 const pricingPlans = [
     {
         id: 'tarjeta-saludable',
@@ -231,7 +230,7 @@ export default function LandingPage() {
                 const Icon = card.icon;
                 return (
                     <motion.div variants={fadeIn()} key={index}>
-                        <Card className="text-center p-6 h-full border-b-4 border-transparent hover:border-primary transition-all duration-300">
+                        <Card className="text-center p-6 h-full border-b-4 border-transparent hover:border-primary transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]">
                              <div className="inline-block p-4 bg-primary/10 rounded-full mb-4">
                                 <Icon className="w-8 h-8 text-primary" />
                             </div>
@@ -313,7 +312,8 @@ export default function LandingPage() {
                 <motion.div
                     key={plan.name}
                     initial="hidden"
-                    animate="visible"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.5 }}
                     variants={fadeIn(0.2 * (index + 1))}
                     className="flex"
                 >
@@ -370,3 +370,5 @@ export default function LandingPage() {
     </>
   );
 }
+
+    
