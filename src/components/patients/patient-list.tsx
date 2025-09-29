@@ -380,48 +380,48 @@ export default function PatientList() {
         >
             {/* Desktop Table */}
             <motion.div 
-                className="hidden md:block rounded-lg border bg-card"
+                className="hidden md:block"
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
             >
-                <Table>
+                <Table className="border-separate border-spacing-y-4 -mt-4">
                 <TableHeader>
-                    <TableRow>
-                    <TableHead>Nombre</TableHead>
-                    <TableHead>Edad</TableHead>
-                    <TableHead>Género</TableHead>
-                    <TableHead>Última Visita</TableHead>
-                    <TableHead>Estado</TableHead>
-                    <TableHead className="text-right">Acciones</TableHead>
+                    <TableRow className='bg-transparent hover:bg-transparent border-none'>
+                        <TableHead className='text-muted-foreground'>Nombre</TableHead>
+                        <TableHead className='text-muted-foreground'>Edad</TableHead>
+                        <TableHead className='text-muted-foreground'>Género</TableHead>
+                        <TableHead className='text-muted-foreground'>Última Visita</TableHead>
+                        <TableHead className='text-muted-foreground'>Estado</TableHead>
+                        <TableHead className="text-right text-muted-foreground">Acciones</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {paginatedPatients.map((patient, index) => (
+                    {paginatedPatients.map((patient) => (
                     <motion.tr
                         key={patient.id}
                         variants={itemVariants}
                         layout
-                        className="group"
+                        className="group bg-card/95 rounded-2xl shadow-sm border border-border/50 hover:shadow-primary/10 transition-all overflow-hidden"
                     >
-                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">
-                        <div className="flex items-center gap-3">
-                            <Avatar>
-                            {patient.avatarUrl && <AvatarImage src={patient.avatarUrl} alt={patient.name} />}
-                            <AvatarFallback>{getInitials(patient.name)}</AvatarFallback>
-                            </Avatar>
-                            <span className="font-medium">{patient.name}</span>
-                        </div>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer rounded-l-2xl py-5">
+                            <div className="flex items-center gap-3">
+                                <Avatar>
+                                {patient.avatarUrl && <AvatarImage src={patient.avatarUrl} alt={patient.name} />}
+                                <AvatarFallback>{getInitials(patient.name)}</AvatarFallback>
+                                </Avatar>
+                                <span className="font-medium">{patient.name}</span>
+                            </div>
                         </TableCell>
-                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">{patient.age}</TableCell>
-                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">{patient.gender}</TableCell>
-                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">{patient.lastVisit || 'N/A'}</TableCell>
-                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer">
-                        <Badge variant={patient.status === 'Activo' ? 'success' : 'destructive'}>
-                            {patient.status}
-                        </Badge>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer py-5">{patient.age}</TableCell>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer py-5">{patient.gender}</TableCell>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer py-5">{patient.lastVisit || 'N/A'}</TableCell>
+                        <TableCell onClick={() => handlePatientClick(patient)} className="cursor-pointer py-5">
+                            <Badge variant={patient.status === 'Activo' ? 'success' : 'destructive'}>
+                                {patient.status}
+                            </Badge>
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right rounded-r-2xl py-5">
                             <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleDelete(patient.id); }}>
                                 <Trash2 className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-destructive" />
                             </Button>
