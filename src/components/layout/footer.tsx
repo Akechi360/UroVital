@@ -61,7 +61,7 @@ export default function Footer() {
                      <div className="space-y-4">
                         <h4 className="font-semibold text-foreground">Contacto</h4>
                         <ul className="space-y-2 text-sm">
-                            <li>123 Street, New York, USA</li>
+                            <li>Valencia, Edo. Carabobo</li>
                             <li>info@urovital.com</li>
                             <li>+012 345 6789</li>
                         </ul>

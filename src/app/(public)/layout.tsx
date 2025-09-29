@@ -62,7 +62,7 @@ export default function PublicLayout({
                     </div>
                      <div className="hidden md:flex items-center gap-2">
                         <MapPin size={14} />
-                        <span>123 Street, New York, USA</span>
+                        <span>Valencia, Edo. Carabobo</span>
                     </div>
                 </div>
             </div>
@@ -89,8 +89,8 @@ export default function PublicLayout({
                 </nav>
                 <div className="flex items-center gap-2">
                     <Button asChild>
-                        <Link href={isAuthenticated ? "/dashboard" : "/planes"}>
-                        {isAuthenticated ? "Ir al Panel" : "Afíliate Ahora"}
+                        <Link href={isAuthenticated ? "/dashboard" : "/login"}>
+                          {isAuthenticated ? "Ir al Panel" : "Afíliate Ahora"}
                         </Link>
                     </Button>
                      <Button asChild variant="outline">
