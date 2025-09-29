@@ -4,12 +4,11 @@
 import { useState, useMemo, useEffect } from 'react';
 import type { Estudio } from '@/lib/types';
 import { getEstudios } from '@/lib/actions';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Search, Stethoscope } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { PageHeader } from '@/components/shared/page-header';
 
 export default function EstudiosPage() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -41,11 +40,16 @@ export default function EstudiosPage() {
         show: { y: 0, opacity: 1 },
     };
 
+    const toSentenceCase = (str: string) => {
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    };
+
+
     return (
         <main className="container mx-auto px-4 pb-20">
             <div className="text-center mb-12">
-                <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl font-headline">Estudios Urológicos</h1>
-                <p className="max-w-2xl mx-auto mt-4 text-lg text-muted-foreground">Explora los estudios y procedimientos especializados que ofrecemos.</p>
+                <h1 className="text-4xl font-bold font-headline">Estudios Urológicos</h1>
             </div>
 
             <div className="relative w-full max-w-lg mx-auto mb-12">
@@ -73,8 +77,7 @@ export default function EstudiosPage() {
                                 "hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]"
                             )}>
                                 <CardHeader>
-                                    <CardTitle className="text-base">{estudio.nombre}</CardTitle>
-                                    <CardDescription>{estudio.categoria}</CardDescription>
+                                    <CardTitle className="text-base">{toSentenceCase(estudio.nombre)}</CardTitle>
                                 </CardHeader>
                             </Card>
                         </motion.div>
