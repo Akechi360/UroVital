@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -62,13 +63,6 @@ const pricingPlans = [
         features: ["Registro Familiar", "Todos los Beneficios del Plan Básico", "Chequeo Anual de Salud", "Citas Prioritarias", "Servicios de Telemedicina"], 
         isPopular: true,
         icon: HeartPulse,
-    },
-    { 
-        name: "Plan Corporativo", 
-        price: 99, 
-        features: ["Todos los Beneficios del Plan Popular", "Análisis Completos", "Procedimientos Quirúrgicos Menores", "Descuentos Dentales y de Visión", "Programas de Bienestar"], 
-        isPopular: false,
-        icon: ShieldCheck,
     },
 ]
 
@@ -366,3 +360,5 @@ export default function LandingPage() {
     </>
   );
 }
+
+    
