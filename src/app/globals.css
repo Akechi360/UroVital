@@ -21,7 +21,7 @@
     --muted: 220 14% 93%;
     --muted-foreground: 220 9% 46%;
 
-    --accent: 175 62% 39%; /* UroVital Teal: #26A69A */
+    --accent: 222 83% 53%; /* UroVital Blue: ~#2563eb */
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
@@ -52,7 +52,7 @@
     --muted: 215 14% 24%;
     --muted-foreground: 215 10% 65%;
 
-    --accent: 175 55% 45%; /* UroVital Teal (Dark) */
+    --accent: 222 78% 61%; /* UroVital Blue (Dark) */
     --accent-foreground: 210 20% 98%;
 
     --destructive: 0 63% 51%;
