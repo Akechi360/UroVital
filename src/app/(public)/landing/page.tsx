@@ -43,10 +43,10 @@ const serviceCards = [
 
 // TODO: Define final content for these steps
 const processSteps = [
-    { number: "01", title: "Reservá tu turno", description: "Agendá tu cita fácilmente online o por teléfono." },
-    { number: "02", title: "Elegí tu especialista", description: "Revisá los perfiles y seleccioná el doctor que prefieras." },
-    { number: "03", title: "Recibí la consulta", description: "Obtené un plan de cuidado personalizado de nuestros expertos." },
-    { number: "04", title: "Comenzá tu tratamiento", description: "Iniciá tu camino hacia una mejor salud con nuestro apoyo." },
+    { number: "01", title: "Agenda tu cita", description: "Agenda tu cita fácilmente online o por teléfono." },
+    { number: "02", title: "Elige tu especialista", description: "Revisa los perfiles y selecciona el doctor que prefieras." },
+    { number: "03", title: "Recibe la consulta", description: "Obtén un plan de cuidado personalizado de nuestros expertos." },
+    { number: "04", title: "Comienza tu tratamiento", description: "Inicia tu camino hacia una mejor salud con nuestro apoyo." },
 ]
 
 // TODO: Define final pricing and benefits for these plans
@@ -174,14 +174,14 @@ export default function LandingPage() {
                             <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/30">
                                 <div className="p-3 bg-primary/10 rounded-full"><MessageSquare className="text-primary"/></div>
                                 <div>
-                                    <h3 className="font-semibold">Consultas gratuitas</h3>
-                                    <p className="text-sm text-muted-foreground">Chateá con el equipo en cualquier momento.</p>
+                                    <h3 className="font-semibold">Consultas ilimitadas</h3>
+                                    <p className="text-sm text-muted-foreground">Chatea con el equipo en cualquier momento.</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/30">
                                 <div className="p-3 bg-primary/10 rounded-full"><FlaskConical className="text-primary"/></div>
                                 <div>
-                                    <h3 className="font-semibold">Cobertura en estudios</h3>
+                                    <h3 className="font-semibold">Cobertura de estudios</h3>
                                     <p className="text-sm text-muted-foreground">Radiología, uroflujometrías y más con descuentos preferenciales.</p>
                                 </div>
                             </div>
@@ -189,7 +189,7 @@ export default function LandingPage() {
                                 <div className="p-3 bg-primary/10 rounded-full"><Stethoscope className="text-primary"/></div>
                                 <div>
                                     <h3 className="font-semibold">Atención en consultorios</h3>
-                                    <p className="text-sm text-muted-foreground">Reservá turnos con especialistas sin demoras.</p>
+                                    <p className="text-sm text-muted-foreground">Agenda turnos con especialistas sin demoras.</p>
                                 </div>
                             </div>
                              <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/30">
@@ -302,7 +302,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer} className="text-center max-w-2xl mx-auto">
                 <motion.p variants={fadeIn()} className="text-primary font-semibold text-sm uppercase mb-2">Planes de Precios</motion.p>
-                <motion.h2 variants={fadeIn()} className="text-3xl md:text-4xl font-bold font-headline mb-4">Elegí el plan perfecto para vos</motion.h2>
+                <motion.h2 variants={fadeIn()} className="text-3xl md:text-4xl font-bold font-headline mb-4">Elige el plan perfecto para ti</motion.h2>
             </motion.div>
              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch mt-12">
             {pricingPlans.map((plan, index) => (
@@ -358,7 +358,7 @@ export default function LandingPage() {
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn()}>
                 <h2 className="text-3xl md:text-4xl font-bold font-headline mb-4">¿Listo para mejorar tu salud?</h2>
                 <p className="max-w-2xl mx-auto text-muted-foreground mb-8">
-                    Potenciá tu bienestar con planes flexibles y acompañamiento experto.
+                    Potencia tu bienestar con planes flexibles y acompañamiento experto.
                 </p>
                 <Button size="lg" asChild>
                     <Link href="/planes">Afíliate Ahora</Link>
