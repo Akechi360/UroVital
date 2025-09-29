@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone, FlaskConical, ZoomIn, Play, MessageSquare, Phone, MapPin, Ambulance, Microscope, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { AffiliateFlowTrigger } from '@/components/public/affiliate-flow-dialog';
+import { AffiliateFlowTrigger } from '@/components/public/affiliate-enrollment';
 
 const fadeIn = (delay: number = 0) => ({
   hidden: { opacity: 0, y: 20 },
@@ -230,7 +230,7 @@ export default function LandingPage() {
                 const Icon = card.icon;
                 return (
                     <motion.div variants={fadeIn()} key={index}>
-                        <Card className="text-center p-6 h-full border-b-4 border-transparent hover:border-primary transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+                        <Card className="text-center p-6 h-full border-b-4 border-transparent transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]">
                              <div className="inline-block p-4 bg-primary/10 rounded-full mb-4">
                                 <Icon className="w-8 h-8 text-primary" />
                             </div>
