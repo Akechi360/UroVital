@@ -12,7 +12,6 @@ import Footer from "@/components/layout/footer";
 
 const NAV_LINKS = [
     { href: "/landing", label: "Inicio" },
-    { href: "/planes", label: "Planes" },
     { href: "/directorio", label: "Directorio" },
     { href: "/estudios", label: "Estudios" },
     { href: "#contact", label: "Contacto" },

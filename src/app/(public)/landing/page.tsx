@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone, FlaskConical, ZoomIn, Play, MessageSquare, Phone, MapPin, Ambulance, Microscope, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -48,22 +48,30 @@ const processSteps = [
     { number: "04", title: "Comenzá tu tratamiento", description: "Iniciá tu camino hacia una mejor salud con nuestro apoyo." },
 ]
 
-// TODO: Define final content and pricing for these plans
+// TODO: Define final pricing and benefits for these plans
 const pricingPlans = [
-    { 
-        name: "Tarjeta Saludable", 
-        price: 38, 
-        features: ["Registro Individual", "Cuidado Preventivo", "Visitas de Atención Primaria", "Referencia a Especialistas", "Análisis Básicos"], 
-        isPopular: false,
-        icon: Users,
+    {
+        name: "Tarjeta Saludable",
+        subtitle: "Individual + 2 Beneficiarios",
+        features: [
+            "Consultas médicas gratuitas (hasta 6 al año).",
+            "Descuentos en laboratorio e imagenología.",
+            "Acceso a fisiatría y rehabilitación.",
+        ],
+        priceSummary: "150$ anual o 50 inicial + 10 mensuales",
+        detailsUrl: "/planes/tarjeta-saludable",
     },
-    { 
-        name: "Fondo Espíritu Santo", 
-        price: 59, 
-        features: ["Registro Familiar", "Todos los Beneficios del Plan Básico", "Chequeo Anual de Salud", "Citas Prioritarias", "Servicios de Telemedicina"], 
-        isPopular: true,
-        icon: HeartPulse,
-    },
+    {
+        name: "Fondo Espíritu Santo",
+        subtitle: "Grupos de 200–500 afiliados",
+        features: [
+            "Cobertura anual integral (emergencias, APS, estudios, hospitalización).",
+            "Procedimientos quirúrgicos electivos o de emergencia.",
+            "Traslados en ambulancia y atención 24/7.",
+        ],
+        priceSummary: "Cobertura anual entre $35.000 y $87.500",
+        detailsUrl: "/planes/fondo-espiritu-santo",
+    }
 ]
 
 export default function LandingPage() {
@@ -304,42 +312,51 @@ export default function LandingPage() {
                 <motion.p variants={fadeIn} className="text-primary font-semibold text-sm uppercase mb-2">Planes de Precios</motion.p>
                 <motion.h2 variants={fadeIn} className="text-3xl md:text-4xl font-bold font-headline mb-4">Elegí el plan perfecto para vos</motion.h2>
             </motion.div>
-             <motion.div 
-                initial="hidden" 
-                whileInView="visible" 
-                viewport={{ once: true, amount: 0.2 }} 
-                variants={staggerContainer} 
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 items-end"
-            >
-                {pricingPlans.map((plan, index) => {
-                    const Icon = plan.icon;
-                    return (
-                        <motion.div variants={fadeIn} key={index} className={plan.isPopular ? "transform lg:-translate-y-4" : ""}>
-                            <Card className={`h-full flex flex-col ${plan.isPopular ? 'border-primary border-2 shadow-2xl shadow-primary/20' : ''}`}>
-                                {plan.isPopular && <div className="bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider text-center py-1 rounded-t-lg">Más Popular</div>}
-                                <CardHeader className="text-center">
-                                    <div className="inline-block p-3 bg-primary/10 rounded-full mb-2 mx-auto"><Icon className="w-7 h-7 text-primary" /></div>
-                                    <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-                                    <p className="text-4xl font-bold text-primary">${plan.price}<span className="text-lg font-normal text-muted-foreground">/anual</span></p>
-                                </CardHeader>
-                                <CardContent className="flex-grow">
-                                    <ul className="space-y-3 text-sm">
-                                        {plan.features.map((feature, i) => (
-                                            <li key={i} className="flex items-center gap-3">
-                                                <Check className="h-4 w-4 text-green-500" />
-                                                <span>{feature}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </CardContent>
-                                <div className="p-6">
-                                     <Button className="w-full" variant={plan.isPopular ? 'default' : 'outline'}>Elegir Plan</Button>
-                                </div>
-                            </Card>
-                        </motion.div>
-                    )
-                })}
-            </motion.div>
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch mt-12">
+            {pricingPlans.map((plan, index) => (
+                <motion.div
+                    key={plan.name}
+                    initial="hidden"
+                    animate="visible"
+                    variants={fadeIn(0.2 * (index + 1))}
+                    className="flex"
+                >
+                        <Card className={cn(
+                        "flex flex-col h-full w-full rounded-2xl shadow-sm transition-all duration-300 ease-in-out bg-card/50",
+                        "hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]"
+                        )}>
+                        <CardHeader>
+                            <CardTitle className="text-2xl font-bold font-headline text-primary">{plan.name}</CardTitle>
+                            <CardDescription>{plan.subtitle}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-grow space-y-6">
+                            <ul className="space-y-3">
+                                {plan.features.map(feature => (
+                                    <li key={feature} className="flex items-start">
+                                        <Check className="w-5 h-5 mr-3 mt-0.5 text-green-500 shrink-0" />
+                                        <span className="text-muted-foreground">{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            
+                            <div className="pt-4 border-t">
+                                <h4 className="font-semibold">Precio</h4>
+                                <p className="text-muted-foreground">{plan.priceSummary}</p>
+                            </div>
+                            
+                        </CardContent>
+                        <CardFooter className="flex-col items-stretch gap-2 !pt-4">
+                            <Button size="lg" className="w-full">
+                                Afíliate Ahora
+                            </Button>
+                            <Button asChild size="lg" variant="outline" className="w-full">
+                                <Link href={plan.detailsUrl}>Ver detalles</Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </motion.div>
+            ))}
+        </div>
         </div>
       </section>
 
