@@ -16,7 +16,7 @@ import paymentTypesData from './data/payment-types.json';
 import paymentsData from './data/payments.json';
 import doctorsData from './data/doctors.json';
 import estudiosData from './data/estudios.json';
-import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company, Supply, Provider, PaymentMethod, PaymentType, Payment, Doctor, Estudio } from './types';
+import type { Patient, Appointment, Consultation, User, LabResult, IpssScore, Report, Company, Supply, Provider, PaymentMethod, PaymentType, Payment, Doctor, Estudio, AffiliateLead } from './types';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -271,4 +271,12 @@ export async function getDoctors(): Promise<Doctor[]> {
 export async function getEstudios(): Promise<Estudio[]> {
     await delay(100);
     return estudiosData as Estudio[];
+}
+
+// AFFILIATE LEAD ACTIONS
+export async function submitAffiliateLead(lead: AffiliateLead): Promise<void> {
+    // TODO: Connect this to a real backend endpoint.
+    await delay(500);
+    console.log("Submitting affiliate lead:", lead);
+    return Promise.resolve();
 }

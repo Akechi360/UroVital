@@ -173,6 +173,7 @@ export interface PaymentType {
 export interface Payment {
     id: string;
     patientId: string;
+    doctorId?: string;
     paymentTypeId: string;
     paymentMethodId: string;
     date: string;
@@ -199,4 +200,17 @@ export interface Affiliation {
     afiliados: number;
     ultimaAfiliacion: string;
     estado: string;
+}
+
+export interface AffiliateLead {
+  fullName: string;
+  documentId: string;
+  birthDate: string;
+  phone: string;
+  email: string;
+  address: string;
+  planId: 'tarjeta-saludable' | 'fondo-espiritu-santo';
+  paymentMode: 'contado' | 'credito';
+  paymentMethod: 'banvenez' | 'mercantil' | 'bnc' | 'banesco' | 'usdt' | 'wallytech' | 'zinlli' | 'paypal';
+  schedule?: { upfront: number; installments: number; installmentValue: number; frequencyDays: number; };
 }

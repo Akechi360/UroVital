@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Stethoscope, Check, Users, ShieldCheck, HeartPulse, Bone, FlaskConical, ZoomIn, Play, MessageSquare, Phone, MapPin, Ambulance, Microscope, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { AffiliateFlowTrigger } from '@/components/public/affiliate-flow-dialog';
 
 const fadeIn = (delay: number = 0) => ({
   hidden: { opacity: 0, y: 20 },
@@ -41,7 +42,7 @@ const serviceCards = [
     { title: "Seguimiento digital", icon: Clock, description: "Recordatorios y acceso rápido a tus resultados." },
 ]
 
-// TODO: Define final content for these steps
+// TODO: Define final copy for these steps if needed. Current ones are placeholders.
 const processSteps = [
     { number: "01", title: "Agenda tu cita", description: "Agenda tu cita fácilmente online o por teléfono." },
     { number: "02", title: "Elige tu especialista", description: "Revisa los perfiles y selecciona el doctor que prefieras." },
@@ -49,9 +50,10 @@ const processSteps = [
     { number: "04", title: "Comienza tu tratamiento", description: "Inicia tu camino hacia una mejor salud con nuestro apoyo." },
 ]
 
-// TODO: Define final pricing and benefits for these plans
+// TODO: Define final pricing and benefits for these plans. This data should be in sync with /lib/payment-options.ts
 const pricingPlans = [
     {
+        id: 'tarjeta-saludable',
         name: "Tarjeta Saludable",
         subtitle: "Individual + 2 Beneficiarios",
         features: [
@@ -59,10 +61,12 @@ const pricingPlans = [
             "Descuentos en laboratorio e imagenología.",
             "Acceso a fisiatría y rehabilitación.",
         ],
+        price: 150,
         priceSummary: "150$ anual o 50 inicial + 10 mensuales",
         detailsUrl: "/planes/tarjeta-saludable",
     },
     {
+        id: 'fondo-espiritu-santo',
         name: "Fondo Espíritu Santo",
         subtitle: "Grupos de 200–500 afiliados",
         features: [
@@ -70,6 +74,7 @@ const pricingPlans = [
             "Procedimientos quirúrgicos electivos o de emergencia.",
             "Traslados en ambulancia y atención 24/7.",
         ],
+        price: 35000,
         priceSummary: "Cobertura anual entre $35.000 y $87.500",
         detailsUrl: "/planes/fondo-espiritu-santo",
     }
@@ -142,19 +147,19 @@ export default function LandingPage() {
                 {/* TODO: Connect to real data */}
                 <motion.div variants={fadeIn()}>
                     <p className="text-4xl font-bold text-primary">1k+</p>
-                    <p className="text-sm text-muted-foreground mt-1">Pacientes Registrados</p>
+                    <p className="text-sm text-muted-foreground mt-1">Pacientes registrados</p>
                 </motion.div>
                 <motion.div variants={fadeIn()}>
                     <p className="text-4xl font-bold text-primary">2</p>
-                    <p className="text-sm text-muted-foreground mt-1">Planes Activos</p>
+                    <p className="text-sm text-muted-foreground mt-1">Planes activos</p>
                 </motion.div>
                 <motion.div variants={fadeIn()}>
                     <p className="text-4xl font-bold text-primary">30+</p>
-                    <p className="text-sm text-muted-foreground mt-1">Especialistas en la Red</p>
+                    <p className="text-sm text-muted-foreground mt-1">Especialistas en la red</p>
                 </motion.div>
                 <motion.div variants={fadeIn()}>
                     <p className="text-4xl font-bold text-primary">500+</p>
-                    <p className="text-sm text-muted-foreground mt-1">Estudios Almacenados</p>
+                    <p className="text-sm text-muted-foreground mt-1">Estudios almacenados</p>
                 </motion.div>
               </motion.div>
           </div>
@@ -174,14 +179,14 @@ export default function LandingPage() {
                             <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/30">
                                 <div className="p-3 bg-primary/10 rounded-full"><MessageSquare className="text-primary"/></div>
                                 <div>
-                                    <h3 className="font-semibold">Consultas ilimitadas</h3>
+                                    <h3 className="font-semibold">Consultas gratuitas</h3>
                                     <p className="text-sm text-muted-foreground">Chatea con el equipo en cualquier momento.</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/30">
                                 <div className="p-3 bg-primary/10 rounded-full"><FlaskConical className="text-primary"/></div>
                                 <div>
-                                    <h3 className="font-semibold">Cobertura de estudios</h3>
+                                    <h3 className="font-semibold">Cobertura en estudios</h3>
                                     <p className="text-sm text-muted-foreground">Radiología, uroflujometrías y más con descuentos preferenciales.</p>
                                 </div>
                             </div>
@@ -338,9 +343,11 @@ export default function LandingPage() {
                             
                         </CardContent>
                         <CardFooter className="flex-col items-stretch gap-2 !pt-4">
-                            <Button size="lg" className="w-full">
-                                Afíliate Ahora
-                            </Button>
+                            <AffiliateFlowTrigger planId={plan.id as 'tarjeta-saludable' | 'fondo-espiritu-santo'}>
+                                <Button size="lg" className="w-full">
+                                    Afíliate Ahora
+                                </Button>
+                            </AffiliateFlowTrigger>
                             <Button asChild size="lg" variant="outline" className="w-full">
                                 <Link href={plan.detailsUrl}>Ver detalles</Link>
                             </Button>
@@ -360,9 +367,9 @@ export default function LandingPage() {
                 <p className="max-w-2xl mx-auto text-muted-foreground mb-8">
                     Potencia tu bienestar con planes flexibles y acompañamiento experto.
                 </p>
-                <Button size="lg" asChild>
-                    <Link href="/planes">Afíliate Ahora</Link>
-                </Button>
+                <AffiliateFlowTrigger planId="tarjeta-saludable">
+                     <Button size="lg">Afíliate Ahora</Button>
+                </AffiliateFlowTrigger>
             </motion.div>
         </div>
       </section>

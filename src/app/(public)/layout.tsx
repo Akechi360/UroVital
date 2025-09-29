@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from 'react';
 import Footer from "@/components/layout/footer";
+import { AffiliateFlowTrigger } from "@/components/public/affiliate-flow-dialog";
 
 const NAV_LINKS = [
     { href: "/landing", label: "Inicio" },
@@ -29,7 +30,10 @@ export default function PublicLayout({
   const showLandingHeader = pathname === '/landing';
 
   useEffect(() => {
-    if (!showLandingHeader) return;
+    if (!showLandingHeader) {
+      setScrolled(false);
+      return;
+    }
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -93,13 +97,17 @@ export default function PublicLayout({
                       ))}
                   </nav>
                   <div className="flex items-center gap-2">
-                      <Button asChild>
-                          <Link href={isAuthenticated ? "/dashboard" : "/login"}>
-                            {isAuthenticated ? "Ir al Panel" : "Afíliate Ahora"}
-                          </Link>
-                      </Button>
+                      {isAuthenticated ? (
+                         <Button asChild>
+                            <Link href="/dashboard">Ir al Panel</Link>
+                        </Button>
+                      ) : (
+                        <AffiliateFlowTrigger planId="tarjeta-saludable">
+                            <Button>Afíliate Ahora</Button>
+                        </AffiliateFlowTrigger>
+                      )}
                        <Button asChild variant="outline">
-                          <Link href={isAuthenticated ? "/dashboard" : "/login"}>
+                          <Link href="/login">
                             Iniciar Sesión
                           </Link>
                       </Button>
