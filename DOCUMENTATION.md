@@ -26,8 +26,6 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   │   └── supplies
     │   │   │       └── page.tsx
     │   │   ├── afiliaciones
-    │   │   │   ├── lista
-    │   │   │   │   └── page.tsx
     │   │   │   └── page.tsx
     │   │   ├── appointments
     │   │   │   └── page.tsx
@@ -39,8 +37,6 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   │   ├── layout.tsx
     │   │   │   └── page.tsx
     │   │   ├── finanzas
-    │   │   │   ├── nuevo
-    │   │   │   │   └── page.tsx
     │   │   │   ├── pagos
     │   │   │   │   └── page.tsx
     │   │   │   └── page.tsx
@@ -142,8 +138,6 @@ Este documento describe la estructura de archivos y directorios del proyecto Uro
     │   │   ├── patient-summary-cards.tsx
     │   │   ├── patient-summary-client.tsx
     │   │   └── quick-actions.tsx
-    │   ├── public
-    │   │   └── affiliate-enrollment.tsx
     │   ├── reports
     │   │   ├── add-report-fab.tsx
     │   │   ├── new-report-form.tsx
