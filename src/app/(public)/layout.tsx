@@ -2,13 +2,16 @@
 'use client';
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/layout/auth-provider";
-import { Stethoscope, Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Stethoscope, Mail, Phone, MapPin, Clock, Menu, Sun, Moon } from "lucide-react";
 import Link from "next/link";
 import 'animate.css';
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from 'react';
 import Footer from "@/components/layout/footer";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useTheme } from "next-themes";
+
 
 const NAV_LINKS = [
     { href: "/landing", label: "Inicio" },
@@ -23,8 +26,14 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   const { isAuthenticated } = useAuth();
+  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
 
   const showLandingHeader = pathname === '/landing';
 
@@ -85,6 +94,8 @@ export default function PublicLayout({
                       </div>
                       <span className="font-headline text-primary">UroVital</span>
                   </Link>
+
+                  {/* Desktop Nav */}
                   <nav className="hidden lg:flex items-center gap-2">
                       {NAV_LINKS.map(link => (
                           <Button key={link.href} asChild variant="ghost" className={cn(
@@ -95,7 +106,62 @@ export default function PublicLayout({
                           </Button>
                       ))}
                   </nav>
-                  <div className="flex items-center gap-2">
+
+                  {/* Mobile Nav Trigger */}
+                  <div className="lg:hidden">
+                    <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+                        <SheetTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                                <Menu className="h-6 w-6" />
+                                <span className="sr-only">Abrir menú</span>
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left">
+                            <SheetHeader>
+                                <SheetTitle className="sr-only">Menú de Navegación</SheetTitle>
+                            </SheetHeader>
+                             <nav className="flex flex-col gap-4 mt-8">
+                                {NAV_LINKS.map(link => (
+                                    <Button key={link.href} asChild variant="ghost" className={cn(
+                                        "justify-start text-lg",
+                                        (pathname === link.href || (link.href !== '/landing' && pathname.startsWith(link.href))) && "text-primary"
+                                    )}>
+                                        <Link href={link.href}>{link.label}</Link>
+                                    </Button>
+                                ))}
+                            </nav>
+                             <div className="mt-8 pt-4 border-t flex flex-col gap-3">
+                                {isAuthenticated ? (
+                                    <Button asChild size="lg" className="w-full">
+                                        <Link href="/dashboard">Ir al Panel</Link>
+                                    </Button>
+                                ) : (
+                                    <Button asChild size="lg" className="w-full">
+                                    <Link href="/afiliacion">Afíliate Ahora</Link>
+                                    </Button>
+                                )}
+                                <Button asChild variant="outline" size="lg" className="w-full">
+                                    <Link href="/login">
+                                        Iniciar Sesión
+                                    </Link>
+                                </Button>
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                  </div>
+
+                  {/* Desktop actions */}
+                  <div className="hidden lg:flex items-center gap-3">
+                       <Button
+                        variant="ghost"
+                        size="icon"
+                        type="button"
+                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                        >
+                        <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                        <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                        <span className="sr-only">Cambiar tema</span>
+                        </Button>
                       {isAuthenticated ? (
                          <Button asChild>
                             <Link href="/dashboard">Ir al Panel</Link>
