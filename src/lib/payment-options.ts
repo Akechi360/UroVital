@@ -4,23 +4,22 @@ export const AFFILIATE_PLANS = [
         id: 'tarjeta-saludable',
         name: "Tarjeta Saludable",
         subtitle: "Individual + 2 Beneficiarios",
-        price: 150,
-        credit: {
-            upfrontPercent: 0.4, // 40%
-            installments: 3,
-            frequencyDays: 14,
-        }
+        price: 150, // Annual
+        affiliationFee: 0,
+        installmentOptions: [
+            { type: 'cuotas', count: 3, amount: 50 },
+            { type: 'mensual', count: 12, amount: 10 }
+        ]
     },
     {
         id: 'fondo-espiritu-santo',
         name: "Fondo Espíritu Santo",
         subtitle: "Grupos de 200–500 afiliados",
-        price: 35000, // Example price, needs to be defined
-        credit: {
-            upfrontPercent: 0.5, // 50%
-            installments: 6,
-            frequencyDays: 30,
-        }
+        price: 250, // Annual
+        coverageBenefit: "Garantiza una cobertura del 15% del monto total.",
+        installmentOptions: [
+            { type: 'cuotas', count: 4, amount: 62.50 }
+        ]
     },
 ];
 

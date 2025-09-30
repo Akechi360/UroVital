@@ -42,6 +42,32 @@ const serviceCards = [
     { title: "Seguimiento digital", icon: Clock, description: "Recordatorios y acceso rápido a tus resultados." },
 ]
 
+const specialtyCards = [
+  {
+    icon: Stethoscope,
+    title: 'Urología',
+    description: 'Atención especializada para el sistema urinario y reproductivo masculino.',
+  },
+  {
+    icon: HeartPulse,
+    title: 'Ginecología',
+    description:
+      'Cuidado integral de la salud femenina, desde revisiones hasta tratamientos complejos.',
+  },
+  {
+    icon: Bone,
+    title: 'Oncología',
+    description: 'Diagnóstico y tratamiento de cáncer con un enfoque multidisciplinario y humano.',
+  },
+  {
+    icon: ZoomIn,
+    title: 'Medicina Interna',
+    description:
+      'Prevención, diagnóstico y tratamiento de enfermedades en adultos.',
+  },
+];
+
+
 const processSteps = [
     { number: "01", title: "Agenda tu cita", description: "Agenda tu cita fácilmente online o por teléfono." },
     { number: "02", title: "Elige tu especialista", description: "Revisa los perfiles y selecciona el doctor que prefieras." },
@@ -55,12 +81,13 @@ const pricingPlans = [
         name: "Tarjeta Saludable",
         subtitle: "Individual + 2 Beneficiarios",
         features: [
+            "Afiliación sin costo.",
             "Consultas médicas gratuitas (hasta 6 al año).",
             "Descuentos en laboratorio e imagenología.",
             "Acceso a fisiatría y rehabilitación.",
         ],
         price: 150,
-        priceSummary: "150$ anual o 50 inicial + 10 mensuales",
+        priceSummary: "$150 anual, 3 cuotas de $50 o $10 mensuales.",
         detailsUrl: "/planes/tarjeta-saludable",
     },
     {
@@ -68,12 +95,13 @@ const pricingPlans = [
         name: "Fondo Espíritu Santo",
         subtitle: "Grupos de 200–500 afiliados",
         features: [
+            "Cobertura del 15% del monto total en atención médica.",
             "Cobertura anual integral (emergencias, APS, estudios, hospitalización).",
             "Procedimientos quirúrgicos electivos o de emergencia.",
             "Traslados en ambulancia y atención 24/7.",
         ],
-        price: 35000,
-        priceSummary: "Cobertura anual entre $35.000 y $87.500",
+        price: 250,
+        priceSummary: "$250 anual o 4 cuotas de $62.50",
         detailsUrl: "/planes/fondo-espiritu-santo",
     }
 ]
@@ -121,19 +149,6 @@ export default function LandingPage() {
                           className="relative rounded-t-full mx-auto"
                           priority
                       />
-                       <motion.div 
-                        initial={{opacity: 0, scale: 0.5, y: 50}}
-                        animate={{opacity: 1, scale: 1, y: 0}}
-                        transition={{duration: 0.5, delay: 0.5, ease: "easeOut"}}
-                        className="absolute bottom-10 left-0 bg-white dark:bg-card shadow-lg rounded-lg p-3 flex items-center gap-3">
-                        <div className="p-2 bg-primary/10 rounded-md">
-                            <ShieldCheck className="text-primary"/>
-                        </div>
-                        <div>
-                            <p className="font-semibold text-sm">Cuidado de Confianza</p>
-                            <p className="text-xs text-muted-foreground">Especialistas Expertos</p>
-                        </div>
-                    </motion.div>
                   </motion.div>
               </div>
           </div>
@@ -272,31 +287,56 @@ export default function LandingPage() {
           </div>
       </section>
 
-      {/* Journey to Health Section */}
-      <section className="py-20 md:py-28 bg-gray-50 dark:bg-[#0D122A]">
+      {/* Our Specialties Section */}
+      <section className="py-20 md:py-28 bg-blue-50 dark:bg-[#0D122A]">
         <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={fadeIn()}>
-                    <h2 className="text-3xl md:text-4xl font-bold font-headline mb-6">Nuestras Especialidades</h2>
-                    <p className="text-muted-foreground mb-6">
-                        Un equipo multidisciplinario dedicado a tu bienestar integral.
-                    </p>
-                    <ul className="space-y-3">
-                        <li className="flex items-center gap-3"><Check className="text-primary h-5 w-5" /> Urología</li>
-                        <li className="flex items-center gap-3"><Check className="text-primary h-5 w-5" /> Ginecología</li>
-                        <li className="flex items-center gap-3"><Check className="text-primary h-5 w-5" /> Oncología</li>
-                        <li className="flex items-center gap-3"><Check className="text-primary h-5 w-5" /> Medicina Interna</li>
-                    </ul>
-                </motion.div>
-                 <motion.div initial={{opacity: 0, scale: 0.9}} whileInView={{opacity: 1, scale: 1}} viewport={{once: true}} transition={{duration: 0.6}} className="relative">
-                    <Image src="/landing/journey-image.jpg" width={600} height={400} alt="Viaje a la Salud" className="rounded-lg shadow-xl" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <Button variant="ghost" size="icon" className="h-20 w-20 bg-white/30 backdrop-blur-sm rounded-full hover:bg-white/50">
-                            <Play className="h-10 w-10 text-white fill-white" />
-                        </Button>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={staggerContainer}
+            className="text-center max-w-2xl mx-auto"
+          >
+            <motion.p
+              variants={fadeIn()}
+              className="text-primary font-semibold text-sm uppercase mb-2"
+            >
+              Nuestras Especialidades
+            </motion.p>
+            <motion.h2
+              variants={fadeIn()}
+              className="text-3xl md:text-4xl font-bold font-headline mb-4"
+            >
+              Especialistas que cuidan cada etapa de tu salud
+            </motion.h2>
+            <motion.p variants={fadeIn()} className="text-muted-foreground">
+              Un equipo multidisciplinario dedicado a tu bienestar integral.
+            </motion.p>
+          </motion.div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={staggerContainer}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12"
+          >
+            {specialtyCards.map((card, index) => {
+              const Icon = card.icon;
+              return (
+                <motion.div key={card.title} variants={fadeIn()}>
+                  <Card className="text-center p-6 h-full border-b-4 border-transparent transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+                    <div className="inline-block p-4 bg-primary/10 rounded-full mb-4">
+                      <Icon className="w-8 h-8 text-primary" />
                     </div>
+                    <h3 className="font-bold text-lg mb-2">{card.title}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {card.description}
+                    </p>
+                  </Card>
                 </motion.div>
-            </div>
+              );
+            })}
+          </motion.div>
         </div>
       </section>
 
@@ -364,6 +404,19 @@ export default function LandingPage() {
                 <Button asChild size="lg">
                      <Link href="/afiliacion?plan=tarjeta-saludable">Afíliate Ahora</Link>
                 </Button>
+                 <motion.div 
+                    initial={{opacity: 0, scale: 0.5, y: 50}}
+                    animate={{opacity: 1, scale: 1, y: 0}}
+                    transition={{duration: 0.5, delay: 0.5, ease: "easeOut"}}
+                    className="mt-12 mx-auto bg-white dark:bg-card shadow-lg rounded-lg p-3 flex items-center gap-3 max-w-sm">
+                    <div className="p-2 bg-primary/10 rounded-md">
+                        <ShieldCheck className="text-primary"/>
+                    </div>
+                    <div>
+                        <p className="font-semibold text-sm">Cuidado de Confianza</p>
+                        <p className="text-xs text-muted-foreground">Especialistas Expertos</p>
+                    </div>
+                </motion.div>
             </motion.div>
         </div>
       </section>
