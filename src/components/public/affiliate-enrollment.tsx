@@ -1,334 +1,320 @@
 
 'use client';
-
-import { useState, useMemo, Suspense } from 'react';
+import { useState, useMemo, useEffect, forwardRef, type ElementRef, type ComponentProps } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { AFFILIATE_PLANS, PAYMENT_METHODS } from '@/lib/payment-options';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+
+import { Stethoscope, User, Lock, Mail, Phone, Calendar as CalendarIcon, MapPin, Check, CreditCard, ChevronLeft, Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarIcon, Check, ChevronLeft, CreditCard, Loader2, Send } from 'lucide-react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { AFFILIATE_PLANS, PAYMENT_METHODS } from '@/lib/payment-options';
+import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { submitAffiliateLead } from '@/lib/actions';
-import type { AffiliateLead } from '@/lib/types';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
+const MySwal = withReactContent(Swal);
 
-const leadSchema = z.object({
-  fullName: z.string().min(3, "El nombre completo es requerido."),
-  documentId: z.string().regex(/^[VEJGP]?\d{7,9}$/, "Cédula o RIF inválido."),
-  birthDate: z.date({ required_error: "La fecha de nacimiento es requerida." }),
-  phone: z.string().min(10, "El número de teléfono es requerido."),
-  email: z.string().email("El correo electrónico es inválido."),
-});
-
-type LeadFormValues = z.infer<typeof leadSchema>;
-
-function AffiliateEnrollment() {
-  return (
-    <Suspense fallback={<div>Cargando...</div>}>
-      <AffiliateEnrollmentContent />
-    </Suspense>
-  )
-}
-
-function AffiliateEnrollmentContent() {
-  const searchParams = useSearchParams();
-  const { toast } = useToast();
-
-  const initialPlanId = searchParams.get('plan') || AFFILIATE_PLANS[0].id;
-  const [selectedPlanId, setSelectedPlanId] = useState(initialPlanId);
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<LeadFormValues | null>(null);
-  const [paymentMode, setPaymentMode] = useState<'contado' | 'credito'>('contado');
-  const [selectedInstallment, setSelectedInstallment] = useState<number>(0);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const { register, handleSubmit, control, formState: { errors } } = useForm<LeadFormValues>({
-    resolver: zodResolver(leadSchema),
-  });
-
-  const selectedPlan = useMemo(() => AFFILIATE_PLANS.find(p => p.id === selectedPlanId), [selectedPlanId]);
-
-  if (!selectedPlan) {
-    return <div>Plan no válido</div>;
-  }
-  
-  const hasCreditOption = selectedPlan.paymentModes.credito && selectedPlan.paymentModes.credito.installmentOptions.length > 0;
-
-  const onPersonalInfoSubmit = (data: LeadFormValues) => {
-    setFormData(data);
-    setStep(2);
-  };
-
-  const handleFinalSubmit = async () => {
-    if (!formData || !selectedPaymentMethod) {
-        toast({
-            variant: "destructive",
-            title: "Faltan datos",
-            description: "Por favor, completa todos los pasos antes de enviar.",
-        });
-        return;
-    }
-    
-    setIsSubmitting(true);
-    
-    let schedule;
-    if (paymentMode === 'credito' && selectedPlan.paymentModes.credito) {
-        const option = selectedPlan.paymentModes.credito.installmentOptions[selectedInstallment];
-        schedule = {
-            upfront: 0, // Assuming no upfront for credit
-            installments: option.count,
-            installmentValue: option.amount,
-            frequencyDays: option.type === 'mensual' ? 30 : 90, // Example
-        }
-    }
-    
-    const leadData: AffiliateLead = {
-        fullName: formData.fullName,
-        documentId: formData.documentId,
-        birthDate: formData.birthDate.toISOString(),
-        phone: formData.phone,
-        email: formData.email,
-        address: "Dirección de prueba", // Placeholder
-        planId: selectedPlanId as 'tarjeta-saludable' | 'fondo-espiritu-santo',
-        paymentMode: paymentMode,
-        paymentMethod: selectedPaymentMethod,
-        schedule,
-    };
-    
-    try {
-        await submitAffiliateLead(leadData);
-        setStep(4); // Success step
-    } catch(error) {
-        toast({
-            variant: "destructive",
-            title: "Error al enviar",
-            description: "No se pudo procesar tu solicitud. Por favor, inténtalo de nuevo.",
-        });
-    } finally {
-        setIsSubmitting(false);
-    }
+const stepVariants = {
+  hidden: { opacity: 0, x: 50 },
+  visible: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -50, position: 'absolute' },
 };
 
+const FormSchema = z.object({
+  fullName: z.string().min(3, "El nombre debe tener al menos 3 caracteres."),
+  documentId: z.string().regex(/^[0-9]+$/, "Debe ser solo números").min(6, "Debe tener al menos 6 dígitos."),
+  birthDate: z.date({ required_error: "La fecha de nacimiento es requerida." }),
+  phone: z.string().min(7, "El teléfono debe tener al menos 7 caracteres."),
+  email: z.string().email("Email inválido."),
+  address: z.string().min(10, "La dirección debe tener al menos 10 caracteres."),
+  planId: z.enum(['tarjeta-saludable', 'fondo-espiritu-santo']),
+  paymentMode: z.enum(['contado', 'credito']),
+  installmentOption: z.string().optional(),
+  paymentMethod: z.string({ required_error: "Debe seleccionar un método de pago." }),
+});
 
-  const renderStepContent = () => {
-    switch (step) {
-      case 1:
-        return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <h2 className="text-2xl font-bold mb-2">Paso 1: Completa tus Datos</h2>
-            <p className="text-muted-foreground mb-6">Necesitamos algunos datos para iniciar tu proceso de afiliación.</p>
-            <form onSubmit={handleSubmit(onPersonalInfoSubmit)} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Nombre completo</Label>
-                <Input id="fullName" {...register("fullName")} />
-                {errors.fullName && <p className="text-destructive text-sm">{errors.fullName.message}</p>}
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                 <div className="space-y-2">
-                    <Label htmlFor="documentId">Cédula / RIF</Label>
-                    <Input id="documentId" {...register("documentId")} />
-                    {errors.documentId && <p className="text-destructive text-sm">{errors.documentId.message}</p>}
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
-                    <Controller
-                        control={control}
-                        name="birthDate"
-                        render={({ field }) => (
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}>
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {field.value ? format(field.value, "PPP", { locale: es }) : <span>Elige una fecha</span>}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0">
-                                    <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus disabled={(date) => date > new Date() || date < new Date("1900-01-01")}/>
-                                </PopoverContent>
-                            </Popover>
-                        )}
-                    />
-                    {errors.birthDate && <p className="text-destructive text-sm">{errors.birthDate.message}</p>}
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="phone">Teléfono</Label>
-                    <Input id="phone" {...register("phone")} />
-                    {errors.phone && <p className="text-destructive text-sm">{errors.phone.message}</p>}
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="email">Correo electrónico</Label>
-                    <Input id="email" type="email" {...register("email")} />
-                    {errors.email && <p className="text-destructive text-sm">{errors.email.message}</p>}
-                </div>
-              </div>
-              <Button type="submit" className="w-full">Siguiente</Button>
-            </form>
-          </motion.div>
-        );
-      case 2:
-        return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <h2 className="text-2xl font-bold mb-2">Paso 2: Elige tu forma de pago</h2>
-             <p className="text-muted-foreground mb-6">Selecciona cómo prefieres pagar tu plan.</p>
-            <RadioGroup value={paymentMode} onValueChange={(v) => setPaymentMode(v as 'contado' | 'credito')} className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <RadioGroupItem value="contado" id="contado" className="peer sr-only" />
-                    <Label htmlFor="contado" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
-                        Pago de Contado
-                        <span className="font-bold text-lg">${selectedPlan.paymentModes.contado.price.toFixed(2)}</span>
-                    </Label>
-                </div>
-                {hasCreditOption && (
-                     <div>
-                        <RadioGroupItem value="credito" id="credito" className="peer sr-only" />
-                        <Label htmlFor="credito" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
-                            Pago a Crédito
-                            <span className="text-sm font-semibold text-muted-foreground">en cuotas</span>
-                        </Label>
-                    </div>
+type FormValues = z.infer<typeof FormSchema>;
+
+const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number, totalSteps: number }) => (
+    <div className="flex items-center gap-2 mb-4">
+        {Array.from({ length: totalSteps }).map((_, index) => (
+            <motion.div
+                key={index}
+                initial={false}
+                animate={{ scale: currentStep === index + 1 ? 1.2 : 1 }}
+                className={cn(
+                    "h-2 rounded-full transition-colors",
+                    currentStep >= index + 1 ? "bg-primary" : "bg-muted",
+                    currentStep === index + 1 ? "flex-1" : "w-8"
                 )}
-            </RadioGroup>
-            {paymentMode === 'credito' && selectedPlan.paymentModes.credito && (
-                <div className="mb-6">
-                    <h3 className="font-semibold mb-2">Opciones de cuotas</h3>
-                    <RadioGroup value={String(selectedInstallment)} onValueChange={(v) => setSelectedInstallment(Number(v))} className="space-y-2">
-                        {selectedPlan.paymentModes.credito.installmentOptions.map((opt, index) => (
-                            <div key={index} className="flex items-center">
-                                <RadioGroupItem value={String(index)} id={`opt-${index}`} />
-                                <Label htmlFor={`opt-${index}`} className="ml-2">{opt.count} {opt.type} de ${opt.amount.toFixed(2)}</Label>
-                            </div>
-                        ))}
-                    </RadioGroup>
-                </div>
-            )}
-             <Button onClick={() => setStep(3)} className="w-full">Siguiente</Button>
-          </motion.div>
-        );
-      case 3:
-         return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <h2 className="text-2xl font-bold mb-2">Paso 3: Método de Pago</h2>
-             <p className="text-muted-foreground mb-6">Selecciona el método que usarás para realizar tu pago.</p>
-             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {PAYMENT_METHODS.map(method => (
-                    <button key={method.id} onClick={() => setSelectedPaymentMethod(method.id)} className={cn("rounded-lg border-2 p-4 flex flex-col items-center gap-2 transition-colors", selectedPaymentMethod === method.id ? 'border-primary bg-primary/10' : 'border-muted hover:bg-accent')}>
-                        {method.logoSrc && <Image src={method.logoSrc} alt={method.label} width={48} height={48} className="h-8 object-contain" />}
-                        <span className="text-sm font-semibold">{method.label}</span>
-                    </button>
-                ))}
-             </div>
-             <Button onClick={handleFinalSubmit} disabled={!selectedPaymentMethod || isSubmitting} className="w-full mt-6">
-                {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Procesando...</> : 'Finalizar Afiliación'}
-             </Button>
-          </motion.div>
-        );
-      case 4:
-        return (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
-                <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
-                    <Check className="h-8 w-8 text-green-600" />
-                </div>
-                <h2 className="text-2xl font-bold mb-2">¡Solicitud Enviada!</h2>
-                <p className="text-muted-foreground mb-6">Hemos recibido tu solicitud de afiliación. Pronto nos pondremos en contacto contigo para confirmar los detalles del pago y activar tu plan.</p>
-                <Button asChild>
-                    <a href="/landing">Volver al Inicio</a>
-                </Button>
-            </motion.div>
-        )
-      default:
-        return null;
+            />
+        ))}
+    </div>
+);
+
+const AffiliateEnrollmentContent = forwardRef<ElementRef<typeof Card>, ComponentProps<typeof Card>>((props, ref) => {
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
+  const [step, setStep] = useState(1);
+  
+  const form = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      planId: searchParams.get('plan') === 'fondo-espiritu-santo' ? 'fondo-espiritu-santo' : 'tarjeta-saludable',
+      paymentMode: 'contado',
+    }
+  });
+
+  const { watch, trigger } = form;
+  const planId = watch('planId');
+  const paymentMode = watch('paymentMode');
+  const selectedPaymentMethodId = watch('paymentMethod');
+
+  const selectedPlan = useMemo(() => AFFILIATE_PLANS.find(p => p.id === planId)!, [planId]);
+  const selectedPaymentMethod = useMemo(() => PAYMENT_METHODS.find(m => m.id === selectedPaymentMethodId), [selectedPaymentMethodId]);
+  
+  const handleNext = async () => {
+    let fields: (keyof FormValues)[] = [];
+    if (step === 1) {
+      fields = ['fullName', 'documentId', 'birthDate', 'phone', 'email', 'address'];
+    } else if (step === 2) {
+      fields = ['planId', 'paymentMode', 'installmentOption', 'paymentMethod'];
+    }
+    
+    const isValid = await trigger(fields);
+    if (isValid) {
+      setStep(prev => prev + 1);
     }
   };
-  
-    const renderOrderSummary = () => {
-        const installmentOption = paymentMode === 'credito' && selectedPlan.paymentModes.credito
-            ? selectedPlan.paymentModes.credito.installmentOptions[selectedInstallment]
-            : null;
 
-        return (
-            <div className="space-y-2 text-sm">
-                <h3 className="font-bold mb-4">Resumen del Pedido</h3>
-                <div className="flex justify-between"><span>Plan</span><span>{selectedPlan.name}</span></div>
-                <div className="flex justify-between"><span>Afiliación</span><span>${selectedPlan.affiliationFee.toFixed(2)}</span></div>
-                <div className="border-t my-2"></div>
-                {paymentMode === 'credito' && installmentOption ? (
+  const handleBack = () => setStep(prev => prev - 1);
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+     try {
+        await submitAffiliateLead({
+            ...data,
+            birthDate: data.birthDate.toISOString(),
+        });
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        MySwal.fire({
+            title: '¡Solicitud Enviada!',
+            text: 'Gracias por afiliarte. Nuestro equipo se pondrá en contacto contigo pronto.',
+            icon: 'success',
+            background: isDarkMode ? '#1e293b' : '#ffffff',
+            color: isDarkMode ? '#f1f5f9' : '#0f172a',
+            confirmButtonColor: '#4f46e5',
+        });
+        form.reset();
+        setStep(1);
+    } catch (error) {
+        toast({
+            variant: 'destructive',
+            title: 'Error al enviar',
+            description: 'Hubo un problema al procesar tu solicitud. Por favor, inténtalo de nuevo.',
+        });
+    }
+  };
+
+  const renderOrderSummary = () => {
+    const installmentKey = form.watch('installmentOption');
+    const selectedInstallment = paymentMode === 'credito' 
+        ? selectedPlan.paymentModes.credito?.installmentOptions.find(opt => `${opt.type}-${opt.count}` === installmentKey)
+        : null;
+
+    return (
+        <div className="p-4 bg-muted/50 rounded-lg space-y-2 text-sm mt-4">
+            <h4 className="font-semibold text-base">Resumen del Plan</h4>
+            <div className="flex justify-between"><span>Plan:</span><span className="font-medium">{selectedPlan.name}</span></div>
+            {selectedPlan.affiliationFee !== undefined && (
+                <div className="flex justify-between"><span>Cuota de Afiliación:</span><span className="font-medium">${selectedPlan.affiliationFee.toFixed(2)}</span></div>
+            )}
+            <div className="border-t my-2"></div>
+             {paymentMode === 'credito' && selectedInstallment ? (
                     <>
-                        <div className="flex justify-between"><span>Modalidad</span><span>Crédito</span></div>
-                        <div className="flex justify-between font-bold"><span>Total a pagar hoy</span><span>${(installmentOption.amount).toFixed(2)}</span></div>
-                        <p className="text-xs text-muted-foreground text-right">({installmentOption.count} {installmentOption.type} de ${installmentOption.amount.toFixed(2)})</p>
+                        <div className="flex justify-between"><span>Modalidad:</span><span className="font-medium">Crédito</span></div>
+                        <div className="flex justify-between font-bold"><span>Total a pagar hoy:</span><span>${selectedInstallment.amount.toFixed(2)}</span></div>
+                        <p className="text-xs text-muted-foreground text-right">{selectedInstallment.count} cuotas de ${selectedInstallment.amount.toFixed(2)}</p>
                     </>
                 ) : (
                     <div className="flex justify-between font-bold"><span>Total</span><span>${selectedPlan.paymentModes.contado.price.toFixed(2)}</span></div>
                 )}
-                 {step === 2 && selectedPaymentMethod && (
-                    <div className="pt-4 mt-4 border-t">
-                        <h4 className="font-semibold mb-2">Método de pago</h4>
-                        <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
-                            <Image src={PAYMENT_METHODS.find(p=>p.id === selectedPaymentMethod)?.logoSrc || ""} alt="" width={32} height={32}/>
-                            <span className="font-medium">{PAYMENT_METHODS.find(p=>p.id === selectedPaymentMethod)?.label}</span>
-                        </div>
-                    </div>
-                )}
-            </div>
-        )
-    }
+        </div>
+    );
+  };
+
 
   return (
-    <div className="container mx-auto px-4 max-w-5xl py-12 md:py-20">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="md:col-span-2">
-          {step > 1 && (
-            <Button variant="ghost" onClick={() => setStep(s => s - 1)} className="mb-4">
-              <ChevronLeft className="mr-2 h-4 w-4" /> Volver
-            </Button>
-          )}
-          <AnimatePresence mode="wait">
-            <Card className="p-6 sm:p-8">
-                {renderStepContent()}
-            </Card>
-          </AnimatePresence>
-        </div>
-
-        {/* Sidebar */}
-        <div className="md:col-span-1">
-          <Card className="p-6 sticky top-20">
-             <RadioGroup value={selectedPlanId} onValueChange={(id) => setSelectedPlanId(id)} className="mb-6 space-y-2">
-                {AFFILIATE_PLANS.map(plan => (
-                    <Label key={plan.id} htmlFor={plan.id} className={cn("flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors", selectedPlanId === plan.id ? "border-primary bg-primary/5" : "border-muted hover:bg-accent/50")}>
-                        <RadioGroupItem value={plan.id} id={plan.id} className="mt-1" />
+    <Card ref={ref} className="w-full max-w-4xl overflow-hidden" {...props}>
+      <CardHeader className='text-center'>
+        <CardTitle className="text-2xl font-bold">Formulario de Afiliación</CardTitle>
+        <CardDescription>Completa los pasos para unirte a UroVital.</CardDescription>
+      </CardHeader>
+      <CardContent>
+         <StepIndicator currentStep={step} totalSteps={3} />
+         <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="relative">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={step}
+                        variants={stepVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        transition={{ duration: 0.3 }}
+                        className="space-y-4"
+                    >
+                      {step === 1 && (
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormField name="fullName" control={form.control} render={({ field }) => (
+                                <FormItem><FormLabel>Nombre Completo</FormLabel><FormControl><Input Icon={User} placeholder="Tu nombre" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                             <FormField name="documentId" control={form.control} render={({ field }) => (
+                                <FormItem><FormLabel>Cédula / Documento</FormLabel><FormControl><Input Icon={User} placeholder="Tu documento de identidad" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField name="birthDate" control={form.control} render={({ field }) => (
+                                <FormItem><FormLabel>Fecha de Nacimiento</FormLabel>
+                                <Popover><PopoverTrigger asChild><FormControl>
+                                    <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                        {field.value ? format(field.value, "PPP") : <span>Elige una fecha</span>}
+                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                    </Button>
+                                </FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar mode="single" selected={field.value} onSelect={field.onChange} captionLayout="dropdown-buttons" fromYear={1930} toYear={new Date().getFullYear()} initialFocus />
+                                </PopoverContent></Popover><FormMessage />
+                                </FormItem>
+                            )} />
+                             <FormField name="phone" control={form.control} render={({ field }) => (
+                                <FormItem><FormLabel>Teléfono</FormLabel><FormControl><Input Icon={Phone} placeholder="Tu número de teléfono" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                             <FormField name="email" control={form.control} render={({ field }) => (
+                                <FormItem className="md:col-span-2"><FormLabel>Email</FormLabel><FormControl><Input Icon={Mail} type="email" placeholder="Tu correo electrónico" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField name="address" control={form.control} render={({ field }) => (
+                                <FormItem className="md:col-span-2"><FormLabel>Dirección</FormLabel><FormControl><Textarea placeholder="Tu dirección completa" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                         </div>
+                      )}
+                      {step === 2 && (
                         <div>
-                            <span className="font-semibold">{plan.name}</span>
-                            <p className="text-sm text-muted-foreground">{plan.subtitle}</p>
+                            <FormField name="planId" control={form.control} render={({ field }) => (
+                                <FormItem><FormLabel>Selecciona tu Plan</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl><SelectTrigger><SelectValue placeholder="Elige un plan" /></SelectTrigger></FormControl>
+                                <SelectContent>{AFFILIATE_PLANS.map(plan => <SelectItem key={plan.id} value={plan.id}>{plan.name}</SelectItem>)}</SelectContent>
+                                </Select><FormMessage /></FormItem>
+                            )} />
+                            {selectedPlan && (
+                                <Card className="mt-4 bg-muted/30">
+                                    <CardContent className="p-4">
+                                        <h3 className="font-semibold">{selectedPlan.subtitle}</h3>
+                                        <p className="text-sm text-muted-foreground">{selectedPlan.paymentModes.credito ? selectedPlan.paymentModes.contado.priceSummary : ""}</p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                            <FormField name="paymentMode" control={form.control} render={({ field }) => (
+                                <FormItem className="mt-4"><FormLabel>Modalidad de Pago</FormLabel><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-4">
+                                    <Label className="flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                        <RadioGroupItem value="contado" className="sr-only" /><span>Contado</span>
+                                        <span className="font-normal text-sm text-muted-foreground">${selectedPlan.paymentModes.contado.price.toFixed(2)}</span>
+                                    </Label>
+                                    <Label className={cn("flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", !selectedPlan.paymentModes.credito && "opacity-50 cursor-not-allowed")}>
+                                        <RadioGroupItem value="credito" className="sr-only" disabled={!selectedPlan.paymentModes.credito} /><span>Crédito</span>
+                                        <span className="font-normal text-sm text-muted-foreground">Paga en cuotas</span>
+                                    </Label>
+                                </RadioGroup><FormMessage /></FormItem>
+                            )} />
+                            {paymentMode === 'credito' && (
+                                <FormField name="installmentOption" control={form.control} render={({ field }) => (
+                                    <FormItem className="mt-4"><FormLabel>Opciones de Cuotas</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl><SelectTrigger><SelectValue placeholder="Elige una opción de cuotas" /></SelectTrigger></FormControl>
+                                        <SelectContent>{selectedPlan.paymentModes.credito?.installmentOptions.map(opt => (
+                                            <SelectItem key={`${opt.type}-${opt.count}`} value={`${opt.type}-${opt.count}`}>
+                                                {opt.count} {opt.type === 'cuotas' ? `cuotas de $${opt.amount.toFixed(2)}` : `pagos mensuales de $${opt.amount.toFixed(2)}`}
+                                            </SelectItem>
+                                        ))}</SelectContent>
+                                    </Select><FormMessage /></FormItem>
+                                )} />
+                            )}
+                            {renderOrderSummary()}
                         </div>
-                    </Label>
-                ))}
-             </RadioGroup>
+                      )}
+                      {step === 3 && (
+                         <div>
+                            <h3 className="text-lg font-semibold">Confirmación Final</h3>
+                            {renderOrderSummary()}
+                             <FormField name="paymentMethod" control={form.control} render={({ field }) => (
+                                <FormItem className="mt-4"><FormLabel>Selecciona tu Método de Pago</FormLabel><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {PAYMENT_METHODS.map(method => (
+                                    <Label key={method.id} className="flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                        <RadioGroupItem value={method.id} className="sr-only" />
+                                        <Building className="mb-2 h-6 w-6" />
+                                        <span className="text-sm font-semibold">{method.label}</span>
+                                    </Label>
+                                ))}
+                                </RadioGroup><FormMessage /></FormItem>
+                            )} />
+                             {selectedPaymentMethod && (
+                                <Card className="mt-4">
+                                    <CardContent className="p-4">
+                                        <p className="font-semibold">{selectedPaymentMethod.label}</p>
+                                        <p className="text-sm text-muted-foreground">{selectedPaymentMethod.description}</p>
+                                        <p className="text-sm font-mono bg-muted p-2 rounded-md mt-2">{selectedPaymentMethod.accountInfo}</p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                         </div>
+                      )}
+                    </motion.div>
+                </AnimatePresence>
 
-            {renderOrderSummary()}
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
+                 <div className="flex justify-between mt-8">
+                    {step > 1 ? (
+                        <Button type="button" variant="outline" onClick={handleBack}><ChevronLeft className="mr-2 h-4 w-4" /> Volver</Button>
+                    ) : <div></div>}
+                    {step < 3 ? (
+                        <Button type="button" onClick={handleNext}>Siguiente</Button>
+                    ) : (
+                        <Button type="submit" disabled={form.formState.isSubmitting}>
+                            {form.formState.isSubmitting ? "Enviando..." : "Confirmar y Enviar Solicitud"}
+                        </Button>
+                    )}
+                </div>
+            </form>
+         </Form>
+      </CardContent>
+    </Card>
+  )
+});
+AffiliateEnrollmentContent.displayName = "AffiliateEnrollmentContent";
+
+
+export function AffiliateEnrollment() {
+  return <AffiliateEnrollmentContent />;
 }
 
+// Dummy input to be used in the form until the real one is ready.
+const InputWithIcon = forwardRef<HTMLInputElement, ComponentProps<typeof Input> & {Icon: React.ElementType}>(
+    ({Icon, ...props}, ref) => {
+    return (
+        <div className="relative">
+            <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input ref={ref} className="pl-10" {...props} />
+        </div>
+    )
+});
+InputWithIcon.displayName = "InputWithIcon";
 
-export { AffiliateEnrollment };
-
+    
