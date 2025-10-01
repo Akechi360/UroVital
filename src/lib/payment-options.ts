@@ -21,6 +21,7 @@ export const AFFILIATE_PLANS = [
         id: 'fondo-espiritu-santo',
         name: "Fondo Espíritu Santo",
         subtitle: "Grupos de 200–500 afiliados",
+        affiliationFee: 0,
         coverageBenefit: "Garantiza una cobertura del 15% del monto total.",
         paymentModes: {
             contado: {

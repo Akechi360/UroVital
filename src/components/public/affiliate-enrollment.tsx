@@ -1,16 +1,19 @@
 'use client';
 
-import * as React from 'react';
-import { useState, useMemo, Suspense, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useForm, FormProvider, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, User, CreditCard, Mail, Phone, Calendar as CalendarIcon, Briefcase, FileText, ArrowRight, Banknote, Landmark } from 'lucide-react';
+import Image from 'next/image';
+
 import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,510 +27,490 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { Check, CheckCircle, ChevronLeft, CreditCard, Loader2, User, Wallet } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { AFFILIATE_PLANS, PAYMENT_METHODS } from '@/lib/payment-options';
+import { cn } from '@/lib/utils';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Calendar } from '../ui/calendar';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import Image from 'next/image';
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { AFFILIATE_PLANS, PAYMENT_METHODS } from '@/lib/payment-options';
-import { submitAffiliateLead, type AffiliateLead } from '@/lib/actions';
-
+import { useToast } from '@/hooks/use-toast';
+import { submitAffiliateLead } from '@/lib/actions';
+import { Label } from '../ui/label';
 
 const formSchema = z.object({
-  fullName: z.string().min(3, "El nombre completo debe tener al menos 3 caracteres."),
+  fullName: z.string().min(3, "El nombre debe tener al menos 3 caracteres."),
   documentId: z.string().min(6, "El documento de identidad es requerido."),
   birthDate: z.date({ required_error: "La fecha de nacimiento es requerida." }),
-  phone: z.string().min(7, "El teléfono es requerido."),
+  phone: z.string().min(10, "El teléfono debe tener al menos 10 caracteres."),
   email: z.string().email("El correo electrónico no es válido."),
   address: z.string().min(10, "La dirección debe tener al menos 10 caracteres."),
-  planId: z.enum(['tarjeta-saludable', 'fondo-espiritu-santo'], { required_error: "Debe seleccionar un plan." }),
-  paymentMode: z.enum(['contado', 'credito'], { required_error: "Debe seleccionar una modalidad de pago." }),
+  planId: z.string({ required_error: "Debes seleccionar un plan." }),
+  paymentMode: z.enum(['contado', 'credito'], { required_error: "Debes seleccionar una modalidad de pago." }),
   installmentOption: z.string().optional(),
-  paymentMethod: z.string({ required_error: "Debe seleccionar un método de pago." }),
+  paymentMethod: z.string({ required_error: "Debes seleccionar un método de pago." }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 function AffiliateEnrollmentContent() {
   const searchParams = useSearchParams();
+  const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+
+  const initialPlan = searchParams.get('plan') || AFFILIATE_PLANS[0].id;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: '',
       documentId: '',
-      birthDate: undefined,
       phone: '',
       email: '',
       address: '',
-      planId: searchParams.get('plan') === 'fondo-espiritu-santo' ? 'fondo-espiritu-santo' : 'tarjeta-saludable',
-      paymentMode: undefined,
+      planId: initialPlan,
+      paymentMode: 'contado',
       installmentOption: '',
       paymentMethod: '',
     },
   });
 
-  const { watch, trigger, getValues } = form;
-
+  const { watch, trigger } = form;
   const planId = watch('planId');
   const paymentMode = watch('paymentMode');
   const installmentOption = watch('installmentOption');
-  const paymentMethod = watch('paymentMethod');
-
-  const selectedPlan = useMemo(() => AFFILIATE_PLANS.find(p => p.id === planId), [planId]);
+  const selectedPlan = useMemo(() => AFFILIATE_PLANS.find(p => p.id === planId)!, [planId]);
+  const selectedPaymentMethod = watch('paymentMethod');
+  
   const selectedInstallment = useMemo(() => {
-    if (paymentMode === 'credito' && selectedPlan && 'installmentOptions' in selectedPlan.paymentModes.credito) {
+    if (paymentMode === 'credito' && installmentOption) {
       return selectedPlan.paymentModes.credito.installmentOptions.find(o => `${o.count}-${o.type}` === installmentOption);
     }
     return null;
-  }, [paymentMode, selectedPlan, installmentOption]);
-
-  const selectedPaymentMethod = useMemo(() => PAYMENT_METHODS.find(p => p.id === paymentMethod), [paymentMethod]);
+  }, [paymentMode, installmentOption, selectedPlan]);
 
   const handleNextStep = async () => {
     let fieldsToValidate: (keyof FormValues)[] = [];
     if (step === 1) {
       fieldsToValidate = ['fullName', 'documentId', 'birthDate', 'phone', 'email', 'address'];
     } else if (step === 2) {
-      fieldsToValidate = ['planId', 'paymentMode'];
-      if(paymentMode === 'credito') fieldsToValidate.push('installmentOption');
-      fieldsToValidate.push('paymentMethod');
+      fieldsToValidate = ['planId', 'paymentMode', 'paymentMethod'];
+       if (form.getValues('paymentMode') === 'credito') {
+        fieldsToValidate.push('installmentOption');
+      }
     }
-    
+
     const isValid = await trigger(fieldsToValidate);
     if (isValid) {
       setStep(prev => prev + 1);
-    } else {
-        toast({
-            variant: "destructive",
-            title: "Campos Incompletos",
-            description: "Por favor, completa todos los campos requeridos antes de continuar.",
-        })
     }
   };
 
-  const handlePrevStep = () => setStep(prev => prev - 1);
-
-  async function onSubmit(data: FormValues) {
+  const handlePrevStep = () => {
+    setStep(prev => prev - 1);
+  };
+  
+  const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
     try {
-        const leadData: AffiliateLead = {
-            ...data,
-            birthDate: format(data.birthDate, 'yyyy-MM-dd'),
+        const leadData = {
+            ...values,
+            birthDate: format(values.birthDate, 'yyyy-MM-dd'),
+            planId: values.planId as 'tarjeta-saludable' | 'fondo-espiritu-santo',
+            schedule: selectedInstallment ? {
+                upfront: 0,
+                installments: selectedInstallment.count,
+                installmentValue: selectedInstallment.amount,
+                frequencyDays: selectedInstallment.type === 'mensual' ? 30 : (365 / selectedInstallment.count)
+            } : undefined
         };
         await submitAffiliateLead(leadData);
-        handleNextStep();
+        toast({
+            title: '🎉 ¡Solicitud Enviada!',
+            description: 'Hemos recibido tu solicitud de afiliación. Nos pondremos en contacto contigo pronto.',
+        });
+        setStep(4);
     } catch (error) {
         toast({
-            variant: "destructive",
-            title: "Error al enviar",
-            description: "No se pudo procesar tu solicitud. Por favor, intenta de nuevo.",
+            variant: 'destructive',
+            title: 'Ocurrió un error',
+            description: 'No se pudo enviar tu solicitud. Por favor, inténtalo de nuevo más tarde.',
         });
     } finally {
         setIsSubmitting(false);
     }
-  }
+  };
   
-  if (!selectedPlan) {
-    return <div>Cargando plan...</div>;
-  }
+  const renderOrderSummary = () => {
+    if (!selectedPlan) return null;
 
-  const renderOrderSummary = () => (
-    <div className="space-y-2 rounded-lg border bg-muted/50 p-4">
-      <h3 className="font-semibold">Resumen de la orden</h3>
+    return (
+      <div className="bg-primary/5 dark:bg-primary/10 p-4 rounded-lg space-y-2 border border-primary/20">
+      <h3 className="font-semibold text-lg mb-2">Resumen del Pedido</h3>
       <div className="flex justify-between text-sm">
         <span>Plan</span>
         <span className="font-medium">{selectedPlan.name}</span>
       </div>
       <div className="flex justify-between text-sm">
         <span>Cuota de Afiliación</span>
-        <span className="font-medium">${selectedPlan.affiliationFee.toFixed(2)}</span>
+        <span className="font-medium">${(selectedPlan.affiliationFee ?? 0).toFixed(2)}</span>
       </div>
       <div className="border-t border-dashed my-2"></div>
       {selectedInstallment ? (
-        <>
-            <div className="flex justify-between text-sm">
-                <span>Modalidad</span>
-                <span className="font-medium">Crédito</span>
-            </div>
-            <div className="flex justify-between text-sm font-bold">
-                <span>Total a Pagar Hoy (1ra Cuota)</span>
-                <span>${selectedInstallment.amount.toFixed(2)}</span>
-            </div>
-            <p className="text-xs text-muted-foreground pt-1">
-                Pagarás ${selectedInstallment.amount.toFixed(2)} hoy, seguido de {selectedInstallment.count - 1} pago(s) de ${selectedInstallment.amount.toFixed(2)} cada uno.
-            </p>
-        </>
+          <>
+              <div className="flex justify-between text-sm">
+                  <span>Modalidad</span>
+                  <span className="font-medium">Crédito ({selectedInstallment.count} {selectedInstallment.type === 'mensual' ? 'meses' : 'cuotas'})</span>
+              </div>
+              <div className="flex justify-between font-bold text-lg mt-2">
+                  <span>Valor de la cuota</span>
+                  <span>${selectedInstallment.amount.toFixed(2)}</span>
+              </div>
+          </>
       ) : (
-        <div className="flex justify-between font-bold"><span>Total</span><span>${selectedPlan.paymentModes.contado.price.toFixed(2)}</span></div>
+          <div className="flex justify-between font-bold"><span>Total</span><span>${selectedPlan.paymentModes.contado.price.toFixed(2)}</span></div>
       )}
-    </div>
-  );
+  </div>
+    )
+  };
+
+  const steps = [
+    {
+      title: 'Información Personal',
+      icon: User,
+      fields: [
+        { name: 'fullName', label: 'Nombre Completo', placeholder: 'Ej: Juan Pérez', icon: User },
+        { name: 'documentId', label: 'Cédula o Pasaporte', placeholder: 'Ej: V-12345678', icon: FileText },
+        { name: 'birthDate', label: 'Fecha de Nacimiento', icon: CalendarIcon },
+        { name: 'phone', label: 'Teléfono', placeholder: 'Ej: 0414-1234567', icon: Phone },
+        { name: 'email', label: 'Correo Electrónico', placeholder: 'ejemplo@correo.com', icon: Mail },
+        { name: 'address', label: 'Dirección', placeholder: 'Ej: Av. Bolívar, Valencia', icon: Briefcase },
+      ]
+    },
+    {
+      title: 'Plan y Pago',
+      icon: CreditCard,
+      fields: []
+    },
+    {
+      title: 'Confirmación',
+      icon: Check,
+      fields: []
+    }
+  ];
 
   return (
-    <FormProvider {...form}>
-      <h1 className="text-2xl font-bold text-center text-primary font-headline">Formulario de Afiliación</h1>
-      
-      {step < 4 && (
-        <div className="flex items-center justify-center my-4">
-            {[1, 2, 3].map((s, i) => (
-            <React.Fragment key={s}>
-                <div className="flex flex-col items-center">
-                    <div
-                        className={cn(
-                            "flex h-8 w-8 items-center justify-center rounded-full transition-all",
-                            step > s ? "bg-green-500 text-white" : "bg-muted text-muted-foreground",
-                            step === s && "bg-primary text-primary-foreground scale-110"
-                        )}
-                    >
-                        {step > s ? <Check size={18} /> : s}
-                    </div>
-                    <p className={cn(
-                        "mt-2 text-xs font-semibold transition-all",
-                        step === s ? "text-primary" : "text-muted-foreground"
-                    )}>
-                        {['Información', 'Pago', 'Confirmar'][i]}
-                    </p>
-                </div>
-                {i < 2 && <div className={cn("flex-1 h-1 mx-2 transition-colors", step > s ? 'bg-green-500' : 'bg-muted')} />}
-            </React.Fragment>
-            ))}
-        </div>
-      )}
-
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {step === 1 && (
-          <div className="space-y-4 animate-in fade-in-0 duration-300">
-            <h2 className="text-lg font-semibold flex items-center gap-2"><User className="text-primary"/>Información Personal</h2>
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre completo</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ej: Juan Pérez" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="grid sm:grid-cols-2 gap-4">
-               <FormField
-                control={form.control}
-                name="documentId"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Cédula / Pasaporte</FormLabel>
-                    <FormControl>
-                        <Input placeholder="V-12.345.678" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-                 <FormField
-                    control={form.control}
-                    name="birthDate"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                        <FormLabel>Fecha de Nacimiento</FormLabel>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                            <FormControl>
-                                <Button
-                                variant={"outline"}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.3 }}
+          >
+             {step <= 3 && (
+                <>
+                <h2 className="text-2xl font-bold text-center mb-2 font-headline">{steps[step-1].title}</h2>
+                <div className="flex items-center justify-center my-4">
+                    {[1, 2, 3].map((s, i) => (
+                    <React.Fragment key={s}>
+                        <div className="flex flex-col items-center">
+                            <div
                                 className={cn(
-                                    "w-full pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
+                                    "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300",
+                                    step > s ? 'bg-green-500 text-white' : step === s ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
                                 )}
-                                >
-                                {field.value ? (
-                                    format(field.value, "PPP", { locale: es })
-                                ) : (
-                                    <span>Selecciona una fecha</span>
-                                )}
-                                </Button>
-                            </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                date > new Date() || date < new Date("1900-01-01")
-                                }
-                                initialFocus
-                            />
-                            </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-            </div>
-            <div className="grid sm:grid-cols-2 gap-4">
-                <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Teléfono</FormLabel>
-                        <FormControl>
-                            <Input placeholder="0414-1234567" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                            <Input type="email" placeholder="juan.perez@email.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </div>
-             <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Dirección</FormLabel>
-                    <FormControl>
-                        <Textarea placeholder="Urb. La Viña, Calle 1, Casa 1-1, Valencia, Carabobo" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-            />
-          </div>
-        )}
-        
-        {step === 2 && (
-          <div className="space-y-8 animate-in fade-in-0 duration-300">
-            <div>
-              <h2 className="text-lg font-semibold flex items-center gap-2 mb-4"><Wallet className="text-primary"/>Plan y Pago</h2>
-              
-              <FormField
-                control={form.control}
-                name="planId"
-                render={({ field }) => (
-                  <FormItem className="space-y-4">
-                    <FormLabel className="text-base">1. Selecciona tu Plan de Afiliación</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                      >
-                        {AFFILIATE_PLANS.map((plan) => (
-                          <FormItem key={plan.id}>
-                            <FormControl>
-                              <RadioGroupItem value={plan.id} id={plan.id} className="sr-only" />
-                            </FormControl>
-                            <Label htmlFor={plan.id} className="flex flex-col rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all">
-                              <span className="font-bold text-lg">{plan.name}</span>
-                              <span className="text-sm text-muted-foreground">{plan.subtitle}</span>
-                            </Label>
-                          </FormItem>
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-             <div>
-                <FormField
-                    control={form.control}
-                    name="paymentMode"
-                    render={({ field }) => (
-                        <FormItem className="space-y-4">
-                            <FormLabel className="text-base">2. Elige la Modalidad de Pago</FormLabel>
-                            <FormControl>
-                                <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-4">
-                                     <FormItem>
-                                        <FormControl>
-                                            <RadioGroupItem value="contado" id="contado" className="sr-only" />
-                                        </FormControl>
-                                        <Label htmlFor="contado" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
-                                        Contado
-                                        <span className="font-bold">${selectedPlan.paymentModes.contado.price.toFixed(2)}</span>
-                                        </Label>
-                                    </FormItem>
-                                     <FormItem>
-                                        <FormControl>
-                                            <RadioGroupItem value="credito" id="credito" className="sr-only" />
-                                        </FormControl>
-                                        <Label htmlFor="credito" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
-                                        Crédito
-                                        <span className="text-xs text-muted-foreground mt-1">Paga en cuotas</span>
-                                        </Label>
-                                    </FormItem>
-                                </RadioGroup>
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-            </div>
-            
-            {paymentMode === 'credito' && 'installmentOptions' in selectedPlan.paymentModes.credito && (
-                <div className="animate-in fade-in-0 duration-500">
-                    <FormField
-                        control={form.control}
-                        name="installmentOption"
-                        render={({ field }) => (
-                            <FormItem className="space-y-4">
-                                <FormLabel className="text-base">3. Elige tu Opción de Cuotas</FormLabel>
-                                <FormControl>
-                                <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                     {selectedPlan.paymentModes.credito.installmentOptions.map(option => (
-                                         <FormItem key={`${option.count}-${option.type}`}>
-                                            <FormControl>
-                                                <RadioGroupItem value={`${option.count}-${option.type}`} id={`${option.count}-${option.type}`} className="sr-only" />
-                                            </FormControl>
-                                            <Label htmlFor={`${option.count}-${option.type}`} className="flex items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
-                                                <div className="flex flex-col">
-                                                    <span>{option.count} {option.type === 'cuotas' ? 'Cuotas' : 'Meses'}</span>
-                                                    <span className="text-xs text-muted-foreground">
-                                                        {option.type === 'cuotas' ? 'Pagos fijos' : 'Pagos mensuales'}
-                                                    </span>
-                                                </div>
-                                                <span className="font-bold">${option.amount.toFixed(2)}</span>
-                                            </Label>
-                                        </FormItem>
-                                    ))}
-                                </RadioGroup>
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+                            >
+                                {step > s ? <Check size={16}/> : s}
+                            </div>
+                            <span className={cn("text-xs mt-2", step === s ? 'font-bold' : 'text-muted-foreground')}>{steps[i].title.split(' ')[0]}</span>
+                        </div>
+                        {i < 2 && <div className={cn("flex-1 h-0.5 mx-2", step > s ? 'bg-green-500' : 'bg-muted')}></div>}
+                    </React.Fragment>
+                    ))}
                 </div>
+                </>
             )}
 
-            <div>
-                <FormField
+
+            {step === 1 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                {steps[0].fields.map(field => (
+                  <FormField
+                    key={field.name}
                     control={form.control}
-                    name="paymentMethod"
-                    render={({ field }) => (
-                        <FormItem className="space-y-4">
-                            <FormLabel className="text-base">{paymentMode === 'credito' ? '4.' : '3.'} Selecciona un Método de Pago</FormLabel>
-                            <FormControl>
-                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                {PAYMENT_METHODS.map(method => (
-                                <FormItem key={method.id}>
+                    name={field.name as keyof FormValues}
+                    render={({ field: renderField }) => (
+                      <FormItem className={field.name === 'address' ? 'sm:col-span-2' : ''}>
+                        <FormLabel>{field.label}</FormLabel>
+                        <FormControl>
+                          {field.name === 'birthDate' ? (
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-full justify-start text-left font-normal",
+                                    !renderField.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  <CalendarIcon className="mr-2 h-4 w-4" />
+                                  {renderField.value ? format(renderField.value, "PPP", { locale: es }) : <span>Selecciona una fecha</span>}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0">
+                                <Calendar
+                                  mode="single"
+                                  selected={renderField.value as Date | undefined}
+                                  onSelect={renderField.onChange}
+                                  initialFocus
+                                  captionLayout="dropdown-buttons"
+                                  fromYear={1930}
+                                  toYear={new Date().getFullYear() - 18}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          ) : (
+                            <Input placeholder={field.placeholder} {...renderField} value={renderField.value as string || ''} />
+                          )}
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
+            )}
+            
+            {step === 2 && (
+              <div className="space-y-8 mt-6">
+                 {/* Plan Selection */}
+                <FormField
+                  control={form.control}
+                  name="planId"
+                  render={({ field }) => (
+                    <FormItem className="space-y-4">
+                      <FormLabel className="text-lg font-semibold">Selecciona tu Plan</FormLabel>
+                        <FormControl>
+                            <RadioGroup
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                            >
+                                {AFFILIATE_PLANS.map((plan) => (
+                                <FormItem key={plan.id}>
                                     <FormControl>
-                                        <RadioGroupItem value={method.id} id={method.id} className="sr-only" />
+                                    <RadioGroupItem value={plan.id} id={plan.id} className="sr-only" />
                                     </FormControl>
-                                    <Label htmlFor={method.id} className="flex flex-col items-center justify-center gap-2 rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer h-full">
-                                    <Image src={method.logoSrc} alt={method.label} width={40} height={40} className="h-10 w-auto"/>
-                                    <span className="text-sm font-semibold">{method.label}</span>
+                                    <Label
+                                    htmlFor={plan.id}
+                                    className="flex flex-col rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
+                                    >
+                                    <span className="text-xl font-bold font-headline text-primary">{plan.name}</span>
+                                    <span className="text-sm text-muted-foreground">{plan.subtitle}</span>
                                     </Label>
                                 </FormItem>
                                 ))}
                             </RadioGroup>
+                        </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Payment Mode Selection */}
+                <FormField
+                  control={form.control}
+                  name="paymentMode"
+                  render={({ field }) => (
+                    <FormItem className="space-y-4">
+                      <FormLabel className="text-lg font-semibold">Modalidad de Pago</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="grid grid-cols-2 gap-4"
+                        >
+                          <FormItem>
+                             <FormControl>
+                                <RadioGroupItem value="contado" id="contado" className="sr-only" />
+                             </FormControl>
+                             <Label
+                                htmlFor="contado"
+                                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer h-full"
+                              >
+                                Contado
+                                <span className="font-bold text-lg">${selectedPlan.paymentModes.contado.price.toFixed(2)}</span>
+                              </Label>
+                          </FormItem>
+                           <FormItem>
+                             <FormControl>
+                                <RadioGroupItem value="credito" id="credito" className="sr-only" />
+                             </FormControl>
+                             <Label
+                                htmlFor="credito"
+                                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer h-full"
+                              >
+                                Crédito
+                                <span className="text-sm text-muted-foreground mt-1">Paga en cuotas</span>
+                              </Label>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                {/* Installment Options */}
+                <AnimatePresence>
+                {paymentMode === 'credito' && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
+                    >
+                        <FormField
+                        control={form.control}
+                        name="installmentOption"
+                        render={({ field }) => (
+                            <FormItem className="space-y-4">
+                            <FormLabel className="text-lg font-semibold">Opciones de Cuotas</FormLabel>
+                            <FormControl>
+                                <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="grid grid-cols-2 gap-4"
+                                >
+                                    {selectedPlan.paymentModes.credito.installmentOptions.map((opt) => (
+                                    <FormItem key={`${opt.count}-${opt.type}`}>
+                                        <FormControl>
+                                            <RadioGroupItem value={`${opt.count}-${opt.type}`} id={`${opt.count}-${opt.type}`} className="sr-only" />
+                                        </FormControl>
+                                        <Label
+                                        htmlFor={`${opt.count}-${opt.type}`}
+                                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                        >
+                                        <span className="font-medium">{opt.count} {opt.type}</span>
+                                        <span className="font-bold text-lg">${opt.amount.toFixed(2)}</span>
+                                        </Label>
+                                    </FormItem>
+                                    ))}
+                                </RadioGroup>
                             </FormControl>
                             <FormMessage />
-                        </FormItem>
-                    )}
+                            </FormItem>
+                        )}
+                        />
+                    </motion.div>
+                )}
+                </AnimatePresence>
+
+                {/* Payment Method Selection */}
+                 <FormField
+                  control={form.control}
+                  name="paymentMethod"
+                  render={({ field }) => (
+                    <FormItem className="space-y-4">
+                      <FormLabel className="text-lg font-semibold">Método de Pago</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="grid grid-cols-2 md:grid-cols-4 gap-4"
+                        >
+                          {PAYMENT_METHODS.map((method) => (
+                            <FormItem key={method.id}>
+                                <FormControl>
+                                    <RadioGroupItem value={method.id} id={method.id} className="sr-only" />
+                                </FormControl>
+                                 <Label
+                                    htmlFor={method.id}
+                                    className="flex flex-col items-center justify-center gap-2 rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                >
+                                    <Image src={method.logoSrc} alt={method.label} width={40} height={40} />
+                                    <span className="text-sm font-medium">{method.label}</span>
+                                </Label>
+                            </FormItem>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-            </div>
-          </div>
-        )}
-
-        {step === 3 && (
-            <div className="space-y-6 animate-in fade-in-0 duration-300">
-                <h2 className="text-lg font-semibold flex items-center gap-2"><CreditCard className="text-primary"/>Confirmación y Pago</h2>
-                <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                        <h3 className="font-semibold">Detalles de la Afiliación</h3>
-                        <div className="text-sm space-y-2 rounded-lg border bg-muted/25 p-4">
-                            <div className="flex justify-between"><span>Nombre:</span><span className="font-medium text-right">{getValues('fullName')}</span></div>
-                            <div className="flex justify-between"><span>Documento:</span><span className="font-medium">{getValues('documentId')}</span></div>
-                            <div className="flex justify-between"><span>Email:</span><span className="font-medium">{getValues('email')}</span></div>
-                        </div>
-                         <h3 className="font-semibold pt-2">Pago</h3>
-                        {renderOrderSummary()}
+              </div>
+            )}
+            
+            {step === 3 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+                    <div>
+                         <h3 className="font-semibold text-lg mb-2">Detalles de la Afiliación</h3>
+                         <div className="bg-muted/30 p-4 rounded-lg space-y-2 text-sm">
+                            <div className="flex justify-between"><span>Nombre:</span><span className="font-medium">{form.getValues('fullName')}</span></div>
+                            <div className="flex justify-between"><span>Documento:</span><span className="font-medium">{form.getValues('documentId')}</span></div>
+                            <div className="flex justify-between"><span>Teléfono:</span><span className="font-medium">{form.getValues('phone')}</span></div>
+                            <div className="flex justify-between"><span>Email:</span><span className="font-medium">{form.getValues('email')}</span></div>
+                         </div>
                     </div>
-                     <div className="space-y-4">
-                        <h3 className="font-semibold">Instrucciones de Pago</h3>
-                        <div className="text-sm space-y-4 rounded-lg border bg-muted/25 p-4">
-                            <p>Para completar su afiliación, por favor realice el pago utilizando los siguientes datos:</p>
-                            <div className="flex items-center gap-3">
-                                <Image src={selectedPaymentMethod?.logoSrc || ''} alt={selectedPaymentMethod?.label || ''} width={40} height={40} />
-                                <div>
-                                    <p className="font-bold">{selectedPaymentMethod?.label}</p>
-                                    <p className="text-xs">{selectedPaymentMethod?.description}</p>
-                                </div>
-                            </div>
-                            <div className="p-3 bg-muted rounded-md text-xs font-mono text-center">
-                                {selectedPaymentMethod?.accountInfo}
-                            </div>
-                            <p>Una vez realizado el pago, por favor envíe el comprobante a nuestro departamento de administración para activar su cuenta.</p>
-                        </div>
-                    </div>
+                    {renderOrderSummary()}
                 </div>
-            </div>
-        )}
-        
-        {step === 4 && (
-            <div className="text-center py-10 flex flex-col items-center animate-in fade-in-0 zoom-in-95 duration-500">
-                <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-                <h2 className="text-2xl font-bold mb-2">¡Solicitud Recibida!</h2>
-                <p className="text-muted-foreground max-w-md mx-auto">
-                    Hemos recibido tu solicitud de afiliación. Por favor, completa el pago y envía el comprobante para activar tu plan.
-                </p>
-                <Button onClick={() => setStep(1)} className="mt-8">Realizar otra afiliación</Button>
-            </div>
-        )}
+            )}
 
-        <div className="flex justify-between items-center pt-4">
-          {step > 1 && step < 4 && (
-            <Button variant="outline" onClick={handlePrevStep} type="button">
-              <ChevronLeft className="mr-2 h-4 w-4" /> Anterior
+            {step === 4 && (
+                <div className="text-center py-16">
+                     <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.2 }}
+                        className="w-24 h-24 bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto"
+                     >
+                        <Check size={60} />
+                    </motion.div>
+                    <h2 className="text-2xl font-bold mt-6">¡Solicitud Completada!</h2>
+                    <p className="text-muted-foreground mt-2 max-w-md mx-auto">
+                        Gracias por afiliarte. Recibirás un correo con los próximos pasos. Nuestro equipo se pondrá en contacto contigo a la brevedad.
+                    </p>
+                    <Button asChild className="mt-8">
+                        <a href="/landing">Volver al Inicio</a>
+                    </Button>
+                </div>
+            )}
+
+            </motion.div>
+        </AnimatePresence>
+
+        {step < 3 && (
+          <div className="flex justify-between mt-8">
+            <Button type="button" variant="outline" onClick={handlePrevStep} disabled={step === 1}>
+              Anterior
             </Button>
-          )}
-          <div className="flex-1" />
-          {step < 3 && (
-            <Button onClick={handleNextStep} type="button">
+            <Button type="button" onClick={handleNextStep}>
               Siguiente
             </Button>
-          )}
-          {step === 3 && (
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSubmitting ? "Procesando..." : "Confirmar y Enviar Solicitud"}
-            </Button>
-          )}
-        </div>
+          </div>
+        )}
+        {step === 3 && (
+            <div className="flex justify-between mt-8">
+                <Button type="button" variant="outline" onClick={handlePrevStep} disabled={isSubmitting}>
+                Anterior
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Enviando...' : 'Confirmar y Enviar Solicitud'}
+                </Button>
+            </div>
+        )}
+
       </form>
-    </FormProvider>
-  );
+    </Form>
+  )
 }
 
 export function AffiliateEnrollment() {
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   return (
     <div className="w-full max-w-4xl mx-auto overflow-hidden rounded-2xl border border-border/20 bg-card/50 shadow-2xl shadow-primary/10 backdrop-blur-lg">
       <div className="p-6 sm:p-8">
