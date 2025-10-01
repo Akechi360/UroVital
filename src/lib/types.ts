@@ -40,7 +40,7 @@ export const ROLE_PERMISSIONS: Record<User['role'], Permission[]> = {
     'appointments:write',
     'patients:read',
     'companies:read',
-    'finance:read', // Can see payments, but not audit
+    'finance:read', 
   ],
   patient: ['appointments:read', 'appointments:write', 'settings:read'],
 };
