@@ -1,25 +1,37 @@
-// TODO: Fill with real plan details
+
 export const AFFILIATE_PLANS = [
     {
         id: 'tarjeta-saludable',
         name: "Tarjeta Saludable",
         subtitle: "Individual + 2 Beneficiarios",
-        price: 150, // Annual
         affiliationFee: 0,
-        installmentOptions: [
-            { type: 'cuotas', count: 3, amount: 50 },
-            { type: 'mensual', count: 12, amount: 10 }
-        ]
+        paymentModes: {
+            contado: {
+                price: 150,
+            },
+            credito: {
+                installmentOptions: [
+                    { type: 'cuotas', count: 3, amount: 50 },
+                    { type: 'mensual', count: 12, amount: 10 }
+                ]
+            }
+        }
     },
     {
         id: 'fondo-espiritu-santo',
         name: "Fondo Espíritu Santo",
         subtitle: "Grupos de 200–500 afiliados",
-        price: 250, // Annual
         coverageBenefit: "Garantiza una cobertura del 15% del monto total.",
-        installmentOptions: [
-            { type: 'cuotas', count: 4, amount: 62.50 }
-        ]
+        paymentModes: {
+            contado: {
+                price: 250,
+            },
+            credito: {
+                installmentOptions: [
+                    { type: 'cuotas', count: 4, amount: 62.50 }
+                ]
+            }
+        }
     },
 ];
 

@@ -87,7 +87,7 @@ const pricingPlans = [
             "Acceso a fisiatría y rehabilitación.",
         ],
         price: 150,
-        priceSummary: "$150 anual, 3 cuotas de $50 o $10 mensuales.",
+        priceSummary: "$150 anual (contado), 3 cuotas de $50 o $10 mensuales.",
         detailsUrl: "/planes/tarjeta-saludable",
     },
     {
@@ -101,7 +101,7 @@ const pricingPlans = [
             "Traslados en ambulancia y atención 24/7.",
         ],
         price: 250,
-        priceSummary: "$250 anual o 4 cuotas de $62.50",
+        priceSummary: "$250 anual (contado) o 4 cuotas de $62.50.",
         detailsUrl: "/planes/fondo-espiritu-santo",
     }
 ]
